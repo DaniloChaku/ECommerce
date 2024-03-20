@@ -9,5 +9,6 @@ namespace ECommerce.Core.Domain.RepositoryContracts
 {
     public interface IManufacturerRepository : IRepository<Manufacturer>
     {
+        Task<bool> UpdateAsync(Manufacturer manufacturer);
     }
 }

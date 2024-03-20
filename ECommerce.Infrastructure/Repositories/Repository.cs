@@ -35,15 +35,13 @@ namespace ECommerce.Infrastructure.Repositories
             return await SaveAsync();
         }
 
-        public async Task<bool> UpdateAsync(TEntity entity)
-        {
-            _dbSet.Update(entity);
-            return await SaveAsync();
-        }
-
         public async Task<bool> DeleteAsync(TEntity entity)
         {
-            _dbSet.Remove(entity);
+            if (_dbSet.Contains(entity))
+            {
+                _dbSet.Remove(entity);
+            }
+
             return await SaveAsync();
         }
 

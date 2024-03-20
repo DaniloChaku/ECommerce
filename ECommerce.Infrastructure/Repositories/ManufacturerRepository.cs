@@ -14,5 +14,18 @@ namespace ECommerce.Infrastructure.Repositories
         public ManufacturerRepository(DbContext context) : base(context)
         {
         }
+
+        public async Task<bool> UpdateAsync(Manufacturer manufacturer)
+        {
+            var existingManufacturer = await _dbSet.FindAsync(manufacturer.Id);
+            if (existingManufacturer == null)
+            {
+                return false;
+            }
+
+            existingManufacturer.Name = manufacturer.Name;
+
+            return await SaveAsync();
+        }
     }
 }

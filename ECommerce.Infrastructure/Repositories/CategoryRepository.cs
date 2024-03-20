@@ -14,5 +14,18 @@ namespace ECommerce.Infrastructure.Repositories
         public CategoryRepository(DbContext context) : base(context)
         {
         }
+
+        public async Task<bool> UpdateAsync(Category category)
+        {
+            var existingCategory = await _dbSet.FindAsync(category.Id);
+            if (existingCategory == null)
+            {
+                return false;
+            }
+
+            existingCategory.Name = category.Name;
+
+            return await SaveAsync();
+        }
     }
 }

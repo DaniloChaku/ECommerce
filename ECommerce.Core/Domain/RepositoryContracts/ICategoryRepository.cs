@@ -9,5 +9,6 @@ namespace ECommerce.Core.Domain.RepositoryContracts
 {
     public interface ICategoryRepository : IRepository<Category>
     {
+        Task<bool> UpdateAsync(Category category);
     }
 }

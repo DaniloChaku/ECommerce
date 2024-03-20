@@ -14,5 +14,34 @@ namespace ECommerce.Infrastructure.Repositories
         public ProductRepository(DbContext context) : base(context)
         {
         }
+
+        public async Task<bool> UpdateAsync(Product product)
+        {
+            var existingProduct = await _dbSet.FindAsync(product.Id);
+            if (existingProduct == null)
+            {
+                return false;
+            }
+
+            existingProduct.Name = product.Name;
+            existingProduct.Description = product.Description;
+            existingProduct.Price = product.Price;
+            existingProduct.SalePrice = product.SalePrice;
+            existingProduct.ImageUrl = product.ImageUrl;
+            existingProduct.ManufacturerId = product.ManufacturerId;
+            existingProduct.CategoryId = product.CategoryId;
+
+            if (product.Manufacturer != null)
+            {
+                existingProduct.Manufacturer = product.Manufacturer;
+            }
+
+            if (product.Category != null)
+            {
+                existingProduct.Category = product.Category;
+            }
+
+            return await SaveAsync();
+        }
     }
 }

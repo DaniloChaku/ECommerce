@@ -11,7 +11,6 @@ namespace ECommerce.Core.Domain.RepositoryContracts
         Task<IEnumerable<TEntity>> GetAllAsync();
         Task<TEntity?> GetByIdAsync(Guid id);
         Task<bool> AddAsync(TEntity entity);
-        Task<bool> UpdateAsync(TEntity entity);
         Task<bool> DeleteAsync(TEntity entity);
         Task<bool> SaveAsync();
     }
