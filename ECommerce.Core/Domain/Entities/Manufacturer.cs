@@ -13,5 +13,20 @@ namespace ECommerce.Core.Domain.Entities
         public Guid Id { get; set; }
         [Required]
         public string Name { get; set; }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is Manufacturer manufacturer)
+            {
+                return Id == manufacturer.Id && Name == manufacturer.Name;
+            }
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }

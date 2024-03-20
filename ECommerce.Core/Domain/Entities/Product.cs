@@ -30,5 +30,28 @@ namespace ECommerce.Core.Domain.Entities
         public Guid CategoryId { get; set; }
         [ForeignKey(nameof(CategoryId))]
         public Category Category { get; set; }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is Product product)
+            {
+                return Id == product.Id
+               && Name == product.Name
+               && Description == product.Description
+               && Price == product.Price
+               && SalePrice == product.SalePrice
+               && ImageUrl == product.ImageUrl
+               && Stock == product.Stock
+               && ManufacturerId == product.ManufacturerId
+               && CategoryId == product.CategoryId;
+            }
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode(); 
+        }
     }
 }

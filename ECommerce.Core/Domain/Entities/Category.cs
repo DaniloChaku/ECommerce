@@ -13,5 +13,20 @@ namespace ECommerce.Core.Domain.Entities
         public Guid Id { get; set; }
         [Required]
         public string Name { get; set; }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is Category category)
+            {
+                return Id == category.Id && Name == category.Name;
+            }
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }
