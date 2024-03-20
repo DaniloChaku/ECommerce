@@ -27,19 +27,10 @@ namespace ECommerce.Infrastructure.Repositories
             existingProduct.Description = product.Description;
             existingProduct.Price = product.Price;
             existingProduct.SalePrice = product.SalePrice;
+            existingProduct.Stock = product.Stock;
             existingProduct.ImageUrl = product.ImageUrl;
             existingProduct.ManufacturerId = product.ManufacturerId;
             existingProduct.CategoryId = product.CategoryId;
-
-            if (product.Manufacturer != null)
-            {
-                existingProduct.Manufacturer = product.Manufacturer;
-            }
-
-            if (product.Category != null)
-            {
-                existingProduct.Category = product.Category;
-            }
 
             return await SaveAsync();
         }
