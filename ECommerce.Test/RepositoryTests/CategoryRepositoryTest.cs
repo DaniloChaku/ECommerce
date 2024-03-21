@@ -75,6 +75,40 @@ namespace ECommerce.Test.RepositoryTests
             }
         }
 
+        [Fact]
+        public async Task GetAllAsync_WithFilter_ReturnsMatchingCategories()
+        {
+            
+            using (var context = GetContext())
+            {
+                // Arrange
+                var fixture = new Fixture();
+                var repository = new CategoryRepository(context);
+
+                var category1 = fixture.Build<Category>()
+                    .With(c => c.Name, "Electronics").Create();
+                context.Categories.Add(category1);
+
+                var category2 = fixture.Build<Category>()
+                    .With(c => c.Name, "Books").Create();
+                context.Categories.Add(category2);
+
+                var category3 = fixture.Build<Category>()
+                    .With(c => c.Name, "Drinks").Create();
+                context.Categories.Add(category3);
+
+                await context.SaveChangesAsync();
+
+                // Act
+                var result = await repository.GetAllAsync(c => c.Name == "Electronics");
+
+                // Assert
+                result.Should().ContainSingle(c => c.Id == category1.Id);
+                result.Should().NotContain(c => c.Id == category2.Id);
+                result.Should().NotContain(c => c.Id == category3.Id);
+            }
+        }
+
         #endregion
 
         #region GetByIdAsync

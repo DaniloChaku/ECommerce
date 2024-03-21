@@ -72,6 +72,40 @@ namespace ECommerce.Test.RepositoryTests
             }
         }
 
+        [Fact]
+        public async Task GetAllAsync_WithFilter_ReturnsMatchingProducts()
+        {
+
+            using (var context = GetContext())
+            {
+                // Arrange
+                var fixture = new Fixture();
+                var repository = new ProductRepository(context);
+
+                var product1 = fixture.Build<Product>()
+                    .With(c => c.Name, "Bread").Create();
+                context.Products.Add(product1);
+
+                var product2 = fixture.Build<Product>()
+                    .With(c => c.Name, "Milk").Create();
+                context.Products.Add(product2);
+
+                var product3 = fixture.Build<Product>()
+                    .With(c => c.Name, "Candy").Create();
+                context.Products.Add(product3);
+
+                await context.SaveChangesAsync();
+
+                // Act
+                var result = await repository.GetAllAsync(c => c.Name == "Candy");
+
+                // Assert
+                result.Should().ContainSingle(c => c.Id == product3.Id);
+                result.Should().NotContain(c => c.Id == product2.Id);
+                result.Should().NotContain(c => c.Id == product1.Id);
+            }
+        }
+
         #endregion
 
         #region GetByIdAsync
