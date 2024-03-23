@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ECommerce.Infrastructure.Repositories
 {
-    public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
+    public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
         protected readonly DbContext _context;
         protected readonly DbSet<TEntity> _dbSet;
@@ -20,7 +20,7 @@ namespace ECommerce.Infrastructure.Repositories
             _dbSet = context.Set<TEntity>();
         }
 
-        public async Task<IEnumerable<TEntity>> GetAllAsync(
+        public virtual async Task<IEnumerable<TEntity>> GetAllAsync(
             Expression<Func<TEntity, bool>>? filter = null)
         {
             IQueryable<TEntity> query = _dbSet;
@@ -30,21 +30,21 @@ namespace ECommerce.Infrastructure.Repositories
                 query = query.Where(filter);
             }
 
-            return query.ToList();
+            return await query.ToListAsync();
         }
 
-        public async Task<TEntity?> GetByIdAsync(Guid id)
+        public virtual async Task<TEntity?> GetByIdAsync(Guid id)
         {
             return await _dbSet.FindAsync(id);
         }
 
-        public async Task<bool> AddAsync(TEntity entity)
+        public virtual async Task<bool> AddAsync(TEntity entity)
         {
             await _dbSet.AddAsync(entity);
             return await SaveAsync();
         }
 
-        public async Task<bool> DeleteAsync(TEntity entity)
+        public virtual async Task<bool> DeleteAsync(TEntity entity)
         {
             if (_dbSet.Contains(entity))
             {
@@ -54,7 +54,7 @@ namespace ECommerce.Infrastructure.Repositories
             return await SaveAsync();
         }
 
-        public async Task<bool> SaveAsync()
+        public virtual async Task<bool> SaveAsync()
         {
             var saved = await _context.SaveChangesAsync();
             return saved > 0;
