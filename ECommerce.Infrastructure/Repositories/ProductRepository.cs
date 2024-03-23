@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -33,6 +34,20 @@ namespace ECommerce.Infrastructure.Repositories
             existingProduct.CategoryId = product.CategoryId;
 
             return await SaveAsync();
+        }
+
+        public override async Task<IEnumerable<Product>> GetAllAsync(Expression<Func<Product, bool>>? filter = null)
+        {
+            IQueryable<Product> query = _dbSet;
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            query.Include(nameof(Category)).Include(nameof(Manufacturer));
+
+            return await query.ToListAsync();
         }
     }
 }
