@@ -18,9 +18,11 @@ namespace ECommerce.Core.Domain.Entities
         public string? Description { get; set; }
         [Required]
         [Range(0, double.MaxValue)]
-        public double Price { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal Price { get; set; }
         [Range(0, double.MaxValue)]
-        public double? SalePrice { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal? SalePrice { get; set; }
         public string? ImageUrl { get; set; }
         [Required]
         public long Stock { get; set; }
