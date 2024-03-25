@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ECommerce.Core.Helpers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -17,10 +18,10 @@ namespace ECommerce.Core.Domain.Entities
         [MaxLength(400)]
         public string? Description { get; set; }
         [Required]
-        [Range(0, double.MaxValue)]
+        [Range(typeof(decimal), "0", Constants.MaxDecimalValueString)]
         [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
-        [Range(0, double.MaxValue)]
+        [Range(typeof(decimal), "0", Constants.MaxDecimalValueString)]
         [Column(TypeName = "decimal(18,2)")]
         public decimal? SalePrice { get; set; }
         public string? ImageUrl { get; set; }

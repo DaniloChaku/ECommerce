@@ -34,7 +34,7 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("ECommerce.Core.Domain.Entities.Manufacturer", b =>
@@ -49,7 +49,7 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Manufacturers");
+                    b.ToTable("Manufacturers", (string)null);
                 });
 
             modelBuilder.Entity("ECommerce.Core.Domain.Entities.Product", b =>
@@ -90,7 +90,7 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("ManufacturerId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("ECommerce.Core.Domain.Entities.Product", b =>
