@@ -19,7 +19,22 @@ namespace ECommerce.Core.DTO
                 Id = Id,
                 Name = Name 
             };
-        } 
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is CategoryDto categoryDto)
+            {
+                return Id == categoryDto.Id && Name == categoryDto.Name;
+            } 
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 
     public static class CategoryExtensions
