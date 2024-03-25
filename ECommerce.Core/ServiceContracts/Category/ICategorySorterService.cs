@@ -10,6 +10,6 @@ namespace ECommerce.Core.ServiceContracts.Category
 {
     public interface ICategorySorterService
     {
-        Task<IEnumerable<CategoryDto>> GetSortedAsync(IEnumerable<CategoryDto> categories, SortOrder sortOrder);
+        Task<IEnumerable<CategoryDto>> SortAsync(IEnumerable<CategoryDto> categories, SortOrder sortOrder);
     }
 }
