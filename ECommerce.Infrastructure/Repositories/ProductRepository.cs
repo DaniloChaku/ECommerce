@@ -49,5 +49,10 @@ namespace ECommerce.Infrastructure.Repositories
 
             return await query.ToListAsync();
         }
+
+        public async override Task<Product?> GetByIdAsync(Guid id)
+        {
+            return await _dbSet.Include("Category").Include("Manufacturer").FirstOrDefaultAsync(t => t.Id == id);
+        }
     }
 }
