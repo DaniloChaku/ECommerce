@@ -9,6 +9,6 @@ namespace ECommerce.Core.ServiceContracts.Category
 {
     public interface ICategoryUpdaterService
     {
-        Task<CategoryDto> UpdateAsync(CategoryDto categoryDto);
+        Task<bool> UpdateAsync(CategoryDto categoryDto);
     }
 }
