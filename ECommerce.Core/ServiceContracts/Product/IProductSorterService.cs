@@ -10,7 +10,7 @@ namespace ECommerce.Core.ServiceContracts.Product
 {
     public interface IProductSorterService
     {
-        Task<IEnumerable<ProductDto>> SortAsync(IEnumerable<ProductDto> products,
+        List<ProductDto> Sort(IEnumerable<ProductDto> products,
             string? sortBy, SortOrder sortOrder = SortOrder.ASC, bool onSaleFirst = false);
     }
 }

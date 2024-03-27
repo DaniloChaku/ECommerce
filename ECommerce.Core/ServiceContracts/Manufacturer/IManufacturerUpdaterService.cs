@@ -9,6 +9,6 @@ namespace ECommerce.Core.ServiceContracts.Manufacturer
 {
     public interface IManufacturerUpdaterService
     {
-        Task<bool> UpdateAsync(ManufacturerDto manufacturerDto);
+        Task<ResultDto<ManufacturerDto>> UpdateAsync(ManufacturerDto manufacturerDto);
     }
 }

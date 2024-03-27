@@ -9,7 +9,7 @@ namespace ECommerce.Core.ServiceContracts.Manufacturer
 {
     public interface IManufacturerGetterService
     {
-        Task<IEnumerable<ManufacturerDto>> GetAllAsync();
+        Task<List<ManufacturerDto>> GetAllAsync();
         Task<ManufacturerDto?> GetByIdAsync(Guid id);
     }
 }

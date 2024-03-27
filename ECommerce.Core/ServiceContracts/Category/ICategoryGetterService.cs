@@ -9,7 +9,7 @@ namespace ECommerce.Core.ServiceContracts.Category
 {
     public interface ICategoryGetterService
     {
-        Task<IEnumerable<CategoryDto>> GetAllAsync();
+        Task<List<CategoryDto>> GetAllAsync();
         Task<CategoryDto?> GetByIdAsync(Guid id);
     }
 }

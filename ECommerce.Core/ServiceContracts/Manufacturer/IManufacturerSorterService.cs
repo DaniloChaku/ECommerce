@@ -10,7 +10,7 @@ namespace ECommerce.Core.ServiceContracts.Manufacturer
 {
     public interface IManufacturerSorterService
     {
-        Task<IEnumerable<ManufacturerDto>> SortAsync(
-            IEnumerable<ManufacturerDto> manufacturers, SortOrder sortOrder  = SortOrder.ASC);
+        List<ManufacturerDto> Sort(
+            IEnumerable<ManufacturerDto> manufacturers, SortOrder sortOrder = SortOrder.ASC);
     }
 }

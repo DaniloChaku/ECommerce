@@ -9,6 +9,6 @@ namespace ECommerce.Core.ServiceContracts.Category
 {
     public interface ICategoryAdderService
     {
-        Task<CategoryDto> AddAsync(CategoryDto categoryDto); 
+        Task<ResultDto<CategoryDto>> AddAsync(CategoryDto categoryDto); 
     }
 }

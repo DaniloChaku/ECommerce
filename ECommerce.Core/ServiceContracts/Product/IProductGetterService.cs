@@ -9,10 +9,10 @@ namespace ECommerce.Core.ServiceContracts.Product
 {
     public interface IProductGetterService
     {
-        Task<IEnumerable<ProductDto>> GetAllAsync();
+        Task<List<ProductDto>> GetAllAsync();
         Task<ProductDto?> GetByIdAsync(Guid id);
-        Task<IEnumerable<ProductDto>> GetByCategoryAsync(Guid categoryId);
-        Task<IEnumerable<ProductDto>> GetByManufacturerAsync(Guid manufacturerId);
-        Task<IEnumerable<ProductDto>> GetByNameAsync(string name);
+        Task<List<ProductDto>> GetByCategoryAsync(Guid categoryId);
+        Task<List<ProductDto>> GetByManufacturerAsync(Guid manufacturerId);
+        Task<List<ProductDto>> GetByNameAsync(string name);
     }
 }
