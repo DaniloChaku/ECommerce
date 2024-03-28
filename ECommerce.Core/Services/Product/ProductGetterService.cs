@@ -1,4 +1,5 @@
-﻿using ECommerce.Core.Domain.RepositoryContracts;
+﻿using ECommerce.Core.Domain.Entities;
+using ECommerce.Core.Domain.RepositoryContracts;
 using ECommerce.Core.DTO;
 using ECommerce.Core.ServiceContracts.Product;
 using System;
@@ -11,34 +12,39 @@ namespace ECommerce.Core.Services.Product
 {
     public class ProductGetterService : IProductGetterService
     {
+        private readonly IProductRepository _productRepository;
+
         public ProductGetterService(IProductRepository productRepository)
         {
-            
+            _productRepository = productRepository; 
         }
 
-        public Task<IEnumerable<ProductDto>> GetAllAsync()
+        public async Task<ProductDto?> GetByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var product = await _productRepository.GetByIdAsync(id);
+
+            return product?.ToDto();
         }
 
-        public Task<IEnumerable<ProductDto>> GetByCategoryAsync(Guid categoryId)
+        public async Task<List<ProductDto>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            var products = await _productRepository.GetAllAsync();
+
+            return products.Select(t => t.ToDto()).ToList();
         }
 
-        public Task<ProductDto?> GetByIdAsync(Guid id)
+        public async Task<List<ProductDto>> GetByCategoryAsync(Guid categoryId)
         {
-            throw new NotImplementedException();
+            var products = await _productRepository.GetAllAsync(t => t.CategoryId == categoryId);
+
+            return products.Select(t => t.ToDto()).ToList();
         }
 
-        public Task<IEnumerable<ProductDto>> GetByManufacturerAsync(Guid manufacturerId)
+        public async Task<List<ProductDto>> GetByManufacturerAsync(Guid manufacturerId)
         {
-            throw new NotImplementedException();
-        }
+            var products = await _productRepository.GetAllAsync(t => t.ManufacturerId == manufacturerId);
 
-        public Task<IEnumerable<ProductDto>> GetByNameAsync(string name)
-        {
-            throw new NotImplementedException();
+            return products.Select(t => t.ToDto()).ToList();
         }
     }
 }

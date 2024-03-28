@@ -11,14 +11,44 @@ namespace ECommerce.Core.Services.Category
 {
     public class CategoryUpdaterService : ICategoryUpdaterService
     {
+        private readonly ICategoryRepository _categoryRepository;
+
         public CategoryUpdaterService(ICategoryRepository categoryRepository)
         {
-
+            _categoryRepository = categoryRepository;
         }
 
-        public Task<bool> UpdateAsync(CategoryDto categoryDto)
+        public async Task<bool> UpdateAsync(CategoryDto categoryDto)
         {
-            throw new NotImplementedException();
+            if (categoryDto is null)
+            {
+                throw new ArgumentNullException(nameof(categoryDto), "Category data cannot be null");
+            }
+
+            if (string.IsNullOrEmpty(categoryDto.Name))
+            {
+                throw new ArgumentException("Name cannot be null or empty", nameof(categoryDto.Name));
+            }
+
+            if (categoryDto.Id == Guid.Empty)
+            {
+                throw new ArgumentException("Id cannot be empty", nameof(categoryDto.Id));
+            }
+
+            var existingCategory = await _categoryRepository.GetByIdAsync(categoryDto.Id);
+            if (existingCategory is null)
+            {
+                throw new ArgumentException("Category does not exist");
+            }
+
+            var category = categoryDto.ToEntity();
+
+            if (!await _categoryRepository.UpdateAsync(category))
+            {
+                throw new InvalidOperationException("Failed to update category");
+            }
+
+            return true;
         }
     }
 }

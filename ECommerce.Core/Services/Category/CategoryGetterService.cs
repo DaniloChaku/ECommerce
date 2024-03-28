@@ -11,19 +11,25 @@ namespace ECommerce.Core.Services.Category
 {
     public class CategoryGetterService : ICategoryGetterService
     {
+        private readonly ICategoryRepository _categoryRepository;
+
         public CategoryGetterService(ICategoryRepository categoryRepository)
         {
-
+            _categoryRepository = categoryRepository;
         }
 
-        public Task<IEnumerable<CategoryDto>> GetAllAsync()
+        public async Task<List<CategoryDto>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            var categories = await _categoryRepository.GetAllAsync();
+
+            return categories.Select(t => t.ToDto()).ToList();
         }
 
-        public Task<CategoryDto?> GetByIdAsync(Guid id)
+        public async Task<CategoryDto?> GetByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var category = await _categoryRepository.GetByIdAsync(id);
+
+            return category?.ToDto();
         }
     }
 }

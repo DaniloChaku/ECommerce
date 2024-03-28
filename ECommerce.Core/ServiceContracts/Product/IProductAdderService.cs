@@ -9,6 +9,6 @@ namespace ECommerce.Core.ServiceContracts.Product
 {
     public interface IProductAdderService
     {
-        Task<ResultDto<ManufacturerDto>> AddAsync(ProductDto productDto);
+        Task<bool> AddAsync(ProductDto productDto);
     }
 }

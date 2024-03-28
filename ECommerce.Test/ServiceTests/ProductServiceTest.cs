@@ -4,6 +4,7 @@ using ECommerce.Core.DTO;
 using ECommerce.Core.Enums;
 using ECommerce.Core.ServiceContracts.Product;
 using ECommerce.Core.Services.Product;
+using FluentAssertions.Common;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -37,11 +38,27 @@ namespace ECommerce.Test.ServiceTests
             _productAdderService = new ProductAdderService(_productRepository);
             _productDeleterService = new ProductDeleterService(_productRepository);
             _productGetterService = new ProductGetterService(_productRepository);
-            _productSorterService = new ProductSorterService(_productRepository);
+            _productSorterService = new ProductSorterService();
             _productUpdaterService = new ProductUpdaterService(_productRepository);
         }
 
         #region AddAsync
+
+        [Fact]
+        public async Task AddAsync_NullProductDto_ThrowsArgumentNullException()
+        {
+            // Arrange
+            var productDto = null as ProductDto;
+
+            // Act
+            var actoin = async () =>
+            {
+                await _productAdderService.AddAsync(productDto!);
+            };
+
+            // Assert
+            await actoin.Should().ThrowAsync<ArgumentNullException>();
+        }
 
         [Fact]
         public async Task AddAsync_NullName_ThrowsArgumentException()
@@ -53,13 +70,13 @@ namespace ECommerce.Test.ServiceTests
                 .Create();
 
             // Act
-            var action = async () =>
+            var actoin = async () =>
             {
                 await _productAdderService.AddAsync(productDto);
             };
 
             // Assert
-            await action.Should().ThrowAsync<ArgumentException>();
+            await actoin.Should().ThrowAsync<ArgumentException>();
         }
 
         [Fact]
@@ -71,13 +88,13 @@ namespace ECommerce.Test.ServiceTests
                 .Create();
 
             // Act
-            var action = async () =>
+            var actoin = async () =>
             {
                 await _productAdderService.AddAsync(productDto);
             };
 
             // Assert
-            await action.Should().ThrowAsync<ArgumentException>();
+            await actoin.Should().ThrowAsync<ArgumentException>();
         }
 
         [Fact]
@@ -97,13 +114,13 @@ namespace ECommerce.Test.ServiceTests
                 It.IsAny<Expression<Func<Product, bool>>?>())).ReturnsAsync(new List<Product>() { productDto1.ToEntity() });
 
             // Act
-            var action = async () =>
+            var actoin = async () =>
             {
                 await _productAdderService.AddAsync(productDto2);
             };
 
             // Assert
-            await action.Should().ThrowAsync<ArgumentException>();
+            await actoin.Should().ThrowAsync<ArgumentException>();
         }
 
         [Fact]
@@ -114,32 +131,32 @@ namespace ECommerce.Test.ServiceTests
                 .With(t => t.Price, -10).Create();
 
             // Act
-            var action = async () =>
+            var actoin = async () =>
             {
                 await _productAdderService.AddAsync(productDto);
             };
 
             // Assert
-            await action.Should().ThrowAsync<ArgumentException>();
+            await actoin.Should().ThrowAsync<ArgumentException>();
         }
 
         [Fact]
-        public async Task AddAsync_ValidData_ReturnsProductDto()
+        public async Task AddAsync_ValidData_ReturnsTrue()
         {
             // Arrange
             var productDto = _fixture.Build<ProductDto>()
                 .With(t => t.Id, Guid.Empty).Create();
+
+            _productRepositoryMock.Setup(repo => repo.GetAllAsync(It.IsAny<Expression<Func<Product, bool>>?>()))
+                .ReturnsAsync(new List<Product>());
             _productRepositoryMock.Setup(repo => repo.AddAsync(It.IsAny<Product>()))
                 .ReturnsAsync(true);
 
             // Act
             var result = await _productAdderService.AddAsync(productDto);
 
-            productDto.Id = result.Id;
-
             // Assert
-            result.Id.Should().NotBe(Guid.Empty);
-            result.Should().BeEquivalentTo(productDto);
+            result.Should().BeTrue();
         }
 
         #endregion
@@ -161,10 +178,10 @@ namespace ECommerce.Test.ServiceTests
         }
 
         [Fact]
-        public async Task GetAllAsync_NonEmptyDb_ReturnsProductList()
+        public async Task GetAllAsync_NonEmptyDb_ReturnsProductDtoList()
         {
             // Arrange
-            var products = _fixture.CreateMany<Product>(3);
+            var products = _fixture.CreateMany<Product>(3).ToList();
             _productRepositoryMock.Setup(repo => repo.GetAllAsync(null))
                                    .ReturnsAsync(products);
 
@@ -213,28 +230,88 @@ namespace ECommerce.Test.ServiceTests
 
         #endregion
 
-        #region DeleteAsync
+        #region GetByCategoryAsync
 
         [Fact]
-        public async Task DeleteAsync_ValidId_ReturnsTrue()
+        public async Task GetByCategoryAsync_EmptyDb_ReturnsEmptyList()
         {
             // Arrange
-            var productId = Guid.NewGuid();
-            _productRepositoryMock.Setup(repo => repo.GetByIdAsync(productId))
-                                   .ReturnsAsync(new Product { Id = productId });
+            var categoryId = _fixture.Create<Guid>();
 
-            _productRepositoryMock.Setup(repo => repo.DeleteAsync(It.IsAny<Product>()))
-                                   .ReturnsAsync(true);
+            _productRepositoryMock.Setup(repo => repo.GetAllAsync(It.IsAny<Expression<Func<Product, bool>>?>()))
+                                   .ReturnsAsync(new List<Product>());
 
-            // Ac
-            var result = await _productDeleterService.DeleteAsync(productId);
+            // Act
+            var result = await _productGetterService.GetByCategoryAsync(categoryId);
 
             // Assert
-            result.Should().BeTrue();
+            result.Should().BeEmpty();
         }
 
         [Fact]
-        public async Task DeleteAsync_InvalidId_ReturnsFalse()
+        public async Task GetByCategoryAsync_NonEmptyDb_ReturnsProductDtoList()
+        {
+            // Arrange
+            var categoryId = Guid.NewGuid();
+            var products = _fixture.CreateMany<Product>().ToList();
+            _productRepositoryMock.Setup(x => x.GetAllAsync(
+                It.IsAny<Expression<Func<Product, bool>>?>()))
+                .ReturnsAsync(products);
+            var expected = products.Select(t => t.ToDto());
+
+            // Act
+            var result = await _productGetterService.GetByCategoryAsync(categoryId);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Should().BeEquivalentTo(expected);
+        }
+
+        #endregion
+
+        #region GetByManufacturerAsync
+
+        [Fact]
+        public async Task GetByManufacturerAsync_EmptyDb_ReturnsEmptyList()
+        {
+            // Arrange
+            var manufacturerId = _fixture.Create<Guid>();
+
+            _productRepositoryMock.Setup(repo => repo.GetAllAsync(It.IsAny<Expression<Func<Product, bool>>?>()))
+                                   .ReturnsAsync(new List<Product>());
+
+            // Act
+            var result = await _productGetterService.GetByManufacturerAsync(manufacturerId);
+
+            // Assert
+            result.Should().BeEmpty();
+        }
+
+        [Fact]
+        public async Task GetByManufacturerAsync_NonEmptyDb_ReturnsProductDtoList()
+        {
+            // Arrange
+            var manufacturerId = Guid.NewGuid();
+            var products = _fixture.CreateMany<Product>().ToList();
+            _productRepositoryMock.Setup(x => x.GetAllAsync(
+                It.IsAny<Expression<Func<Product, bool>>?>()))
+                .ReturnsAsync(products);
+            var expected = products.Select(t => t.ToDto());
+
+            // Act
+            var result = await _productGetterService.GetByManufacturerAsync(manufacturerId);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Should().BeEquivalentTo(expected);
+        }
+
+        #endregion
+
+        #region DeleteAsync
+
+        [Fact]
+        public async Task DeleteAsync_InvalidId_ThrowsArgumentException()
         {
             // Arrange
             var invalidId = Guid.NewGuid();
@@ -242,10 +319,34 @@ namespace ECommerce.Test.ServiceTests
                                    .ReturnsAsync(null as Product);
 
             // Act
-            var result = await _productDeleterService.DeleteAsync(invalidId);
+            var action = async () =>
+            {
+                await _productDeleterService.DeleteAsync(invalidId);
+            };
 
             // Assert
-            result.Should().BeFalse();
+            await action.Should().ThrowAsync<ArgumentException>();
+        }
+
+        [Fact]
+        public async Task DeleteAsync_ValidId_ReturnsTrue()
+        {
+            // Arrange
+            var productId = Guid.NewGuid();
+            var existingProduct = _fixture.Build<Product>()
+                .With(t => t.Id, productId).Create();
+
+            _productRepositoryMock.Setup(repo => repo.GetByIdAsync(productId))
+                                   .ReturnsAsync(existingProduct);
+
+            _productRepositoryMock.Setup(repo => repo.DeleteAsync(It.IsAny<Product>()))
+                                   .ReturnsAsync(true);
+
+            // Act
+            var result = await _productDeleterService.DeleteAsync(productId);
+
+            // Assert
+            result.Should().BeTrue();
         }
 
         #endregion
@@ -253,7 +354,23 @@ namespace ECommerce.Test.ServiceTests
         #region UpdateAsync
 
         [Fact]
-        public async Task UpdateAsync_EmptyId_ReturnsFalse()
+        public async Task UpdateAsync_NullProductDto_ThrowsArgumentNullException()
+        {
+            // Arrange
+            var productDto = null as ProductDto;
+
+            // Act
+            var action = async () =>
+            {
+                await _productUpdaterService.UpdateAsync(productDto!);
+            };
+
+            // Assert
+            await action.Should().ThrowAsync<ArgumentNullException>();
+        }
+
+        [Fact]
+        public async Task UpdateAsync_EmptyId_ThrowsArgumentException()
         {
             // Arrange
             var productDto = _fixture.Build<ProductDto>()
@@ -261,14 +378,17 @@ namespace ECommerce.Test.ServiceTests
                 .Create();
 
             // Act
-            var result = await _productUpdaterService.UpdateAsync(productDto);
+            var action = async () =>
+            {
+                await _productUpdaterService.UpdateAsync(productDto);
+            };
 
             // Assert
-            result.Should().BeFalse();
+            await action.Should().ThrowAsync<ArgumentException>();
         }
 
         [Fact]
-        public async Task UpdateAsync_NullName_ReturnsFalse()
+        public async Task UpdateAsync_NullName_ThrowsArgumentException()
         {
             // Arrange
             var productDto = _fixture.Build<ProductDto>()
@@ -277,14 +397,17 @@ namespace ECommerce.Test.ServiceTests
                 .Create();
 
             // Act
-            var result = await _productUpdaterService.UpdateAsync(productDto);
+            var action = async () =>
+            {
+                await _productUpdaterService.UpdateAsync(productDto);
+            };
 
             // Assert
-            result.Should().BeFalse();
+            await action.Should().ThrowAsync<ArgumentException>();
         }
 
         [Fact]
-        public async Task UpdateAsync_InvalidId_ReturnsFalse()
+        public async Task UpdateAsync_InvalidId_ThrowsArgumentException()
         {
             // Arrange
             var invalidId = Guid.NewGuid();
@@ -296,27 +419,33 @@ namespace ECommerce.Test.ServiceTests
                                    .ReturnsAsync(null as Product);
 
             // Act
-            var result = await _productUpdaterService.UpdateAsync(productDto);
+            var action = async () =>
+            {
+                await _productUpdaterService.UpdateAsync(productDto);
+            };
 
             // Assert
-            result.Should().BeFalse();
+            await action.Should().ThrowAsync<ArgumentException>();
         }
 
         [Fact]
-        public async Task UpdateAsync_NegativePrice_ReturnsFalse()
+        public async Task UpdateAsync_NegativePrice_ThrowsArgumentException()
         {
             // Arrange
             var productDto = _fixture.Build<ProductDto>()
                 .With(t => t.Price, -2).Create();
 
             // Act
-            var result = await _productUpdaterService.UpdateAsync(productDto);
+            var action = async () =>
+            {
+                await _productUpdaterService.UpdateAsync(productDto);
+            };
 
             // Assert
-            result.Should().BeFalse();
+            await action.Should().ThrowAsync<ArgumentException>();
         }
 
-            [Fact]
+        [Fact]
         public async Task UpdateAsync_ValidData_ReturnsTrue()
         {
             // Arrange
@@ -343,10 +472,10 @@ namespace ECommerce.Test.ServiceTests
 
         #endregion
 
-        #region SortAsync
+        #region Sort
 
         [Fact]
-        public async Task SortAsync_SortAscendingByName_ReturnsSortedCategories()
+        public void Sort_SortAscendingByName_ReturnsSortedCategories()
         {
             // Arrange
             var products = _fixture.CreateMany<ProductDto>();
@@ -354,7 +483,7 @@ namespace ECommerce.Test.ServiceTests
             var sortedProducts = products.OrderBy(t => t.Name);
 
             // Act
-            var result = await _productSorterService.SortAsync(products, nameof(ProductDto.Name));
+            var result = _productSorterService.Sort(products, nameof(ProductDto.Name));
 
             // Assert
             result.Should().NotBeNull();
@@ -362,7 +491,7 @@ namespace ECommerce.Test.ServiceTests
         }
 
         [Fact]
-        public async Task SortAsync_SortDescendingByName_ReturnsSortedCategories()
+        public void Sort_SortDescendingByName_ReturnsSortedCategories()
         {
             // Arrange
             var products = _fixture.CreateMany<ProductDto>();
@@ -370,7 +499,7 @@ namespace ECommerce.Test.ServiceTests
             var sortedProducts = products.OrderByDescending(t => t.Name);
 
             // Act
-            var result = await _productSorterService.SortAsync(products, nameof(ProductDto.Name), SortOrder.DESC);
+            var result = _productSorterService.Sort(products, nameof(ProductDto.Name), SortOrder.DESC);
 
             // Assert
             result.Should().NotBeNull();
@@ -378,7 +507,7 @@ namespace ECommerce.Test.ServiceTests
         }
 
         [Fact]
-        public async Task SortAsync_SortAscendingByPrice_ReturnsSortedCategories()
+        public void Sort_SortAscendingByPrice_ReturnsSortedCategories()
         {
             // Arrange
             var products = _fixture.CreateMany<ProductDto>();
@@ -386,7 +515,7 @@ namespace ECommerce.Test.ServiceTests
             var sortedProducts = products.OrderBy(t => t.Price);
 
             // Act
-            var result = await _productSorterService.SortAsync(products, nameof(ProductDto.Price));
+            var result = _productSorterService.Sort(products, nameof(ProductDto.Price));
 
             // Assert
             result.Should().NotBeNull();
@@ -394,13 +523,13 @@ namespace ECommerce.Test.ServiceTests
         }
 
         [Fact]
-        public async Task SortAsync_InvalidSortBy_ReturnsCategories()
+        public void Sort_InvalidSortBy_ReturnsCategories()
         {
             // Arrange
             var products = _fixture.CreateMany<ProductDto>();
 
             // Act
-            var result = await _productSorterService.SortAsync(products, " ");
+            var result = _productSorterService.Sort(products, " ");
 
             // Assert
             result.Should().NotBeNull();
@@ -408,7 +537,7 @@ namespace ECommerce.Test.ServiceTests
         }
 
         [Fact]
-        public async Task SortAsync_SortAscendingByNameOnSaleFirst_ReturnsSortedCategories()
+        public void Sort_SortAscendingByNameOnSaleFirst_ReturnsSortedCategories()
         {
             // Arrange
             var products = new List<ProductDto>
@@ -421,8 +550,8 @@ namespace ECommerce.Test.ServiceTests
             var sortedProducts = products.OrderBy(p => p.SalePrice.HasValue ? 0 : 1).ThenBy(p => p.Name);
 
             // Act
-            var result = await _productSorterService
-                .SortAsync(products, sortBy: nameof(ProductDto.Name), sortOrder: SortOrder.ASC, onSaleFirst: true);
+            var result = _productSorterService.Sort(
+                products, sortBy: nameof(ProductDto.Name), sortOrder: SortOrder.ASC, onSaleFirst: true);
 
             // Assert
             result.Should().NotBeNull();
@@ -430,13 +559,13 @@ namespace ECommerce.Test.ServiceTests
         }
 
         [Fact]
-        public async Task SortAsync_EmptyCategories_ReturnsEmptyList()
+        public void Sort_EmptyCategories_ReturnsEmptyList()
         {
             // Arrange
             var products = new List<ProductDto>();
 
             // Act
-            var result = await _productSorterService.SortAsync(products, "Name");
+            var result = _productSorterService.Sort(products, "Name");
 
             // Assert
             result.Should().NotBeNull();

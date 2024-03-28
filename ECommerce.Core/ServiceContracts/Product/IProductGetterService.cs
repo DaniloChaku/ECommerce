@@ -13,6 +13,5 @@ namespace ECommerce.Core.ServiceContracts.Product
         Task<ProductDto?> GetByIdAsync(Guid id);
         Task<List<ProductDto>> GetByCategoryAsync(Guid categoryId);
         Task<List<ProductDto>> GetByManufacturerAsync(Guid manufacturerId);
-        Task<List<ProductDto>> GetByNameAsync(string name);
     }
 }

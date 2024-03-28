@@ -11,14 +11,45 @@ namespace ECommerce.Core.Services.Category
 {
     public class CategoryAdderService : ICategoryAdderService
     {
+        private readonly ICategoryRepository _categoryRepository;
+
         public CategoryAdderService(ICategoryRepository categoryRepository)
         {
-
+            _categoryRepository = categoryRepository;
         }
 
-        public Task<CategoryDto> AddAsync(CategoryDto categoryDto)
+        public async Task<bool> AddAsync(CategoryDto categoryDto)
         {
-            throw new NotImplementedException();
+            if (categoryDto is null)
+            {
+                throw new ArgumentNullException(nameof(categoryDto), "Category data cannot be null");
+            }
+
+            if (string.IsNullOrEmpty(categoryDto.Name))
+            {
+                throw new ArgumentException("Name cannot be null or empty", nameof(categoryDto.Name));
+            }
+
+            if (categoryDto.Id != Guid.Empty)
+            {
+                throw new ArgumentException("Id must be empty", nameof(categoryDto.Id));
+            }
+
+            var existingCategories = await _categoryRepository.GetAllAsync(t => t.Name == categoryDto.Name);
+            if (existingCategories.Any())
+            {
+                throw new ArgumentException("Category with the same name already exists");
+            }
+
+            categoryDto.Id = Guid.NewGuid();
+            var category = categoryDto.ToEntity();
+
+            if (!await _categoryRepository.AddAsync(category))
+            {
+                throw new InvalidOperationException("Failed to add category");
+            }
+
+            return true;
         }
     }
 }

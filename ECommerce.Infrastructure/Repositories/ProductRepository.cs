@@ -36,7 +36,7 @@ namespace ECommerce.Infrastructure.Repositories
             return await SaveAsync();
         }
 
-        public override async Task<IEnumerable<Product>> GetAllAsync(Expression<Func<Product, bool>>? filter = null)
+        public override async Task<List<Product>> GetAllAsync(Expression<Func<Product, bool>>? filter = null)
         {
             IQueryable<Product> query = _dbSet;
 

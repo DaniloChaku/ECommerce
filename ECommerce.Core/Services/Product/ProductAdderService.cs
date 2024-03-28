@@ -1,5 +1,6 @@
 ﻿using ECommerce.Core.Domain.RepositoryContracts;
 using ECommerce.Core.DTO;
+using ECommerce.Core.Helpers;
 using ECommerce.Core.ServiceContracts.Product;
 using System;
 using System.Collections.Generic;
@@ -11,14 +12,48 @@ namespace ECommerce.Core.Services.Product
 {
     public class ProductAdderService : IProductAdderService
     {
+        private readonly IProductRepository _productRepository;
+
         public ProductAdderService(IProductRepository productRepository)
         {
-            
+            _productRepository = productRepository;
         }
 
-        public Task<ProductDto> AddAsync(ProductDto productDto)
+        public async Task<bool> AddAsync(ProductDto productDto)
         {
-            throw new NotImplementedException();
+            if (productDto is null)
+            {
+                throw new ArgumentNullException(nameof(productDto), "Product data cannot be null");
+            }
+
+            if (string.IsNullOrEmpty(productDto.Name))
+            {
+                throw new ArgumentException("Name cannot be null or empty", nameof(productDto.Name));
+            }
+
+            if (productDto.Id != Guid.Empty)
+            {
+                throw new ArgumentException("Id must be empty", nameof(productDto.Id));
+            }
+
+            var existingProducts = await _productRepository.GetAllAsync(t => t.Name == productDto.Name);
+            if (existingProducts.Any())
+            {
+                throw new ArgumentException("Product with the same name already exists");
+            }
+
+            var product = productDto.ToEntity();
+
+            product.Id = Guid.NewGuid();
+
+            ValidationHelper.ValidateModel(product);
+
+            if (!await _productRepository.AddAsync(product))
+            {
+                throw new InvalidOperationException("Failed to add product");
+            }
+
+            return true;
         }
     }
 }

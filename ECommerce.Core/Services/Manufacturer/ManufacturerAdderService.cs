@@ -11,14 +11,45 @@ namespace ECommerce.Core.Services.Manufacturer
 {
     public class ManufacturerAdderService : IManufacturerAdderService
     {
+        private readonly IManufacturerRepository _manufacturerRepository;
+
         public ManufacturerAdderService(IManufacturerRepository manufacturerRepository)
         {
-            
+            _manufacturerRepository = manufacturerRepository;
         }
 
-        public Task<ManufacturerDto> AddAsync(ManufacturerDto manufacturerDto)
+        public async Task<bool> AddAsync(ManufacturerDto manufacturerDto)
         {
-            throw new NotImplementedException();
+            if (manufacturerDto is null)
+            {
+                throw new ArgumentNullException(nameof(manufacturerDto), "manufacturer data cannot be null");
+            }
+
+            if (string.IsNullOrEmpty(manufacturerDto.Name))
+            {
+                throw new ArgumentException("Name cannot be null or empty", nameof(manufacturerDto.Name));
+            }
+
+            if (manufacturerDto.Id != Guid.Empty)
+            {
+                throw new ArgumentException("Id must be empty", nameof(manufacturerDto.Id));
+            }
+
+            var existingManufacturers = await _manufacturerRepository.GetAllAsync(t => t.Name == manufacturerDto.Name);
+            if (existingManufacturers.Any())
+            {
+                throw new ArgumentException("manufacturer with the same name already exists");
+            }
+
+            manufacturerDto.Id = Guid.NewGuid();
+            var manufacturer = manufacturerDto.ToEntity();
+
+            if (!await _manufacturerRepository.AddAsync(manufacturer))
+            {
+                throw new InvalidOperationException("Failed to add manufacturer");
+            }
+
+            return true;
         }
     }
 }

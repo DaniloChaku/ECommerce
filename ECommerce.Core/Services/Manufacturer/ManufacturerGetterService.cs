@@ -11,19 +11,25 @@ namespace ECommerce.Core.Services.Manufacturer
 {
     public class ManufacturerGetterService : IManufacturerGetterService
     {
+        private readonly IManufacturerRepository _manufacturerRepository;
+
         public ManufacturerGetterService(IManufacturerRepository manufacturerRepository)
         {
-            
+            _manufacturerRepository = manufacturerRepository;
         }
 
-        public Task<IEnumerable<ManufacturerDto>> GetAllAsync()
+        public async Task<List<ManufacturerDto>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            var categories = await _manufacturerRepository.GetAllAsync();
+
+            return categories.Select(t => t.ToDto()).ToList();
         }
 
-        public Task<ManufacturerDto?> GetByIdAsync(Guid id)
+        public async Task<ManufacturerDto?> GetByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var manufacturer = await _manufacturerRepository.GetByIdAsync(id);
+
+            return manufacturer?.ToDto();
         }
     }
 }

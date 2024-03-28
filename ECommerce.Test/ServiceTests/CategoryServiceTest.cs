@@ -37,13 +37,29 @@ namespace ECommerce.Test.ServiceTests
             _categoryAdderService = new CategoryAdderService(_categoryRepository);
             _categoryDeleterService = new CategoryDeleterService(_categoryRepository);
             _categoryGetterService = new CategoryGetterService(_categoryRepository);
-            _categorySorterService = new CategorySorterService(_categoryRepository);
+            _categorySorterService = new CategorySorterService();
             _categoryUpdaterService = new CategoryUpdaterService(_categoryRepository);
         }
 
         #region AddAsync
 
         [Fact]
+        public async Task AddAsync_NullCategoryDto_ThrowsArgumentNullException()
+        {
+            // Arrange
+            var categoryDto = null as CategoryDto;
+
+            // Act
+            var action = async () =>
+            {
+                await _categoryAdderService.AddAsync(categoryDto!);
+            };
+
+            // Assert
+            await action.Should().ThrowAsync<ArgumentNullException>();    
+        }
+
+            [Fact]
         public async Task AddAsync_NullName_ThrowsArgumentException()
         {
             // Arrange
@@ -55,7 +71,7 @@ namespace ECommerce.Test.ServiceTests
             // Act
             var action = async () =>
             {
-                await _categoryAdderService.AddAsync(categoryDto);
+                await _categoryAdderService.AddAsync(categoryDto!);
             };
 
             // Assert
@@ -73,7 +89,7 @@ namespace ECommerce.Test.ServiceTests
             // Act
             var action = async () =>
             {
-                await _categoryAdderService.AddAsync(categoryDto);
+                await _categoryAdderService.AddAsync(categoryDto!);
             };
 
             // Assert
@@ -99,7 +115,7 @@ namespace ECommerce.Test.ServiceTests
             // Act
             var action = async () =>
             {
-                await _categoryAdderService.AddAsync(categoryDto2);
+                await _categoryAdderService.AddAsync(categoryDto2!);
             };
 
             // Assert
@@ -107,22 +123,22 @@ namespace ECommerce.Test.ServiceTests
         }
 
         [Fact]
-        public async Task AddAsync_ValidData_ReturnsCategoryDto()
+        public async Task AddAsync_ValidData_ReturnsTrue()
         {
             // Arrange
             var categoryDto = _fixture.Build<CategoryDto>()
                 .With(t => t.Id, Guid.Empty).Create();
+
+            _categoryRepositoryMock.Setup(repo => repo.GetAllAsync(It.IsAny<Expression<Func<Category, bool>>?>()))
+                                   .ReturnsAsync(new List<Category>());
             _categoryRepositoryMock.Setup(repo => repo.AddAsync(It.IsAny<Category>()))
-                .ReturnsAsync(true); 
+                .ReturnsAsync(true);
 
             // Act
             var result = await _categoryAdderService.AddAsync(categoryDto);
 
-            categoryDto.Id = result.Id;
-
             // Assert
-            result.Id.Should().NotBe(Guid.Empty);
-            result.Should().BeEquivalentTo(categoryDto);
+            result.Should().BeTrue();
         }
 
         #endregion
@@ -147,7 +163,7 @@ namespace ECommerce.Test.ServiceTests
         public async Task GetAllAsync_NonEmptyDb_ReturnsCategoryList()
         {
             // Arrange
-            var categories = _fixture.CreateMany<Category>(3);
+            var categories = _fixture.CreateMany<Category>(3).ToList();
             _categoryRepositoryMock.Setup(repo => repo.GetAllAsync(null))
                                    .ReturnsAsync(categories);
 
@@ -199,25 +215,7 @@ namespace ECommerce.Test.ServiceTests
         #region DeleteAsync
 
         [Fact]
-        public async Task DeleteAsync_ValidId_ReturnsTrue()
-        {
-            // Arrange
-            var categoryId = Guid.NewGuid();
-            _categoryRepositoryMock.Setup(repo => repo.GetByIdAsync(categoryId))
-                                   .ReturnsAsync(new Category { Id = categoryId });
-
-            _categoryRepositoryMock.Setup(repo => repo.DeleteAsync(It.IsAny<Category>()))
-                                   .ReturnsAsync(true);
-
-            // Ac
-            var result = await _categoryDeleterService.DeleteAsync(categoryId);
-
-            // Assert
-            result.Should().BeTrue();
-        }
-
-        [Fact]
-        public async Task DeleteAsync_InvalidId_ReturnsFalse()
+        public async Task DeleteAsync_InvalidId_ThrowsArgumentException()
         {
             // Arrange
             var invalidId = Guid.NewGuid();
@@ -225,10 +223,34 @@ namespace ECommerce.Test.ServiceTests
                                    .ReturnsAsync(null as Category);
 
             // Act
-            var result = await _categoryDeleterService.DeleteAsync(invalidId);
+            var action = async () =>
+            {
+                await _categoryDeleterService.DeleteAsync(invalidId);
+            };
 
             // Assert
-            result.Should().BeFalse();
+            await action.Should().ThrowAsync<ArgumentException>();
+        }
+
+        [Fact]
+        public async Task DeleteAsync_ValidId_ReturnsTrue()
+        {
+            // Arrange
+            var categoryId = Guid.NewGuid();
+            var existingCategory = _fixture.Build<Category>()
+                .With(t => t.Id, categoryId).Create();
+
+            _categoryRepositoryMock.Setup(repo => repo.GetByIdAsync(categoryId))
+                                   .ReturnsAsync(existingCategory);
+
+            _categoryRepositoryMock.Setup(repo => repo.DeleteAsync(It.IsAny<Category>()))
+                                   .ReturnsAsync(true);
+
+            // Act
+            var result = await _categoryDeleterService.DeleteAsync(categoryId);
+
+            // Assert
+            result.Should().BeTrue();
         }
 
         #endregion
@@ -236,7 +258,23 @@ namespace ECommerce.Test.ServiceTests
         #region UpdateAsync
 
         [Fact]
-        public async Task UpdateAsync_EmptyId_ReturnsFalse()
+        public async Task UpdateAsync_NullCategoryDto_ThrowsArgumentNullException()
+        {
+            // Arrange
+            var categoryDto = null as CategoryDto;
+
+            // Act
+            var action = async () =>
+            {
+                await _categoryUpdaterService.UpdateAsync(categoryDto!);
+            };
+
+            // Assert
+            await action.Should().ThrowAsync<ArgumentNullException>();
+        }
+
+        [Fact]
+        public async Task UpdateAsync_EmptyId_ThrowsArgumentException()
         {
             // Arrange
             var categoryDto = _fixture.Build<CategoryDto>()
@@ -244,14 +282,17 @@ namespace ECommerce.Test.ServiceTests
                 .Create();
 
             // Act
-            var result = await _categoryUpdaterService.UpdateAsync(categoryDto);
+            var action = async () =>
+            {
+                await _categoryUpdaterService.UpdateAsync(categoryDto!);
+            };
 
             // Assert
-            result.Should().BeFalse();
+            await action.Should().ThrowAsync<ArgumentException>();
         }
 
         [Fact]
-        public async Task UpdateAsync_NullName_ReturnsFalse()
+        public async Task UpdateAsync_NullName_ThrowsArgumentException()
         {
             // Arrange
             var categoryDto = _fixture.Build<CategoryDto>()
@@ -260,14 +301,17 @@ namespace ECommerce.Test.ServiceTests
                 .Create();
 
             // Act
-            var result = await _categoryUpdaterService.UpdateAsync(categoryDto);
+            var action = async () =>
+            {
+                await _categoryUpdaterService.UpdateAsync(categoryDto!);
+            };
 
             // Assert
-            result.Should().BeFalse();
+            await action.Should().ThrowAsync<ArgumentException>();
         }
 
         [Fact]
-        public async Task UpdateAsync_InvalidId_ReturnsFalse()
+        public async Task UpdateAsync_InvalidId_ThrowsArgumentException()
         {
             // Arrange
             var invalidId = Guid.NewGuid(); 
@@ -279,10 +323,13 @@ namespace ECommerce.Test.ServiceTests
                                    .ReturnsAsync(null as Category);
 
             // Act
-            var result = await _categoryUpdaterService.UpdateAsync(categoryDto);
+            var action = async () =>
+            {
+                await _categoryUpdaterService.UpdateAsync(categoryDto!);
+            };
 
             // Assert
-            result.Should().BeFalse();
+            await action.Should().ThrowAsync<ArgumentException>();
         }
 
         [Fact]
@@ -312,10 +359,10 @@ namespace ECommerce.Test.ServiceTests
 
         #endregion
 
-        #region SortAsync
+        #region Sort
 
         [Fact]
-        public async Task SortAsync_SortAscending_ReturnsSortedCategories()
+        public void Sort_SortAscending_ReturnsSortedCategories()
         {
             // Arrange
             var categories = _fixture.CreateMany<CategoryDto>();
@@ -323,7 +370,7 @@ namespace ECommerce.Test.ServiceTests
             var sortedCategories = categories.OrderBy(t => t.Name);
 
             // Act
-            var result = await _categorySorterService.SortAsync(categories);
+            var result = _categorySorterService.Sort(categories);
 
             // Assert
             result.Should().NotBeNull();
@@ -331,7 +378,7 @@ namespace ECommerce.Test.ServiceTests
         }
 
         [Fact]
-        public async Task SortAsync_SortDescending_ReturnsSortedCategories()
+        public void Sort_SortDescending_ReturnsSortedCategories()
         {
             // Arrange
             var categories = _fixture.CreateMany<CategoryDto>();
@@ -339,7 +386,7 @@ namespace ECommerce.Test.ServiceTests
             var sortedCategories = categories.OrderByDescending(t => t.Name);
 
             // Act
-            var result = await _categorySorterService.SortAsync(categories, SortOrder.DESC);
+            var result = _categorySorterService.Sort(categories, SortOrder.DESC);
 
             // Assert
             result.Should().NotBeNull();
@@ -347,13 +394,13 @@ namespace ECommerce.Test.ServiceTests
         }
 
         [Fact]
-        public async Task SortAsync_EmptyCategories_ReturnsEmptyList()
+        public void Sort_EmptyCategories_ReturnsEmptyList()
         {
             // Arrange
             var categories = new List<CategoryDto>();
 
             // Act
-            var result = await _categorySorterService.SortAsync(categories);
+            var result = _categorySorterService.Sort(categories);
 
             // Assert
             result.Should().NotBeNull();

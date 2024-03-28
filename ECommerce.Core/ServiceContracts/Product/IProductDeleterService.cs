@@ -9,6 +9,6 @@ namespace ECommerce.Core.ServiceContracts.Product
 {
     public interface IProductDeleterService
     {
-        Task<ResultDto<ManufacturerDto>> DeleteAsync(Guid id);
+        Task<bool> DeleteAsync(Guid id);
     }
 }

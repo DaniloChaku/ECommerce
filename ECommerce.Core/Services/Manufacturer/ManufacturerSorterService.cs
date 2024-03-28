@@ -12,15 +12,15 @@ namespace ECommerce.Core.Services.Manufacturer
 {
     public class ManufacturerSorterService : IManufacturerSorterService
     {
-        public ManufacturerSorterService(IManufacturerRepository manufacturerRepository)
+        public List<ManufacturerDto> Sort(IEnumerable<ManufacturerDto> manufacturers,
+            SortOrder sortOrder = SortOrder.ASC)
         {
-            
-        }
+            if (sortOrder == SortOrder.ASC)
+            {
+                return manufacturers.OrderBy(t => t.Name).ToList();
+            }
 
-        public Task<IEnumerable<ManufacturerDto>> SortAsync(
-            IEnumerable<ManufacturerDto> manufacturers, SortOrder sortOrder = SortOrder.ASC)
-        {
-            throw new NotImplementedException();
+            return manufacturers.OrderByDescending(t => t.Name).ToList();
         }
     }
 }

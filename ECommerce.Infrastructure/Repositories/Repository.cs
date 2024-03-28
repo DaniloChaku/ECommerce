@@ -20,7 +20,7 @@ namespace ECommerce.Infrastructure.Repositories
             _dbSet = context.Set<TEntity>();
         }
 
-        public virtual async Task<IEnumerable<TEntity>> GetAllAsync(
+        public virtual async Task<List<TEntity>> GetAllAsync(
             Expression<Func<TEntity, bool>>? filter = null)
         {
             IQueryable<TEntity> query = _dbSet;

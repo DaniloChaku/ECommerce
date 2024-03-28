@@ -16,9 +16,9 @@ namespace ECommerce.Core.DTO
         public decimal? SalePrice { get; set; }
         public string? ImageUrl { get; set; }
         public long Stock { get; set; }
-        public Guid ManufacturerId { get; set; }
+        public Guid? ManufacturerId { get; set; }
         public string? ManufacturerName { get; set; }
-        public Guid CategoryId { get; set; }
+        public Guid? CategoryId { get; set; }
         public string? CategoryName { get; set; }
 
         public Product ToEntity()

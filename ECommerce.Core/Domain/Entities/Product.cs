@@ -27,10 +27,10 @@ namespace ECommerce.Core.Domain.Entities
         public string? ImageUrl { get; set; }
         [Required]
         public long Stock { get; set; }
-        public Guid ManufacturerId { get; set; }
+        public Guid? ManufacturerId { get; set; }
         [ForeignKey(nameof(ManufacturerId))]
         public Manufacturer? Manufacturer { get; set; }
-        public Guid CategoryId { get; set; }
+        public Guid? CategoryId { get; set; }
         [ForeignKey(nameof(CategoryId))]
         public Category? Category { get; set; }
 

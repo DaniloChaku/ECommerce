@@ -12,14 +12,15 @@ namespace ECommerce.Core.Services.Category
 {
     public class CategorySorterService : ICategorySorterService
     {
-        public CategorySorterService(ICategoryRepository categoryRepository)
+        public List<CategoryDto> Sort(IEnumerable<CategoryDto> categories, 
+            SortOrder sortOrder = SortOrder.ASC)
         {
+            if (sortOrder == SortOrder.ASC)
+            {
+                return categories.OrderBy(t => t.Name).ToList();
+            }
 
-        }
-
-        public Task<IEnumerable<CategoryDto>> SortAsync(IEnumerable<CategoryDto> categories, SortOrder sortOrder)
-        {
-            throw new NotImplementedException();
+            return categories.OrderByDescending(t => t.Name).ToList();
         }
     }
 }

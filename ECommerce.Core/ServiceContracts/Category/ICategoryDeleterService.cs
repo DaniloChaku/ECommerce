@@ -9,6 +9,6 @@ namespace ECommerce.Core.ServiceContracts.Category
 {
     public interface ICategoryDeleterService
     {
-        Task<ResultDto<CategoryDto>> DeleteAsync(Guid id);
+        Task<bool> DeleteAsync(Guid id);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ECommerce.Core.Domain.RepositoryContracts;
+using ECommerce.Core.DTO;
 using ECommerce.Core.ServiceContracts.Product;
 using System;
 using System.Collections.Generic;
@@ -10,14 +11,28 @@ namespace ECommerce.Core.Services.Product
 {
     public class ProductDeleterService : IProductDeleterService
     {
+        private readonly IProductRepository _productRepository;
+
         public ProductDeleterService(IProductRepository productRepository)
         {
-            
+            _productRepository = productRepository;
         }
 
-        public Task<bool> DeleteAsync(Guid id)
+        public async Task<bool> DeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var existingProduct = await _productRepository.GetByIdAsync(id);
+
+            if (existingProduct is null)
+            {
+                throw new ArgumentException("Product does not exist");
+            }
+
+            if (!await _productRepository.DeleteAsync(existingProduct))
+            {
+                throw new InvalidOperationException("Failed to delete product");
+            }
+
+            return true;
         }
     }
 }

@@ -37,11 +37,27 @@ namespace ECommerce.Test.ServiceTests
             _manufacturerAdderService = new ManufacturerAdderService(_manufacturerRepository);
             _manufacturerDeleterService = new ManufacturerDeleterService(_manufacturerRepository);
             _manufacturerGetterService = new ManufacturerGetterService(_manufacturerRepository);
-            _manufacturerSorterService = new ManufacturerSorterService(_manufacturerRepository);
+            _manufacturerSorterService = new ManufacturerSorterService();
             _manufacturerUpdaterService = new ManufacturerUpdaterService(_manufacturerRepository);
         }
 
         #region AddAsync
+
+        [Fact]
+        public async Task AddAsync_NullManufacturerDto_ThrowsArgumentNullException()
+        {
+            // Arrange
+            var manufacturerDto = null as ManufacturerDto;
+
+            // Act
+            var action = async () =>
+            {
+                await _manufacturerAdderService.AddAsync(manufacturerDto!);
+            };
+
+            // Assert
+            await action.Should().ThrowAsync<ArgumentNullException>();
+        }
 
         [Fact]
         public async Task AddAsync_NullName_ThrowsArgumentException()
@@ -55,7 +71,7 @@ namespace ECommerce.Test.ServiceTests
             // Act
             var action = async () =>
             {
-                await _manufacturerAdderService.AddAsync(manufacturerDto);
+                await _manufacturerAdderService.AddAsync(manufacturerDto!);
             };
 
             // Assert
@@ -73,7 +89,7 @@ namespace ECommerce.Test.ServiceTests
             // Act
             var action = async () =>
             {
-                await _manufacturerAdderService.AddAsync(manufacturerDto);
+                await _manufacturerAdderService.AddAsync(manufacturerDto!);
             };
 
             // Assert
@@ -99,7 +115,7 @@ namespace ECommerce.Test.ServiceTests
             // Act
             var action = async () =>
             {
-                await _manufacturerAdderService.AddAsync(manufacturerDto2);
+                await _manufacturerAdderService.AddAsync(manufacturerDto2!);
             };
 
             // Assert
@@ -107,22 +123,22 @@ namespace ECommerce.Test.ServiceTests
         }
 
         [Fact]
-        public async Task AddAsync_ValidData_ReturnsManufacturerDto()
+        public async Task AddAsync_ValidData_ReturnsTrue()
         {
             // Arrange
             var manufacturerDto = _fixture.Build<ManufacturerDto>()
                 .With(t => t.Id, Guid.Empty).Create();
+
+            _manufacturerRepositoryMock.Setup(repo => repo.GetAllAsync(It.IsAny<Expression<Func<Manufacturer, bool>>?>()))
+                                   .ReturnsAsync(new List<Manufacturer>());
             _manufacturerRepositoryMock.Setup(repo => repo.AddAsync(It.IsAny<Manufacturer>()))
                 .ReturnsAsync(true);
 
             // Act
             var result = await _manufacturerAdderService.AddAsync(manufacturerDto);
 
-            manufacturerDto.Id = result.Id;
-
             // Assert
-            result.Id.Should().NotBe(Guid.Empty);
-            result.Should().BeEquivalentTo(manufacturerDto);
+            result.Should().BeTrue();
         }
 
         #endregion
@@ -147,7 +163,7 @@ namespace ECommerce.Test.ServiceTests
         public async Task GetAllAsync_NonEmptyDb_ReturnsManufacturerList()
         {
             // Arrange
-            var manufacturers = _fixture.CreateMany<Manufacturer>(3);
+            var manufacturers = _fixture.CreateMany<Manufacturer>(3).ToList();
             _manufacturerRepositoryMock.Setup(repo => repo.GetAllAsync(null))
                                    .ReturnsAsync(manufacturers);
 
@@ -199,25 +215,7 @@ namespace ECommerce.Test.ServiceTests
         #region DeleteAsync
 
         [Fact]
-        public async Task DeleteAsync_ValidId_ReturnsTrue()
-        {
-            // Arrange
-            var manufacturerId = Guid.NewGuid();
-            _manufacturerRepositoryMock.Setup(repo => repo.GetByIdAsync(manufacturerId))
-                                   .ReturnsAsync(new Manufacturer { Id = manufacturerId });
-
-            _manufacturerRepositoryMock.Setup(repo => repo.DeleteAsync(It.IsAny<Manufacturer>()))
-                                   .ReturnsAsync(true);
-
-            // Ac
-            var result = await _manufacturerDeleterService.DeleteAsync(manufacturerId);
-
-            // Assert
-            result.Should().BeTrue();
-        }
-
-        [Fact]
-        public async Task DeleteAsync_InvalidId_ReturnsFalse()
+        public async Task DeleteAsync_InvalidId_ThrowsArgumentException()
         {
             // Arrange
             var invalidId = Guid.NewGuid();
@@ -225,10 +223,34 @@ namespace ECommerce.Test.ServiceTests
                                    .ReturnsAsync(null as Manufacturer);
 
             // Act
-            var result = await _manufacturerDeleterService.DeleteAsync(invalidId);
+            var action = async () =>
+            {
+                await _manufacturerDeleterService.DeleteAsync(invalidId);
+            };
 
             // Assert
-            result.Should().BeFalse();
+            await action.Should().ThrowAsync<ArgumentException>();
+        }
+
+        [Fact]
+        public async Task DeleteAsync_ValidId_ReturnsTrue()
+        {
+            // Arrange
+            var manufacturerId = Guid.NewGuid();
+            var existingManufacturer = _fixture.Build<Manufacturer>()
+                .With(t => t.Id, manufacturerId).Create();
+
+            _manufacturerRepositoryMock.Setup(repo => repo.GetByIdAsync(manufacturerId))
+                                   .ReturnsAsync(existingManufacturer);
+
+            _manufacturerRepositoryMock.Setup(repo => repo.DeleteAsync(It.IsAny<Manufacturer>()))
+                                   .ReturnsAsync(true);
+
+            // Act
+            var result = await _manufacturerDeleterService.DeleteAsync(manufacturerId);
+
+            // Assert
+            result.Should().BeTrue();
         }
 
         #endregion
@@ -236,7 +258,23 @@ namespace ECommerce.Test.ServiceTests
         #region UpdateAsync
 
         [Fact]
-        public async Task UpdateAsync_EmptyId_ReturnsFalse()
+        public async Task UpdateAsync_NullManufacturerDto_ThrowsArgumentNullException()
+        {
+            // Arrange
+            var manufacturerDto = null as ManufacturerDto;
+
+            // Act
+            var action = async () =>
+            {
+                await _manufacturerUpdaterService.UpdateAsync(manufacturerDto!);
+            };
+
+            // Assert
+            await action.Should().ThrowAsync<ArgumentNullException>();
+        }
+
+        [Fact]
+        public async Task UpdateAsync_EmptyId_ThrowsArgumentException()
         {
             // Arrange
             var manufacturerDto = _fixture.Build<ManufacturerDto>()
@@ -244,14 +282,17 @@ namespace ECommerce.Test.ServiceTests
                 .Create();
 
             // Act
-            var result = await _manufacturerUpdaterService.UpdateAsync(manufacturerDto);
+            var action = async () =>
+            {
+                await _manufacturerUpdaterService.UpdateAsync(manufacturerDto!);
+            };
 
             // Assert
-            result.Should().BeFalse();
+            await action.Should().ThrowAsync<ArgumentException>();
         }
 
         [Fact]
-        public async Task UpdateAsync_NullName_ReturnsFalse()
+        public async Task UpdateAsync_NullName_ThrowsArgumentException()
         {
             // Arrange
             var manufacturerDto = _fixture.Build<ManufacturerDto>()
@@ -260,14 +301,17 @@ namespace ECommerce.Test.ServiceTests
                 .Create();
 
             // Act
-            var result = await _manufacturerUpdaterService.UpdateAsync(manufacturerDto);
+            var action = async () =>
+            {
+                await _manufacturerUpdaterService.UpdateAsync(manufacturerDto!);
+            };
 
             // Assert
-            result.Should().BeFalse();
+            await action.Should().ThrowAsync<ArgumentException>();
         }
 
         [Fact]
-        public async Task UpdateAsync_InvalidId_ReturnsFalse()
+        public async Task UpdateAsync_InvalidId_ThrowsArgumentException()
         {
             // Arrange
             var invalidId = Guid.NewGuid();
@@ -279,10 +323,13 @@ namespace ECommerce.Test.ServiceTests
                                    .ReturnsAsync(null as Manufacturer);
 
             // Act
-            var result = await _manufacturerUpdaterService.UpdateAsync(manufacturerDto);
+            var action = async () =>
+            {
+                await _manufacturerUpdaterService.UpdateAsync(manufacturerDto!);
+            };
 
             // Assert
-            result.Should().BeFalse();
+            await action.Should().ThrowAsync<ArgumentException>();
         }
 
         [Fact]
@@ -312,10 +359,10 @@ namespace ECommerce.Test.ServiceTests
 
         #endregion
 
-        #region SortAsync
+        #region Sort
 
         [Fact]
-        public async Task SortAsync_SortAscending_ReturnsSortedCategories()
+        public void Sort_SortAscending_ReturnsSortedCategories()
         {
             // Arrange
             var manufacturers = _fixture.CreateMany<ManufacturerDto>();
@@ -323,7 +370,7 @@ namespace ECommerce.Test.ServiceTests
             var sortedManufacturers = manufacturers.OrderBy(t => t.Name);
 
             // Act
-            var result = await _manufacturerSorterService.SortAsync(manufacturers);
+            var result = _manufacturerSorterService.Sort(manufacturers);
 
             // Assert
             result.Should().NotBeNull();
@@ -331,7 +378,7 @@ namespace ECommerce.Test.ServiceTests
         }
 
         [Fact]
-        public async Task SortAsync_SortDescending_ReturnsSortedCategories()
+        public void Sort_SortDescending_ReturnsSortedCategories()
         {
             // Arrange
             var manufacturers = _fixture.CreateMany<ManufacturerDto>();
@@ -339,7 +386,7 @@ namespace ECommerce.Test.ServiceTests
             var sortedManufacturers = manufacturers.OrderByDescending(t => t.Name);
 
             // Act
-            var result = await _manufacturerSorterService.SortAsync(manufacturers, SortOrder.DESC);
+            var result = _manufacturerSorterService.Sort(manufacturers, SortOrder.DESC);
 
             // Assert
             result.Should().NotBeNull();
@@ -347,13 +394,13 @@ namespace ECommerce.Test.ServiceTests
         }
 
         [Fact]
-        public async Task SortAsync_EmptyCategories_ReturnsEmptyList()
+        public void Sort_EmptyCategories_ReturnsEmptyList()
         {
             // Arrange
             var manufacturers = new List<ManufacturerDto>();
 
             // Act
-            var result = await _manufacturerSorterService.SortAsync(manufacturers);
+            var result = _manufacturerSorterService.Sort(manufacturers);
 
             // Assert
             result.Should().NotBeNull();

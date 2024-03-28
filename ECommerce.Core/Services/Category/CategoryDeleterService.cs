@@ -1,4 +1,5 @@
 ﻿using ECommerce.Core.Domain.RepositoryContracts;
+using ECommerce.Core.DTO;
 using ECommerce.Core.ServiceContracts.Category;
 using System;
 using System.Collections.Generic;
@@ -10,14 +11,28 @@ namespace ECommerce.Core.Services.Category
 {
     public class CategoryDeleterService : ICategoryDeleterService
     {
+        private readonly ICategoryRepository _categoryRepository;
+
         public CategoryDeleterService(ICategoryRepository categoryRepository)
         {
-
+            _categoryRepository = categoryRepository;
         }
 
-        public Task<bool> DeleteAsync(Guid id)
+        public async Task<bool> DeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var existingCategory = await _categoryRepository.GetByIdAsync(id);
+
+            if (existingCategory is null)
+            {
+                throw new ArgumentException("Category does not exist");
+            }
+
+            if (!await _categoryRepository.DeleteAsync(existingCategory))
+            {
+                throw new InvalidOperationException("Failed to delete category");
+            }
+
+            return true;
         }
     }
 }
