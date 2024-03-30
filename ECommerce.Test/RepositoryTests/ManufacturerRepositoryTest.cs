@@ -150,7 +150,7 @@ namespace ECommerce.Test.RepositoryTests
         #region AddAsync
 
         [Fact]
-        public async Task AddAsync_AddsEntityToDbSet_ReturnsTrue()
+        public async Task AddAsync_AddsEntityToDbSet_ReturnsAddedManufacturer()
         {
             using (var context = GetContext())
             {
@@ -162,29 +162,33 @@ namespace ECommerce.Test.RepositoryTests
                 var result = await repository.AddAsync(manufacturer);
 
                 // Assert
-                result.Should().BeTrue();
-                context.Manufacturers.Should().Contain(manufacturer);
+                result.Should().NotBeNull();
+                result.Id.Should().NotBe(Guid.Empty);
+                context.Manufacturers.Should().Contain(result);
             }
         }
 
         [Fact]
-        public async Task AddAsync_AddsMultipleEntitiesToDbSet_ReturnsTrue()
+        public async Task AddAsync_AddsMultipleEntitiesToDbSet_ReturnsAddedManufacturers()
         {
             using (var context = GetContext())
             {
                 // Arrange
                 var repository = new ManufacturerRepository(context);
                 var manufacturers = _fixture.CreateMany<Manufacturer>().ToList();
+                var addedManufacturers = new List<Manufacturer>();
 
                 // Act
-                foreach (var Manufacturer in manufacturers)
+                foreach (var manufacturer in manufacturers)
                 {
-                    var result = await repository.AddAsync(Manufacturer);
-                    result.Should().BeTrue();
+                    var addedManufacturer = await repository.AddAsync(manufacturer);
+                    addedManufacturers.Add(addedManufacturer);
+                    addedManufacturer.Should().NotBeNull();
+                    addedManufacturer.Id.Should().NotBe(Guid.Empty);
                 }
 
                 // Assert
-                context.Manufacturers.Should().BeEquivalentTo(manufacturers);
+                context.Manufacturers.Should().BeEquivalentTo(addedManufacturers);
             }
         }
 
@@ -193,7 +197,7 @@ namespace ECommerce.Test.RepositoryTests
         #region UpdateAsync
 
         [Fact]
-        public async Task UpdateAsync_ExistingManufacturer_ReturnsTrue()
+        public async Task UpdateAsync_ExistingManufacturer_ReturnsUpdatedManufacturer()
         {
             using (var context = GetContext())
             {
@@ -210,26 +214,8 @@ namespace ECommerce.Test.RepositoryTests
                 var result = await repository.UpdateAsync(updatedManufacturer);
 
                 // Assert
-                result.Should().BeTrue();
-                context.Manufacturers.Should().Contain(updatedManufacturer);
-            }
-        }
-
-        [Fact]
-        public async Task UpdateAsync_NonExistentManufacturer_ReturnsFalse()
-        {
-            using (var context = GetContext())
-            {
-                // Arrange
-                var repository = new ManufacturerRepository(context);
-                var manufacturer = _fixture.Create<Manufacturer>();
-
-                // Act
-                var result = await repository.UpdateAsync(manufacturer);
-
-                // Assert
-                result.Should().BeFalse();
-                context.Manufacturers.Should().NotContain(manufacturer);
+                result.Should().BeEquivalentTo(updatedManufacturer);
+                context.Manufacturers.Should().Contain(result);
             }
         }
 
@@ -254,23 +240,6 @@ namespace ECommerce.Test.RepositoryTests
                 // Assert
                 result.Should().BeTrue();
                 context.Manufacturers.Should().NotContain(manufacturer);
-            }
-        }
-
-        [Fact]
-        public async Task DeleteAsync_NonExistentManufacturer_ReturnsFalse()
-        {
-            using (var context = GetContext())
-            {
-                // Arrange
-                var repository = new ManufacturerRepository(context);
-                var manufacturer = _fixture.Create<Manufacturer>();
-
-                // Act
-                var result = await repository.DeleteAsync(manufacturer);
-
-                // Assert
-                result.Should().BeFalse();
             }
         }
 

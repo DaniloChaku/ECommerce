@@ -18,7 +18,7 @@ namespace ECommerce.Core.Services.Manufacturer
             _manufacturerRepository = manufacturerRepository;
         }
 
-        public async Task<bool> UpdateAsync(ManufacturerDto manufacturerDto)
+        public async Task<ManufacturerDto> UpdateAsync(ManufacturerDto manufacturerDto)
         {
             if (manufacturerDto is null)
             {
@@ -43,12 +43,9 @@ namespace ECommerce.Core.Services.Manufacturer
 
             var manufacturer = manufacturerDto.ToEntity();
 
-            if (!await _manufacturerRepository.UpdateAsync(manufacturer))
-            {
-                throw new InvalidOperationException("Failed to update manufacturer");
-            }
+            var manufacturerUpdated = await _manufacturerRepository.UpdateAsync(manufacturer);
 
-            return true;
+            return manufacturerUpdated.ToDto();
         }
     }
 }

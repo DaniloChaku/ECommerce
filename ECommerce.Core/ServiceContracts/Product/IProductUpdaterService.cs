@@ -9,6 +9,6 @@ namespace ECommerce.Core.ServiceContracts.Product
 {
     public interface IProductUpdaterService
     {
-        Task<bool> UpdateAsync(ProductDto productDto);
+        Task<ProductDto> UpdateAsync(ProductDto productDto);
     }
 }

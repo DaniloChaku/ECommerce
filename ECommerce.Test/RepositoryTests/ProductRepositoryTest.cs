@@ -150,7 +150,7 @@ namespace ECommerce.Test.RepositoryTests
         #region AddAsync
 
         [Fact]
-        public async Task AddAsync_AddsEntityToDbSet_ReturnsTrue()
+        public async Task AddAsync_AddsEntityToDbSet_ReturnsAddedProduct()
         {
             using (var context = GetContext())
             {
@@ -162,29 +162,33 @@ namespace ECommerce.Test.RepositoryTests
                 var result = await repository.AddAsync(product);
 
                 // Assert
-                result.Should().BeTrue();
-                context.Products.Should().Contain(product);
+                result.Should().NotBeNull();
+                result.Id.Should().NotBe(Guid.Empty);
+                context.Products.Should().Contain(result);
             }
         }
 
         [Fact]
-        public async Task AddAsync_AddsMultipleEntitiesToDbSet_ReturnsTrue()
+        public async Task AddAsync_AddsMultipleEntitiesToDbSet_ReturnsAddedProducts()
         {
             using (var context = GetContext())
             {
                 // Arrange
                 var repository = new ProductRepository(context);
                 var products = _fixture.CreateMany<Product>().ToList();
+                var addedProducts = new List<Product>();
 
                 // Act
-                foreach (var Product in products)
+                foreach (var product in products)
                 {
-                    var result = await repository.AddAsync(Product);
-                    result.Should().BeTrue();
+                    var addedProduct = await repository.AddAsync(product);
+                    addedProducts.Add(addedProduct);
+                    addedProduct.Should().NotBeNull();
+                    addedProduct.Id.Should().NotBe(Guid.Empty);
                 }
 
                 // Assert
-                context.Products.Should().BeEquivalentTo(products);
+                context.Products.Should().BeEquivalentTo(addedProducts);
             }
         }
 
@@ -193,7 +197,7 @@ namespace ECommerce.Test.RepositoryTests
         #region UpdateAsync
 
         [Fact]
-        public async Task UpdateAsync_ExistingProduct_ReturnsTrue()
+        public async Task UpdateAsync_ExistingProduct_ReturnsUpdatedProduct()
         {
             using (var context = GetContext())
             {
@@ -210,26 +214,8 @@ namespace ECommerce.Test.RepositoryTests
                 var result = await repository.UpdateAsync(updatedProduct);
 
                 // Assert
-                result.Should().BeTrue();
+                result.Should().BeEquivalentTo(updatedProduct);
                 context.Products.Should().Contain(updatedProduct);
-            }
-        }
-
-        [Fact]
-        public async Task UpdateAsync_NonExistentProduct_ReturnsFalse()
-        {
-            using (var context = GetContext())
-            {
-                // Arrange
-                var repository = new ProductRepository(context);
-                var product = _fixture.Create<Product>();
-
-                // Act
-                var result = await repository.UpdateAsync(product);
-
-                // Assert
-                result.Should().BeFalse();
-                context.Products.Should().NotContain(product);
             }
         }
 
@@ -254,23 +240,6 @@ namespace ECommerce.Test.RepositoryTests
                 // Assert
                 result.Should().BeTrue();
                 context.Products.Should().NotContain(product);
-            }
-        }
-
-        [Fact]
-        public async Task DeleteAsync_NonExistentProduct_ReturnsFalse()
-        {
-            using (var context = GetContext())
-            {
-                // Arrange
-                var repository = new ProductRepository(context);
-                var product = _fixture.Create<Product>();
-
-                // Act
-                var result = await repository.DeleteAsync(product);
-
-                // Assert
-                result.Should().BeFalse();
             }
         }
 

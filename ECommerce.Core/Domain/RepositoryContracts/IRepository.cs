@@ -11,8 +11,7 @@ namespace ECommerce.Core.Domain.RepositoryContracts
     {
         Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? filter = null);
         Task<TEntity?> GetByIdAsync(Guid id);
-        Task<bool> AddAsync(TEntity entity);
+        Task<TEntity> AddAsync(TEntity entity);
         Task<bool> DeleteAsync(TEntity entity);
-        Task<bool> SaveAsync();
     }
 }

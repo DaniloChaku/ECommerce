@@ -15,17 +15,15 @@ namespace ECommerce.Infrastructure.Repositories
         {
         }
 
-        public async Task<bool> UpdateAsync(Manufacturer manufacturer)
+        public async Task<Manufacturer> UpdateAsync(Manufacturer manufacturer)
         {
             var existingManufacturer = await _dbSet.FindAsync(manufacturer.Id);
-            if (existingManufacturer == null)
-            {
-                return false;
-            }
 
-            existingManufacturer.Name = manufacturer.Name;
+            existingManufacturer!.Name = manufacturer.Name;
 
-            return await SaveAsync();
+            await _context.SaveChangesAsync();
+
+            return existingManufacturer;
         }
     }
 }

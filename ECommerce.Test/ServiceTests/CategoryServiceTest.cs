@@ -11,6 +11,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ECommerce.Test.ServiceTests
 {
@@ -123,22 +124,24 @@ namespace ECommerce.Test.ServiceTests
         }
 
         [Fact]
-        public async Task AddAsync_ValidData_ReturnsTrue()
+        public async Task AddAsync_ValidData_ReturnsAddedCategoryDto()
         {
             // Arrange
             var categoryDto = _fixture.Build<CategoryDto>()
                 .With(t => t.Id, Guid.Empty).Create();
+            var addedCategory = categoryDto.ToEntity();
 
             _categoryRepositoryMock.Setup(repo => repo.GetAllAsync(It.IsAny<Expression<Func<Category, bool>>?>()))
                                    .ReturnsAsync(new List<Category>());
             _categoryRepositoryMock.Setup(repo => repo.AddAsync(It.IsAny<Category>()))
-                .ReturnsAsync(true);
+                .ReturnsAsync(addedCategory);
 
             // Act
             var result = await _categoryAdderService.AddAsync(categoryDto);
 
             // Assert
-            result.Should().BeTrue();
+            result.Should().NotBeNull();
+            result.Should().BeEquivalentTo(categoryDto); 
         }
 
         #endregion
@@ -333,7 +336,7 @@ namespace ECommerce.Test.ServiceTests
         }
 
         [Fact]
-        public async Task UpdateAsync_ValidData_ReturnsTrue()
+        public async Task UpdateAsync_ValidData_ReturnsUpdatedCategoryDto()
         {
             // Arrange
             var categoryId = Guid.NewGuid();
@@ -343,18 +346,20 @@ namespace ECommerce.Test.ServiceTests
             var updatedCategoryDto = _fixture.Build<CategoryDto>()
                 .With(t => t.Id, categoryId)
                 .Create();
+            var updatedCategory = updatedCategoryDto.ToEntity();
 
             _categoryRepositoryMock.Setup(repo => repo.GetByIdAsync(categoryId))
                                    .ReturnsAsync(existingCategory);
 
             _categoryRepositoryMock.Setup(repo => repo.UpdateAsync(It.IsAny<Category>()))
-                                   .ReturnsAsync(true);
+                                   .ReturnsAsync(updatedCategory);
 
             // Act
             var result = await _categoryUpdaterService.UpdateAsync(updatedCategoryDto);
 
             // Assert
-            result.Should().BeTrue();
+            result.Should().NotBeNull();
+            result.Should().BeEquivalentTo(updatedCategoryDto);
         }
 
         #endregion

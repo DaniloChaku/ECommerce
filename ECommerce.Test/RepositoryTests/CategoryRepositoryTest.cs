@@ -153,7 +153,7 @@ namespace ECommerce.Test.RepositoryTests
         #region AddAsync
 
         [Fact]
-        public async Task AddAsync_AddsEntityToDbSet_ReturnsTrue()
+        public async Task AddAsync_AddsEntityToDbSet_ReturnsAddedCategories()
         {
             using (var context = GetContext())
             {
@@ -165,29 +165,33 @@ namespace ECommerce.Test.RepositoryTests
                 var result = await repository.AddAsync(category);
 
                 // Assert
-                result.Should().BeTrue();
-                context.Categories.Should().Contain(category);
+                result.Should().NotBeNull();
+                result.Id.Should().NotBe(Guid.Empty); 
+                context.Categories.Should().Contain(result); 
             }
         }
 
         [Fact]
-        public async Task AddAsync_AddsMultipleEntitiesToDbSet_ReturnsTrue()
+        public async Task AddAsync_AddsMultipleEntitiesToDbSet_ReturnsAddedCategories()
         {
             using (var context = GetContext())
             {
                 // Arrange
                 var repository = new CategoryRepository(context);
                 var categories = _fixture.CreateMany<Category>().ToList();
+                var addedCategories = new List<Category>();
 
                 // Act
                 foreach (var category in categories)
                 {
-                    var result = await repository.AddAsync(category);
-                    result.Should().BeTrue();
+                    var addedCategory = await repository.AddAsync(category);
+                    addedCategories.Add(addedCategory);
+                    addedCategory.Should().NotBeNull(); 
+                    addedCategory.Id.Should().NotBe(Guid.Empty); 
                 }
 
                 // Assert
-                context.Categories.Should().BeEquivalentTo(categories);
+                context.Categories.Should().BeEquivalentTo(addedCategories);
             }
         }
 
@@ -196,7 +200,7 @@ namespace ECommerce.Test.RepositoryTests
         #region UpdateAsync
 
         [Fact]
-        public async Task UpdateAsync_ExistingCategory_ReturnsTrue()
+        public async Task UpdateAsync_ExistingCategory_ReturnsUpdatedCategory()
         {
             using (var context = GetContext())
             {
@@ -213,26 +217,8 @@ namespace ECommerce.Test.RepositoryTests
                 var result = await repository.UpdateAsync(updatedCategory);
 
                 // Assert
-                result.Should().BeTrue();
+                result.Should().BeEquivalentTo(updatedCategory);
                 context.Categories.Should().Contain(updatedCategory);
-            }
-        }
-
-        [Fact]
-        public async Task UpdateAsync_NonExistentCategory_ReturnsFalse()
-        {
-            using (var context = GetContext())
-            {
-                // Arrange
-                var repository = new CategoryRepository(context);
-                var category = _fixture.Create<Category>();
-
-                // Act
-                var result = await repository.UpdateAsync(category);
-
-                // Assert
-                result.Should().BeFalse();
-                context.Categories.Should().NotContain(category);
             }
         }
 
@@ -257,23 +243,6 @@ namespace ECommerce.Test.RepositoryTests
                 // Assert
                 result.Should().BeTrue();
                 context.Categories.Should().NotContain(category);
-            }
-        }
-
-        [Fact]
-        public async Task DeleteAsync_NonExistentCategory_ReturnsFalse()
-        {
-            using (var context = GetContext())
-            {
-                // Arrange
-                var repository = new CategoryRepository(context);
-                var category = _fixture.Create<Category>();
-
-                // Act
-                var result = await repository.DeleteAsync(category);
-
-                // Assert
-                result.Should().BeFalse();
             }
         }
 

@@ -141,22 +141,27 @@ namespace ECommerce.Test.ServiceTests
         }
 
         [Fact]
-        public async Task AddAsync_ValidData_ReturnsTrue()
+        public async Task AddAsync_ValidData_ReturnsAddedProductDto()
         {
             // Arrange
             var productDto = _fixture.Build<ProductDto>()
-                .With(t => t.Id, Guid.Empty).Create();
+                .With(t => t.Id, Guid.Empty)
+                .With(t => t.CategoryName, null as string)
+                .With(t => t.ManufacturerName, null as string)
+                .Create();
+            var addedProduct = productDto.ToEntity();
 
             _productRepositoryMock.Setup(repo => repo.GetAllAsync(It.IsAny<Expression<Func<Product, bool>>?>()))
                 .ReturnsAsync(new List<Product>());
             _productRepositoryMock.Setup(repo => repo.AddAsync(It.IsAny<Product>()))
-                .ReturnsAsync(true);
+                .ReturnsAsync(addedProduct);
 
             // Act
             var result = await _productAdderService.AddAsync(productDto);
 
             // Assert
-            result.Should().BeTrue();
+            result.Should().NotBeNull();
+            result.Should().BeEquivalentTo(productDto);
         }
 
         #endregion
@@ -446,7 +451,7 @@ namespace ECommerce.Test.ServiceTests
         }
 
         [Fact]
-        public async Task UpdateAsync_ValidData_ReturnsTrue()
+        public async Task UpdateAsync_ValidData_ReturnsUpdatedProductDto()
         {
             // Arrange
             var productId = Guid.NewGuid();
@@ -455,19 +460,23 @@ namespace ECommerce.Test.ServiceTests
                 .Create();
             var updatedProductDto = _fixture.Build<ProductDto>()
                 .With(t => t.Id, productId)
+                .With(t => t.CategoryName, null as string)
+                .With(t => t.ManufacturerName, null as string)
                 .Create();
+            var updatedProduct = updatedProductDto.ToEntity();
 
             _productRepositoryMock.Setup(repo => repo.GetByIdAsync(productId))
                                    .ReturnsAsync(existingProduct);
 
             _productRepositoryMock.Setup(repo => repo.UpdateAsync(It.IsAny<Product>()))
-                                   .ReturnsAsync(true);
+                                   .ReturnsAsync(updatedProduct);
 
             // Act
             var result = await _productUpdaterService.UpdateAsync(updatedProductDto);
 
             // Assert
-            result.Should().BeTrue();
+            result.Should().NotBeNull();
+            result.Should().BeEquivalentTo(updatedProductDto);
         }
 
         #endregion

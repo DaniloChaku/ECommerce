@@ -18,7 +18,7 @@ namespace ECommerce.Core.Services.Manufacturer
             _manufacturerRepository = manufacturerRepository;
         }
 
-        public async Task<bool> AddAsync(ManufacturerDto manufacturerDto)
+        public async Task<ManufacturerDto> AddAsync(ManufacturerDto manufacturerDto)
         {
             if (manufacturerDto is null)
             {
@@ -41,15 +41,11 @@ namespace ECommerce.Core.Services.Manufacturer
                 throw new ArgumentException("manufacturer with the same name already exists");
             }
 
-            manufacturerDto.Id = Guid.NewGuid();
             var manufacturer = manufacturerDto.ToEntity();
 
-            if (!await _manufacturerRepository.AddAsync(manufacturer))
-            {
-                throw new InvalidOperationException("Failed to add manufacturer");
-            }
+            var manufacturerAdded = await _manufacturerRepository.AddAsync(manufacturer);
 
-            return true;
+            return manufacturerAdded.ToDto();
         }
     }
 }

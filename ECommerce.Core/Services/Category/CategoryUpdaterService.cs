@@ -18,7 +18,7 @@ namespace ECommerce.Core.Services.Category
             _categoryRepository = categoryRepository;
         }
 
-        public async Task<bool> UpdateAsync(CategoryDto categoryDto)
+        public async Task<CategoryDto> UpdateAsync(CategoryDto categoryDto)
         {
             if (categoryDto is null)
             {
@@ -43,12 +43,9 @@ namespace ECommerce.Core.Services.Category
 
             var category = categoryDto.ToEntity();
 
-            if (!await _categoryRepository.UpdateAsync(category))
-            {
-                throw new InvalidOperationException("Failed to update category");
-            }
-
-            return true;
+            var categoryUpdated = await _categoryRepository.UpdateAsync(category);
+            
+            return categoryUpdated.ToDto();
         }
     }
 }

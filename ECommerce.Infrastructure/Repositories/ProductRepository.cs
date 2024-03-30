@@ -16,15 +16,11 @@ namespace ECommerce.Infrastructure.Repositories
         {
         }
 
-        public async Task<bool> UpdateAsync(Product product)
+        public async Task<Product> UpdateAsync(Product product)
         {
             var existingProduct = await _dbSet.FindAsync(product.Id);
-            if (existingProduct == null)
-            {
-                return false;
-            }
 
-            existingProduct.Name = product.Name;
+            existingProduct!.Name = product.Name;
             existingProduct.Description = product.Description;
             existingProduct.Price = product.Price;
             existingProduct.SalePrice = product.SalePrice;
@@ -33,7 +29,9 @@ namespace ECommerce.Infrastructure.Repositories
             existingProduct.ManufacturerId = product.ManufacturerId;
             existingProduct.CategoryId = product.CategoryId;
 
-            return await SaveAsync();
+            await _context.SaveChangesAsync();
+
+            return existingProduct;
         }
 
         public override async Task<List<Product>> GetAllAsync(Expression<Func<Product, bool>>? filter = null)

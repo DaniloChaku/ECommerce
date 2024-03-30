@@ -18,7 +18,7 @@ namespace ECommerce.Core.Services.Category
             _categoryRepository = categoryRepository;
         }
 
-        public async Task<bool> AddAsync(CategoryDto categoryDto)
+        public async Task<CategoryDto> AddAsync(CategoryDto categoryDto)
         {
             if (categoryDto is null)
             {
@@ -41,15 +41,11 @@ namespace ECommerce.Core.Services.Category
                 throw new ArgumentException("Category with the same name already exists");
             }
 
-            categoryDto.Id = Guid.NewGuid();
             var category = categoryDto.ToEntity();
 
-            if (!await _categoryRepository.AddAsync(category))
-            {
-                throw new InvalidOperationException("Failed to add category");
-            }
+            var categoryAdded = await _categoryRepository.AddAsync(category);
 
-            return true;
+            return categoryAdded.ToDto();
         }
     }
 }

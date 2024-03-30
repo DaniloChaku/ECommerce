@@ -15,17 +15,15 @@ namespace ECommerce.Infrastructure.Repositories
         {
         }
 
-        public async Task<bool> UpdateAsync(Category category)
+        public async Task<Category> UpdateAsync(Category category)
         {
             var existingCategory = await _dbSet.FindAsync(category.Id);
-            if (existingCategory == null)
-            {
-                return false;
-            }
 
-            existingCategory.Name = category.Name;
+            existingCategory!.Name = category.Name;
 
-            return await SaveAsync();
+            await _context.SaveChangesAsync();
+
+            return existingCategory;
         }
     }
 }

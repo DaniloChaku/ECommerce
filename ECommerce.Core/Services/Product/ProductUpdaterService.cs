@@ -19,7 +19,7 @@ namespace ECommerce.Core.Services.Product
             _productRepository = productRepository;
         }
 
-        public async Task<bool> UpdateAsync(ProductDto productDto)
+        public async Task<ProductDto> UpdateAsync(ProductDto productDto)
         {
             if (productDto is null)
             {
@@ -46,12 +46,9 @@ namespace ECommerce.Core.Services.Product
 
             ValidationHelper.ValidateModel(product);
 
-            if (!await _productRepository.UpdateAsync(product))
-            {
-                throw new InvalidOperationException("Failed to update product");
-            }
+            var productUpdated = await _productRepository.UpdateAsync(product);
 
-            return true;
+            return productUpdated.ToDto();
         }
     }
 }

@@ -25,7 +25,7 @@ namespace ECommerce.Infrastructure.Repositories
         {
             IQueryable<TEntity> query = _dbSet;
 
-            if (filter != null)
+            if (filter is not null)
             {
                 query = query.Where(filter);
             }
@@ -38,26 +38,21 @@ namespace ECommerce.Infrastructure.Repositories
             return await _dbSet.FindAsync(id);
         }
 
-        public virtual async Task<bool> AddAsync(TEntity entity)
+        public virtual async Task<TEntity> AddAsync(TEntity entity)
         {
             await _dbSet.AddAsync(entity);
-            return await SaveAsync();
+            await _context.SaveChangesAsync();
+
+            return entity;
         }
 
         public virtual async Task<bool> DeleteAsync(TEntity entity)
         {
-            if (_dbSet.Contains(entity))
-            {
-                _dbSet.Remove(entity);
-            }
+            _dbSet.Remove(entity);
 
-            return await SaveAsync();
-        }
+            var deletedRows = await _context.SaveChangesAsync();
 
-        public virtual async Task<bool> SaveAsync()
-        {
-            var saved = await _context.SaveChangesAsync();
-            return saved > 0;
+            return deletedRows == 1;
         }
     }
 }

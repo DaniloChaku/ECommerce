@@ -19,7 +19,7 @@ namespace ECommerce.Core.Services.Product
             _productRepository = productRepository;
         }
 
-        public async Task<bool> AddAsync(ProductDto productDto)
+        public async Task<ProductDto> AddAsync(ProductDto productDto)
         {
             if (productDto is null)
             {
@@ -44,16 +44,11 @@ namespace ECommerce.Core.Services.Product
 
             var product = productDto.ToEntity();
 
-            product.Id = Guid.NewGuid();
-
             ValidationHelper.ValidateModel(product);
 
-            if (!await _productRepository.AddAsync(product))
-            {
-                throw new InvalidOperationException("Failed to add product");
-            }
+            var productAdded = await _productRepository.AddAsync(product);
 
-            return true;
+            return productAdded.ToDto();
         }
     }
 }

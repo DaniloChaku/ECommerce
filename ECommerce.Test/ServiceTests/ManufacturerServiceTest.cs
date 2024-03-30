@@ -123,22 +123,24 @@ namespace ECommerce.Test.ServiceTests
         }
 
         [Fact]
-        public async Task AddAsync_ValidData_ReturnsTrue()
+        public async Task AddAsync_ValidData_ReturnsAddedManufacturerDto()
         {
             // Arrange
             var manufacturerDto = _fixture.Build<ManufacturerDto>()
                 .With(t => t.Id, Guid.Empty).Create();
+            var addedManufacturer = manufacturerDto.ToEntity();
 
             _manufacturerRepositoryMock.Setup(repo => repo.GetAllAsync(It.IsAny<Expression<Func<Manufacturer, bool>>?>()))
                                    .ReturnsAsync(new List<Manufacturer>());
             _manufacturerRepositoryMock.Setup(repo => repo.AddAsync(It.IsAny<Manufacturer>()))
-                .ReturnsAsync(true);
+                .ReturnsAsync(addedManufacturer);
 
             // Act
             var result = await _manufacturerAdderService.AddAsync(manufacturerDto);
 
             // Assert
-            result.Should().BeTrue();
+            result.Should().NotBeNull();
+            result.Should().BeEquivalentTo(manufacturerDto);
         }
 
         #endregion
@@ -333,7 +335,7 @@ namespace ECommerce.Test.ServiceTests
         }
 
         [Fact]
-        public async Task UpdateAsync_ValidData_ReturnsTrue()
+        public async Task UpdateAsync_ValidData_ReturnsUpdatedManufacturerDto()
         {
             // Arrange
             var manufacturerId = Guid.NewGuid();
@@ -343,18 +345,20 @@ namespace ECommerce.Test.ServiceTests
             var updatedManufacturerDto = _fixture.Build<ManufacturerDto>()
                 .With(t => t.Id, manufacturerId)
                 .Create();
+            var updatedManufacturer = updatedManufacturerDto.ToEntity();
 
             _manufacturerRepositoryMock.Setup(repo => repo.GetByIdAsync(manufacturerId))
                                    .ReturnsAsync(existingManufacturer);
 
             _manufacturerRepositoryMock.Setup(repo => repo.UpdateAsync(It.IsAny<Manufacturer>()))
-                                   .ReturnsAsync(true);
+                                   .ReturnsAsync(updatedManufacturer);
 
             // Act
             var result = await _manufacturerUpdaterService.UpdateAsync(updatedManufacturerDto);
 
             // Assert
-            result.Should().BeTrue();
+            result.Should().NotBeNull();
+            result.Should().BeEquivalentTo(updatedManufacturerDto);
         }
 
         #endregion
