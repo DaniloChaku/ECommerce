@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace ECommerce.Test.ServiceTests
 {
-    public class ProductServiceTest
+    public class ProductServiceTests
     {
         private readonly IProductAdderService _productAdderService;
         private readonly IProductDeleterService _productDeleterService;
@@ -28,7 +28,7 @@ namespace ECommerce.Test.ServiceTests
 
         private readonly IFixture _fixture;
 
-        public ProductServiceTest()
+        public ProductServiceTests()
         {
             _fixture = new Fixture();
 

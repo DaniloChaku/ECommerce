@@ -15,7 +15,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ECommerce.Test.ServiceTests
 {
-    public class CategoryServiceTest
+    public class CategoryServiceTests
     {
         private readonly ICategoryAdderService _categoryAdderService;
         private readonly ICategoryDeleterService _categoryDeleterService;
@@ -28,7 +28,7 @@ namespace ECommerce.Test.ServiceTests
 
         private readonly IFixture _fixture;
 
-        public CategoryServiceTest()
+        public CategoryServiceTests()
         {
             _fixture = new Fixture();
 

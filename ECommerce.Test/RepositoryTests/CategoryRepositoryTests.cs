@@ -11,12 +11,12 @@ using System.Threading.Tasks;
 
 namespace ECommerce.Test.RepositoryTests
 {
-    public class CategoryRepositoryTest : IDisposable
+    public class CategoryRepositoryTests : IDisposable
     {
         private readonly IFixture _fixture;
         private readonly DbContextOptions<ApplicationDbContext> _dbContextOptions;
 
-        public CategoryRepositoryTest()
+        public CategoryRepositoryTests()
         {
             _fixture = new Fixture();
             _dbContextOptions = new DbContextOptionsBuilder<ApplicationDbContext>()

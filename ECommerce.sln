@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ECommerce.Infrastructure", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{F29024C5-BFD8-4AD1-ACEA-214AB1A1CDC3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerce.Test", "ECommerce.Test\ECommerce.Test.csproj", "{688F77F1-E9BF-4C1D-9A4F-D0645B1748B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ECommerce.Tests", "ECommerce.Test\ECommerce.Tests.csproj", "{688F77F1-E9BF-4C1D-9A4F-D0645B1748B6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

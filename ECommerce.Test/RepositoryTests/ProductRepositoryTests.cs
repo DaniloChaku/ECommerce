@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace ECommerce.Test.RepositoryTests
 {
-    public class ProductRepositoryTest : IDisposable
+    public class ProductRepositoryTests : IDisposable
     {
         private readonly IFixture _fixture;
         private readonly DbContextOptions<ApplicationDbContext> _dbContextOptions;
 
-        public ProductRepositoryTest()
+        public ProductRepositoryTests()
         {
             _fixture = new Fixture();
             _dbContextOptions = new DbContextOptionsBuilder<ApplicationDbContext>()

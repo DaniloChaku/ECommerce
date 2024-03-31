@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace ECommerce.Test.ServiceTests
 {
-    public class ManufacturerServiceTest
+    public class ManufacturerServiceTests
     {
         private readonly IManufacturerAdderService _manufacturerAdderService;
         private readonly IManufacturerDeleterService _manufacturerDeleterService;
@@ -27,7 +27,7 @@ namespace ECommerce.Test.ServiceTests
 
         private readonly IFixture _fixture;
 
-        public ManufacturerServiceTest()
+        public ManufacturerServiceTests()
         {
             _fixture = new Fixture();
 
