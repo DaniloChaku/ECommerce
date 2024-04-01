@@ -4,6 +4,7 @@ using ECommerce.Infrastructure.Db;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ECommerce.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240401144647_SeedDataIntoCategories")]
+    partial class SeedDataIntoCategories
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,12 +42,12 @@ namespace ECommerce.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("71886f11-075c-48bc-b5b0-35a4e68a7c33"),
+                            Id = new Guid("fdde7e26-1c7a-42e5-b7eb-0acd83284e81"),
                             Name = "Fruits"
                         },
                         new
                         {
-                            Id = new Guid("e5e04394-6595-4680-8ebe-1030523a01dd"),
+                            Id = new Guid("f63097d2-7f97-44ec-9b30-0526e9b478f3"),
                             Name = "Vegetables"
                         });
                 });

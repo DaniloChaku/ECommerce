@@ -15,5 +15,15 @@ namespace ECommerce.Infrastructure.Db
         public DbSet<Product> Products { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options) { }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Category>().HasData(
+                new Category { Id = new Guid("71886F11-075C-48BC-B5B0-35A4E68A7C33"), Name = "Fruits" },
+                new Category { Id = new Guid("E5E04394-6595-4680-8EBE-1030523A01DD"), Name = "Vegetables" }
+                );
+        }
     }
 }
