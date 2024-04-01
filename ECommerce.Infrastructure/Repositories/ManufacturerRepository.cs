@@ -20,6 +20,7 @@ namespace ECommerce.Infrastructure.Repositories
             var existingManufacturer = await _dbSet.FindAsync(manufacturer.Id);
 
             existingManufacturer!.Name = manufacturer.Name;
+            existingManufacturer.Description = manufacturer.Description;
 
             await _context.SaveChangesAsync();
 

@@ -15,12 +15,14 @@ namespace ECommerce.Core.Domain.Entities
         public Guid Id { get; set; }
         [Required]
         public string Name { get; set; }
+        public string? Description { get; set; }
 
         public override bool Equals(object? obj)
         {
             if (obj is Manufacturer manufacturer)
             {
-                return Id == manufacturer.Id && Name == manufacturer.Name;
+                return Id == manufacturer.Id && Name == manufacturer.Name
+                    && Description == manufacturer.Description;
             }
 
             return false;
