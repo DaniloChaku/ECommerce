@@ -17,7 +17,7 @@ namespace ECommerce.Infrastructure.Repositories
 
         public async Task<Category> UpdateAsync(Category category)
         {
-            var existingCategory = await _dbSet.FindAsync(category.Id);
+            var existingCategory = await _dbSet.FirstOrDefaultAsync(t => t.Id == category.Id);
 
             existingCategory!.Name = category.Name;
 

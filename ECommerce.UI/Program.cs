@@ -1,10 +1,17 @@
+using ECommerce.Core.Domain.RepositoryContracts;
+using ECommerce.Core.ServiceContracts.Category;
+using ECommerce.Core.Services.Category;
 using ECommerce.Infrastructure.Db;
+using ECommerce.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<ICategoryGetterService, CategoryGetterService>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
