@@ -22,7 +22,7 @@ namespace ECommerce.UI.Views.Home
         public async Task<IActionResult> GetAll()
         {
             List<CategoryDto> categoryDtos = await _categoryGetterService.GetAllAsync();
-            return Json(categoryDtos);
+            return Json(new { data = categoryDtos });
         }
     }
 }

@@ -1,12 +1,12 @@
 ﻿let dataTable;
 
 $(document).ready(function () {
-    loadDataTable();
+    loadTableData();
 });
 
 function loadTableData() {
-    $('#myTable').DataTable({
-        ajax: '/categories/getall',
+    $('#categoryTable').DataTable({
+        ajax: { url: '/category/getall' },
         columns: [
             { data: "name", width: "75%" },
             {
