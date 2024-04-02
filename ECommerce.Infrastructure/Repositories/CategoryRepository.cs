@@ -1,5 +1,6 @@
 ﻿using ECommerce.Core.Domain.Entities;
 using ECommerce.Core.Domain.RepositoryContracts;
+using ECommerce.Infrastructure.Db;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace ECommerce.Infrastructure.Repositories
 {
     public class CategoryRepository : Repository<Category>, ICategoryRepository
     {
-        public CategoryRepository(DbContext context) : base(context)
+        public CategoryRepository(ApplicationDbContext context) : base(context)
         {
         }
 

@@ -1,4 +1,5 @@
 ﻿using ECommerce.Core.Domain.RepositoryContracts;
+using ECommerce.Infrastructure.Db;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,10 +12,10 @@ namespace ECommerce.Infrastructure.Repositories
 {
     public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
-        protected readonly DbContext _context;
+        protected readonly ApplicationDbContext _context;
         protected readonly DbSet<TEntity> _dbSet;
 
-        public Repository(DbContext context)
+        public Repository(ApplicationDbContext context)
         {
             _context = context;
             _dbSet = context.Set<TEntity>();

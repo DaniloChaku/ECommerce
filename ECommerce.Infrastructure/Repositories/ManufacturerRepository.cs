@@ -1,5 +1,6 @@
 ﻿using ECommerce.Core.Domain.Entities;
 using ECommerce.Core.Domain.RepositoryContracts;
+using ECommerce.Infrastructure.Db;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace ECommerce.Infrastructure.Repositories
 {
     public class ManufacturerRepository : Repository<Manufacturer>, IManufacturerRepository
     {
-        public ManufacturerRepository(DbContext context) : base(context)
+        public ManufacturerRepository(ApplicationDbContext context) : base(context)
         {
         }
 
