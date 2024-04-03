@@ -12,6 +12,9 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICategoryGetterService, CategoryGetterService>();
+builder.Services.AddScoped<ICategoryAdderService, CategoryAdderService>();
+builder.Services.AddScoped<ICategoryUpdaterService, CategoryUpdaterService>();
+builder.Services.AddScoped<ICategoryDeleterService, CategoryDeleterService>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {

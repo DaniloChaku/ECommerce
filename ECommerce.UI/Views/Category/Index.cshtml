@@ -2,17 +2,22 @@
     ViewBag.Title = "Category Management";
 }
 
-<h2 class="text-center mb-4">Categories</h2>
+<h1 class="text-center mb-3">Categories</h1>
 
-<table id="categoryTable" class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th></th>
-        </tr>
-    </thead>
-</table>
+<section>
+    <a asp-controller="Category" asp-action="Upsert" class="btn btn-primary mb-2">Add Category</a>
+
+    <table id="categoryTable" class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th></th>
+            </tr>
+        </thead>
+    </table>
+</section>
 
 @section Scripts {
     <script src="~/js/categories.js"></script>
+    <partial name="_NotificationPartial.cshtml" />
 }
