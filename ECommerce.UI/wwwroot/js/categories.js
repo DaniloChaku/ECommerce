@@ -3,7 +3,7 @@
 document.addEventListener("DOMContentLoaded", loadTableData);
 
 function loadTableData() {
-    dataTable = $('#categoryTable').DataTable({
+    dataTable = $('#categoriesTable').DataTable({
         ajax: { url: '/category/getall' },
         columns: [
             { data: "name", width: "75%" },
