@@ -19,7 +19,15 @@
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
 
-            <button type="submit" class="btn btn-primary">@ViewBag.Action</button>
+            <div class="row pt-2">
+                <div class="col-6 col-md-3">
+                    <button type="submit" class="btn btn-primary form-control">@ViewBag.Action</button>
+                </div>
+                <div class="col-6 col-md-3">
+                    <a asp-controller="Category" asp-action="Index"
+                       class="btn btn-outline-secondary form-control">Back</a>
+                </div>
+            </div>
         </div>
         <div class="col-3"></div>
     </div>
