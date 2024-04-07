@@ -1,6 +1,8 @@
 using ECommerce.Core.Domain.RepositoryContracts;
 using ECommerce.Core.ServiceContracts.Category;
+using ECommerce.Core.ServiceContracts.Manufacturer;
 using ECommerce.Core.Services.Category;
+using ECommerce.Core.Services.Manufacturer;
 using ECommerce.Infrastructure.Db;
 using ECommerce.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +17,12 @@ builder.Services.AddScoped<ICategoryGetterService, CategoryGetterService>();
 builder.Services.AddScoped<ICategoryAdderService, CategoryAdderService>();
 builder.Services.AddScoped<ICategoryUpdaterService, CategoryUpdaterService>();
 builder.Services.AddScoped<ICategoryDeleterService, CategoryDeleterService>();
+
+builder.Services.AddScoped<IManufacturerRepository, ManufacturerRepository>();
+builder.Services.AddScoped<IManufacturerGetterService, ManufacturerGetterService>();
+builder.Services.AddScoped<IManufacturerAdderService, ManufacturerAdderService>();
+builder.Services.AddScoped<IManufacturerUpdaterService, ManufacturerUpdaterService>();
+builder.Services.AddScoped<IManufacturerDeleterService, ManufacturerDeleterService>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {

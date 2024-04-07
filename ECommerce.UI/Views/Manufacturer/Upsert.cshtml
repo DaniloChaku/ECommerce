@@ -1,0 +1,35 @@
+﻿@model ManufacturerDto
+@{
+    ViewBag.Action = Model.Id == Guid.Empty ? "Add" : "Edit";
+    ViewBag.Title = $"{ViewBag.Action} Manufacturer";
+}
+
+<form asp-controller="Manufacturer" asp-action="Upsert" method="post">
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col-6 justify-content-center">
+            <h1 class="mb-4">@ViewBag.Title</h1>
+
+            <input asp-for="Id" hidden />
+
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label">Name</label>
+                <span class="text-danger">*</span>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label">Description</label>
+                <textarea asp-for="Description" class="form-control"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">@ViewBag.Action</button>
+        </div>
+        <div class="col-3"></div>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial.cshtml" />
+}

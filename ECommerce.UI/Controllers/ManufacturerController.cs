@@ -24,19 +24,55 @@ namespace ECommerce.UI.Controllers
 
         public IActionResult Index()
         {
-            throw new NotImplementedException();
+            return View();
         }
 
         [HttpGet]
         public async Task<IActionResult> Upsert(Guid? id)
         {
-            throw new NotImplementedException();
+            if (id is null || id == Guid.Empty)
+            {
+                return View(new ManufacturerDto());
+            }
+
+            var existingManufacturer = await _manufacturerGetterService.GetByIdAsync(id.Value);
+            if (existingManufacturer is null)
+            {
+                existingManufacturer = new ManufacturerDto();
+            }
+
+            return View(existingManufacturer);
         }
 
         [HttpPost]
         public async Task<IActionResult> Upsert(ManufacturerDto manufacturerDto)
         {
-            throw new NotImplementedException();
+            if (!ModelState.IsValid)
+            {
+                return View(manufacturerDto);
+            }
+
+            try
+            {
+                if (manufacturerDto.Id == Guid.Empty)
+                {
+                    await _manufacturerAdderService.AddAsync(manufacturerDto);
+                }
+                else
+                {
+                    await _manufacturerUpdaterService.UpdateAsync(manufacturerDto);
+                }
+
+                TempData["success"] = $"Manufacturer {(manufacturerDto.Id == Guid.Empty
+                    ? "created" : "updated")} successfully.";
+                return RedirectToAction(nameof(ManufacturerController.Index));
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(nameof(manufacturerDto), ex.Message);
+                TempData["error"] = "An error occurred while processing your request. Please try again.";
+                return View(manufacturerDto);
+            }
         }
 
         #region API
@@ -44,13 +80,53 @@ namespace ECommerce.UI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            throw new NotImplementedException();
+            try
+            {
+                List<ManufacturerDto> manufacturers = await _manufacturerGetterService.GetAllAsync();
+
+                return Ok(new { data = manufacturers });
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { error = "An error occurred while processing your request. Please try again later." });
+            }
         }
 
         [HttpDelete]
         public async Task<IActionResult> Delete(Guid id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var isDeleted = await _manufacturerDeleterService.DeleteAsync(id);
+
+                if (!isDeleted)
+                {
+                    throw new InvalidOperationException("Failed to delete Manufacturer.");
+                }
+
+                var response = new
+                {
+                    Success = true,
+                    Message = "Manufacturer deleted successfully."
+                };
+                TempData["success"] = response.Message;
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(nameof(id), ex.Message);
+
+                var response = new
+                {
+                    Success = false,
+                    Message = "An error occurred while deleting Manufacturer. Please try again."
+                };
+                TempData["error"] = response.Message;
+
+                return BadRequest(response);
+            }
         }
 
         #endregion

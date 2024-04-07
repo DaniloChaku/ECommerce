@@ -1,0 +1,25 @@
+﻿@{
+    ViewBag.Title = "Manufacturers Management";
+}
+
+<h1 class="text-center mb-3">Manufacturers</h1>
+
+<section>
+    <a asp-controller="Manufacturer" asp-action="Upsert" class="btn btn-primary mb-2">Add Manufacturer</a>
+
+    <table id="manufacturersTable" class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th></th>
+            </tr>
+        </thead>
+    </table>
+</section>
+
+@section Scripts {
+    <script src="~/js/utilities.js"></script>
+    <script src="~/js/manufacturers.js"></script>
+    <partial name="_NotificationPartial.cshtml" />
+}
