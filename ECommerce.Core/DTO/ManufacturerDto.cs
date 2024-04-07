@@ -11,13 +11,15 @@ namespace ECommerce.Core.DTO
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
+        public string? Description { get; set; }
 
         public Manufacturer ToEntity()
         {
             return new Manufacturer
             {
                 Id = Id,
-                Name = Name
+                Name = Name,
+                Description = Description
             };
         }
     }
@@ -29,7 +31,8 @@ namespace ECommerce.Core.DTO
             return new ManufacturerDto
             {
                 Id = manufacturer.Id,
-                Name = manufacturer.Name
+                Name = manufacturer.Name,
+                Description = manufacturer.Description
             };
         }
     }
