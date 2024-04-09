@@ -4,6 +4,7 @@ using ECommerce.Infrastructure.Db;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ECommerce.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240409070959_AddUniqueConstraintToCategoryAndManufacturerNames")]
+    partial class AddUniqueConstraintToCategoryAndManufacturerNames
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,7 +40,19 @@ namespace ECommerce.Infrastructure.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("71886f11-075c-48bc-b5b0-35a4e68a7c33"),
+                            Name = "Fruits"
+                        },
+                        new
+                        {
+                            Id = new Guid("e5e04394-6595-4680-8ebe-1030523a01dd"),
+                            Name = "Vegetables"
+                        });
                 });
 
             modelBuilder.Entity("ECommerce.Core.Domain.Entities.Manufacturer", b =>
@@ -58,7 +73,7 @@ namespace ECommerce.Infrastructure.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Manufacturers", (string)null);
+                    b.ToTable("Manufacturers");
                 });
 
             modelBuilder.Entity("ECommerce.Core.Domain.Entities.Product", b =>
@@ -99,7 +114,7 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("ManufacturerId");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("ECommerce.Core.Domain.Entities.Product", b =>
