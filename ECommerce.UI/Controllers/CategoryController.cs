@@ -74,6 +74,18 @@ namespace ECommerce.UI.Controllers
             }
         }
 
+        public async Task<IActionResult> ValidateSameName(string name)
+        {
+            var categories = await _categoryGetterService.GetAllAsync();
+
+            if (categories.Any(t => t.Name == name))
+            {
+                return Json(false);
+            }
+
+            return Json(true);
+        }
+
         #region API
 
         [HttpGet]

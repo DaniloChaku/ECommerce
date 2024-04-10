@@ -1,6 +1,5 @@
 ﻿using ECommerce.Core.DTO;
 using ECommerce.Core.ServiceContracts.Manufacturer;
-using ECommerce.UI.Views.Home;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerce.UI.Controllers
@@ -73,6 +72,18 @@ namespace ECommerce.UI.Controllers
                 TempData["error"] = "An error occurred while processing your request. Please try again.";
                 return View(manufacturerDto);
             }
+        }
+
+        public async Task<IActionResult> ValidateSameName(string name)
+        {
+            var categories = await _manufacturerGetterService.GetAllAsync();
+
+            if (categories.Any(t => t.Name == name))
+            {
+                return Json(false);
+            }
+
+            return Json(true);
         }
 
         #region API

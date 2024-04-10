@@ -1,4 +1,5 @@
 ﻿using ECommerce.Core.Domain.Entities;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,8 @@ namespace ECommerce.Core.DTO
     public class ManufacturerDto
     {
         public Guid Id { get; set; }
+        [Remote(controller: "Manufacturer", action: "ValidateSameName",
+            ErrorMessage = "Manufacturer with the same name already exists")]
         public string Name { get; set; }
         public string? Description { get; set; }
 
