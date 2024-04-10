@@ -2,7 +2,7 @@
 using ECommerce.Core.ServiceContracts.Category;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ECommerce.UI.Views.Home
+namespace ECommerce.UI.Controllers
 {
     public class CategoryController : Controller
     {
