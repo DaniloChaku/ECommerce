@@ -9,17 +9,22 @@
         confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
         if (result.isConfirmed) {
-            $.ajax({
-                url: url,
-                type: 'DELETE',
-                success: function (data) {
+            fetch(url, { 
+                method: 'DELETE'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
                     dataTable.ajax.reload();
                     toastr.success(data.message);
-                },
-                error: function (data) {
-                    toastr.error(data.message)
+                } else {
+                    toastr.error(data.message);
                 }
+                
             })
+            .catch(error => {
+                toastr.error(error.message);
+            });
         }
     })
 }
