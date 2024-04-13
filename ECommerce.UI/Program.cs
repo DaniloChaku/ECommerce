@@ -1,8 +1,10 @@
 using ECommerce.Core.Domain.RepositoryContracts;
 using ECommerce.Core.ServiceContracts.Category;
 using ECommerce.Core.ServiceContracts.Manufacturer;
+using ECommerce.Core.ServiceContracts.Product;
 using ECommerce.Core.Services.Category;
 using ECommerce.Core.Services.Manufacturer;
+using ECommerce.Core.Services.Product;
 using ECommerce.Infrastructure.Db;
 using ECommerce.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -17,12 +19,21 @@ builder.Services.AddScoped<ICategoryGetterService, CategoryGetterService>();
 builder.Services.AddScoped<ICategoryAdderService, CategoryAdderService>();
 builder.Services.AddScoped<ICategoryUpdaterService, CategoryUpdaterService>();
 builder.Services.AddScoped<ICategoryDeleterService, CategoryDeleterService>();
+builder.Services.AddScoped<ICategorySorterService, CategorySorterService>();
 
 builder.Services.AddScoped<IManufacturerRepository, ManufacturerRepository>();
 builder.Services.AddScoped<IManufacturerGetterService, ManufacturerGetterService>();
 builder.Services.AddScoped<IManufacturerAdderService, ManufacturerAdderService>();
 builder.Services.AddScoped<IManufacturerUpdaterService, ManufacturerUpdaterService>();
 builder.Services.AddScoped<IManufacturerDeleterService, ManufacturerDeleterService>();
+builder.Services.AddScoped<IManufacturerSorterService, ManufacturerSorterService>();
+
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IProductGetterService, ProductGetterService>();
+builder.Services.AddScoped<IProductAdderService, ProductAdderService>();
+builder.Services.AddScoped<IProductUpdaterService, ProductUpdaterService>();
+builder.Services.AddScoped<IProductDeleterService, ProductDeleterService>();
+builder.Services.AddScoped<IProductSorterService, ProductSorterService>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {

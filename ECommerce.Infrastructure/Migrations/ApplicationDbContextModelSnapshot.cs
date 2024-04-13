@@ -38,6 +38,18 @@ namespace ECommerce.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Categories", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("71886f11-075c-48bc-b5b0-35a4e68a7c33"),
+                            Name = "Fruits"
+                        },
+                        new
+                        {
+                            Id = new Guid("e5e04394-6595-4680-8ebe-1030523a01dd"),
+                            Name = "Vegetables"
+                        });
                 });
 
             modelBuilder.Entity("ECommerce.Core.Domain.Entities.Manufacturer", b =>

@@ -1,0 +1,103 @@
+﻿@model ProductUpsertModel
+@{
+    ViewBag.Action = Model.Product.Id == Guid.Empty ? "Add" : "Edit";
+    ViewBag.Title = $"{ViewBag.Action} Product";
+}
+
+<form asp-controller="Product" asp-action="Upsert" method="post" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-lg-3"></div>
+        <div class="col-lg-6 col-12 justify-content-center">
+            <h1 class="mb-4">@ViewBag.Title</h1>
+
+            <input asp-for="Product.Id" hidden/>
+            <input asp-for="Product.ImageUrl" hidden/>
+            <input asp-for="Categories" hidden/>
+            <input asp-for="Manufacturers" hidden/>
+
+            <div class="mb-3">
+                <label asp-for="Product.Name" class="form-label">Name</label>
+                <span class="text-danger">*</span>
+                <input asp-for="Product.Name" class="form-control" />
+                <span asp-validation-for="Product.Name" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Product.Description" class="form-label">Description</label>
+                <textarea asp-for="Product.Description" class="form-control"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Product.Price" class="form-label">Price</label>
+                <span class="text-danger">*</span>
+                <input asp-for="Product.Price" type="number" step="0.01" class="form-control" />
+                <span asp-validation-for="Product.Price" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Product.SalePrice" class="form-label">SalePrice</label>
+                <input asp-for="Product.SalePrice" type="number" step="0.01" class="form-control" />
+                <span asp-validation-for="Product.SalePrice" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <div class="row">
+                    <div class="col-6">
+                        <label asp-for="Product.ImageUrl" class="form-label">Image</label>
+                        <input type="file" name="image" asp-for="Product.ImageUrl" class="form-control" />
+                    </div>
+                    <div class="col-6">
+                        @if (Model.Product.ImageUrl is not null)
+                        {
+                            <img src="@Model.Product.ImageUrl"
+                            alt="Failed to load the image for @Model.Product.Name"
+                            class="img-fluid"/>
+                        }
+                        else
+                        {
+                            <span>No image</span>
+                        }
+                    </div>
+                </div>
+                
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Product.Stock" class="form-label">Quantity in Stock</label>
+                <span class="text-danger">*</span>
+                <input asp-for="Product.Stock" min="0" max="@long.MaxValue" class="form-control" />
+                <span asp-validation-for="Product.Stock" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Product.CategoryId" class="form-label">Category</label>
+                <select asp-for="Product.CategoryId" asp-items="Model.Categories" class="form-control">
+                    <option value="@null" selected>none</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Product.ManufacturerId" class="form-label">Manufacturer</label>
+                <select asp-for="Product.ManufacturerId" asp-items="Model.Manufacturers" class="form-control">
+                    <option value="@null" selected>none</option>
+                </select>
+            </div>
+
+            <div class="row pt-2">
+                <div class="col-6 col-md-3">
+                    <button type="submit" class="btn btn-primary form-control">@ViewBag.Action</button>
+                </div>
+                <div class="col-6 col-md-3">
+                    <a asp-controller="Product" asp-action="Index"
+                       class="btn btn-outline-secondary form-control">Back</a>
+                </div>
+                <div asp-validation-summary="All" class="text-danger"></div>
+            </div>
+        </div>
+        <div class="col-lg-3"></div>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial.cshtml" />
+}

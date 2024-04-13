@@ -44,7 +44,7 @@ namespace ECommerce.Infrastructure.Repositories
                 query = query.Where(filter);
             }
 
-            query.Include(nameof(Category)).Include(nameof(Manufacturer));
+            query = query.Include(nameof(Category)).Include(nameof(Manufacturer));
 
             return await query.ToListAsync();
         }

@@ -27,6 +27,7 @@ namespace ECommerce.Core.Domain.Entities
         public decimal? SalePrice { get; set; }
         public string? ImageUrl { get; set; }
         [Required]
+        [Range(0, long.MaxValue)]
         public long Stock { get; set; }
         public Guid? ManufacturerId { get; set; }
         [ForeignKey(nameof(ManufacturerId))]

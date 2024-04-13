@@ -1,0 +1,31 @@
+﻿@{
+    ViewBag.Title = "Products Management";
+}
+
+<h1 class="text-center mb-3">Products</h1>
+
+<section>
+    <a asp-controller="Product" asp-action="Upsert" class="btn btn-primary mb-2">Add Product</a>
+
+    <table id="productsTable" class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price, $</th>
+                <th>Sale Price, $</th>
+                <th>Image</th>
+                <th>Stock</th>
+                <th>Category</th>
+                <th>Manufacturer</th>
+                <th></th>
+            </tr>
+        </thead>
+    </table>
+</section>
+
+@section Scripts {
+    <script src="~/js/utilities.js"></script>
+    <script src="~/js/products.js"></script>
+    <partial name="_NotificationPartial.cshtml" />
+}
