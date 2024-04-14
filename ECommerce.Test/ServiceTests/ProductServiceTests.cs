@@ -4,14 +4,8 @@ using ECommerce.Core.DTO;
 using ECommerce.Core.Enums;
 using ECommerce.Core.ServiceContracts.Product;
 using ECommerce.Core.Services.Product;
-using FluentAssertions.Common;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECommerce.Test.ServiceTests
 {
@@ -67,6 +61,9 @@ namespace ECommerce.Test.ServiceTests
             var productDto = _fixture.Build<ProductDto>()
                 .With(t => t.Id, Guid.Empty)
                 .With(t => t.Name, null as string)
+                .With(t => t.Price, 10)
+                .With(t => t.SalePrice, null as decimal?)
+                .With(t => t.Stock, 10)
                 .Create();
 
             // Act
@@ -85,6 +82,9 @@ namespace ECommerce.Test.ServiceTests
             // Arrange
             var productDto = _fixture.Build<ProductDto>()
                 .With(t => t.Id, Guid.NewGuid())
+                .With(t => t.Price, 10)
+                .With(t => t.SalePrice, null as decimal?)
+                .With(t => t.Stock, 10)
                 .Create();
 
             // Act
@@ -104,10 +104,16 @@ namespace ECommerce.Test.ServiceTests
             var productDto1 = _fixture.Build<ProductDto>()
                 .With(t => t.Id, Guid.Empty)
                 .With(t => t.Name, "Test")
+                .With(t => t.Price, 10)
+                .With(t => t.SalePrice, null as decimal?)
+                .With(t => t.Stock, 10)
                 .Create();
             var productDto2 = _fixture.Build<ProductDto>()
                 .With(t => t.Id, Guid.Empty)
                 .With(t => t.Name, "Test")
+                .With(t => t.Price, 10)
+                .With(t => t.SalePrice, null as decimal?)
+                .With(t => t.Stock, 10)
                 .Create();
 
             _productRepositoryMock.Setup(repo => repo.GetAllAsync(
@@ -128,7 +134,10 @@ namespace ECommerce.Test.ServiceTests
         {
             // Arrange
             var productDto = _fixture.Build<ProductDto>()
-                .With(t => t.Price, -10).Create();
+                .With(t => t.Price, -10)
+                .With(t => t.SalePrice, null as decimal?)
+                .With(t => t.Stock, 10)
+                .Create();
 
             // Act
             var actoin = async () =>
@@ -148,6 +157,9 @@ namespace ECommerce.Test.ServiceTests
                 .With(t => t.Id, Guid.Empty)
                 .With(t => t.CategoryName, null as string)
                 .With(t => t.ManufacturerName, null as string)
+                .With(t => t.Price, 10)
+                .With(t => t.SalePrice, null as decimal?)
+                .With(t => t.Stock, 10)
                 .Create();
             var addedProduct = productDto.ToEntity();
 
@@ -186,7 +198,11 @@ namespace ECommerce.Test.ServiceTests
         public async Task GetAllAsync_NonEmptyDb_ReturnsProductDtoList()
         {
             // Arrange
-            var products = _fixture.CreateMany<Product>(3).ToList();
+            var products = _fixture.Build<Product>()
+                .With(t => t.Price, 10)
+                .With(t => t.SalePrice, null as decimal?)
+                .With(t => t.Stock, 10)
+                .CreateMany<Product>(3).ToList();
             _productRepositoryMock.Setup(repo => repo.GetAllAsync(null))
                                    .ReturnsAsync(products);
 
@@ -221,7 +237,11 @@ namespace ECommerce.Test.ServiceTests
         public async Task GetByIdAsync_ValidId_ReturnsProductDto()
         {
             // Arrange
-            var product = _fixture.Create<Product>();
+            var product = _fixture.Build<Product>()
+                .With(t => t.Price, 10)
+                .With(t => t.SalePrice, null as decimal?)
+                .With(t => t.Stock, 10)
+                .Create();
             _productRepositoryMock.Setup(repo => repo.GetByIdAsync(product.Id))
                                    .ReturnsAsync(product);
 
@@ -258,7 +278,11 @@ namespace ECommerce.Test.ServiceTests
         {
             // Arrange
             var categoryId = Guid.NewGuid();
-            var products = _fixture.CreateMany<Product>().ToList();
+            var products = _fixture.Build<Product>()
+                .With(t => t.Price, 10)
+                .With(t => t.SalePrice, null as decimal?)
+                .With(t => t.Stock, 10)
+                .CreateMany<Product>().ToList();
             _productRepositoryMock.Setup(x => x.GetAllAsync(
                 It.IsAny<Expression<Func<Product, bool>>?>()))
                 .ReturnsAsync(products);
@@ -297,7 +321,11 @@ namespace ECommerce.Test.ServiceTests
         {
             // Arrange
             var manufacturerId = Guid.NewGuid();
-            var products = _fixture.CreateMany<Product>().ToList();
+            var products = _fixture.Build<Product>()
+                .With(t => t.Price, 10)
+                .With(t => t.SalePrice, null as decimal?)
+                .With(t => t.Stock, 10)
+                .CreateMany().ToList();
             _productRepositoryMock.Setup(x => x.GetAllAsync(
                 It.IsAny<Expression<Func<Product, bool>>?>()))
                 .ReturnsAsync(products);
@@ -339,7 +367,11 @@ namespace ECommerce.Test.ServiceTests
             // Arrange
             var productId = Guid.NewGuid();
             var existingProduct = _fixture.Build<Product>()
-                .With(t => t.Id, productId).Create();
+                .With(t => t.Id, productId)
+                .With(t => t.Price, 10)
+                .With(t => t.SalePrice, null as decimal?)
+                .With(t => t.Stock, 10)
+                .Create();
 
             _productRepositoryMock.Setup(repo => repo.GetByIdAsync(productId))
                                    .ReturnsAsync(existingProduct);
@@ -380,6 +412,9 @@ namespace ECommerce.Test.ServiceTests
             // Arrange
             var productDto = _fixture.Build<ProductDto>()
                 .With(t => t.Id, Guid.Empty)
+                .With(t => t.Price, 10)
+                .With(t => t.SalePrice, null as decimal?)
+                .With(t => t.Stock, 10)
                 .Create();
 
             // Act
@@ -399,6 +434,9 @@ namespace ECommerce.Test.ServiceTests
             var productDto = _fixture.Build<ProductDto>()
                 .With(t => t.Id, Guid.NewGuid())
                 .With(t => t.Name, null as string)
+                .With(t => t.Price, 10)
+                .With(t => t.SalePrice, null as decimal?)
+                .With(t => t.Stock, 10)
                 .Create();
 
             // Act
@@ -418,6 +456,9 @@ namespace ECommerce.Test.ServiceTests
             var invalidId = Guid.NewGuid();
             var productDto = _fixture.Build<ProductDto>()
                 .With(t => t.Id, invalidId)
+                .With(t => t.Price, 10)
+                .With(t => t.SalePrice, null as decimal?)
+                .With(t => t.Stock, 10)
                 .Create();
 
             _productRepositoryMock.Setup(repo => repo.GetByIdAsync(invalidId))
@@ -438,7 +479,11 @@ namespace ECommerce.Test.ServiceTests
         {
             // Arrange
             var productDto = _fixture.Build<ProductDto>()
-                .With(t => t.Price, -2).Create();
+                .With(t => t.Price, -2)
+                .With(t => t.Price, 10)
+                .With(t => t.SalePrice, null as decimal?)
+                .With(t => t.Stock, 10)
+                .Create();
 
             // Act
             var action = async () =>
@@ -457,11 +502,17 @@ namespace ECommerce.Test.ServiceTests
             var productId = Guid.NewGuid();
             var existingProduct = _fixture.Build<Product>()
                 .With(t => t.Id, productId)
+                .With(t => t.Price, 10)
+                .With(t => t.SalePrice, null as decimal?)
+                .With(t => t.Stock, 10)
                 .Create();
             var updatedProductDto = _fixture.Build<ProductDto>()
                 .With(t => t.Id, productId)
                 .With(t => t.CategoryName, null as string)
                 .With(t => t.ManufacturerName, null as string)
+                .With(t => t.Price, 10)
+                .With(t => t.SalePrice, null as decimal?)
+                .With(t => t.Stock, 10)
                 .Create();
             var updatedProduct = updatedProductDto.ToEntity();
 
@@ -487,7 +538,12 @@ namespace ECommerce.Test.ServiceTests
         public void Sort_SortAscendingByName_ReturnsSortedCategories()
         {
             // Arrange
-            var products = _fixture.CreateMany<ProductDto>();
+            var products = _fixture
+                .Build<ProductDto>()
+                .With(t => t.Price, 10)
+                .With(t => t.SalePrice, null as decimal?)
+                .With(t => t.Stock, 10)
+                .CreateMany();
 
             var sortedProducts = products.OrderBy(t => t.Name);
 
@@ -503,7 +559,11 @@ namespace ECommerce.Test.ServiceTests
         public void Sort_SortDescendingByName_ReturnsSortedCategories()
         {
             // Arrange
-            var products = _fixture.CreateMany<ProductDto>();
+            var products = _fixture.Build<ProductDto>()
+                .With(t => t.Price, 10)
+                .With(t => t.SalePrice, null as decimal?)
+                .With(t => t.Stock, 10)
+                .CreateMany();
 
             var sortedProducts = products.OrderByDescending(t => t.Name);
 
@@ -519,7 +579,11 @@ namespace ECommerce.Test.ServiceTests
         public void Sort_SortAscendingByPrice_ReturnsSortedCategories()
         {
             // Arrange
-            var products = _fixture.CreateMany<ProductDto>();
+            var products = _fixture.Build<ProductDto>()
+                .With(t => t.Price, 10)
+                .With(t => t.SalePrice, null as decimal?)
+                .With(t => t.Stock, 10)
+                .CreateMany();
 
             var sortedProducts = products.OrderBy(t => t.Price);
 
@@ -535,7 +599,11 @@ namespace ECommerce.Test.ServiceTests
         public void Sort_InvalidSortBy_ReturnsCategories()
         {
             // Arrange
-            var products = _fixture.CreateMany<ProductDto>();
+            var products = _fixture.Build<ProductDto>()
+                .With(t => t.Price, 10)
+                .With(t => t.SalePrice, null as decimal?)
+                .With(t => t.Stock, 10)
+                .CreateMany();
 
             // Act
             var result = _productSorterService.Sort(products, " ");
@@ -551,9 +619,23 @@ namespace ECommerce.Test.ServiceTests
             // Arrange
             var products = new List<ProductDto>
             {
-                _fixture.Create<ProductDto>(),
-                _fixture.Create<ProductDto>(),
-                _fixture.Build<ProductDto>().With(t => t.SalePrice, null as decimal?).Create(),
+                _fixture.Build<ProductDto>()
+                .With(t => t.Price, 10)
+                .With(t => t.SalePrice, null as decimal?)
+                .With(t => t.Stock, 10)
+                .Create(),
+
+                _fixture.Build<ProductDto>()
+                .With(t => t.Price, 10)
+                .With(t => t.SalePrice, null as decimal?)
+                .With(t => t.Stock, 10)
+                .Create(),
+
+                _fixture.Build<ProductDto>()
+                .With(t => t.SalePrice, null as decimal?)
+                .With(t => t.Price, 10)
+                .With(t => t.SalePrice, null as decimal?)
+                .With(t => t.Stock, 10).Create(),
             };
 
             var sortedProducts = products.OrderBy(p => p.SalePrice.HasValue ? 0 : 1).ThenBy(p => p.Name);

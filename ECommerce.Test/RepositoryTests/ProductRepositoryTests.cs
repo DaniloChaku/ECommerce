@@ -1,10 +1,5 @@
 ﻿using ECommerce.Core.Domain.Entities;
 using ECommerce.Infrastructure.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECommerce.Test.RepositoryTests
 {
@@ -60,7 +55,11 @@ namespace ECommerce.Test.RepositoryTests
             {
                 // Arrange
                 var repository = new ProductRepository(context);
-                var products = _fixture.CreateMany<Product>().ToList();
+                var products = _fixture.Build<Product>()
+                    .With(t => t.Price, 10)
+                .With(t => t.SalePrice, null as decimal?)
+                .With(t => t.Stock, 10)
+                    .CreateMany().ToList();
                 context.Products.AddRange(products);
                 await context.SaveChangesAsync();
 
@@ -83,15 +82,27 @@ namespace ECommerce.Test.RepositoryTests
                 var repository = new ProductRepository(context);
 
                 var product1 = fixture.Build<Product>()
-                    .With(c => c.Name, "Bread").Create();
+                    .With(c => c.Name, "Bread")
+                    .With(t => t.Price, 10)
+                .With(t => t.SalePrice, null as decimal?)
+                .With(t => t.Stock, 10)
+                .Create();
                 context.Products.Add(product1);
 
                 var product2 = fixture.Build<Product>()
-                    .With(c => c.Name, "Milk").Create();
+                    .With(c => c.Name, "Milk")
+                    .With(t => t.Price, 10)
+                .With(t => t.SalePrice, null as decimal?)
+                .With(t => t.Stock, 10)
+                .Create();
                 context.Products.Add(product2);
 
                 var product3 = fixture.Build<Product>()
-                    .With(c => c.Name, "Candy").Create();
+                    .With(c => c.Name, "Candy")
+                    .With(t => t.Price, 10)
+                .With(t => t.SalePrice, null as decimal?)
+                .With(t => t.Stock, 10)
+                .Create();
                 context.Products.Add(product3);
 
                 await context.SaveChangesAsync();
@@ -133,7 +144,11 @@ namespace ECommerce.Test.RepositoryTests
             {
                 // Arrange
                 var repository = new ProductRepository(context);
-                var product = _fixture.Create<Product>();
+                var product = _fixture.Build<Product>()
+                    .With(t => t.Price, 10)
+                .With(t => t.SalePrice, null as decimal?)
+                .With(t => t.Stock, 10)
+                .Create();
                 context.Products.Add(product);
                 await context.SaveChangesAsync();
 
@@ -156,7 +171,11 @@ namespace ECommerce.Test.RepositoryTests
             {
                 // Arrange
                 var repository = new ProductRepository(context);
-                var product = _fixture.Create<Product>();
+                var product = _fixture.Build<Product>()
+                    .With(t => t.Price, 10)
+                .With(t => t.SalePrice, null as decimal?)
+                .With(t => t.Stock, 10)
+                .Create();
 
                 // Act
                 var result = await repository.AddAsync(product);
@@ -175,7 +194,11 @@ namespace ECommerce.Test.RepositoryTests
             {
                 // Arrange
                 var repository = new ProductRepository(context);
-                var products = _fixture.CreateMany<Product>().ToList();
+                var products = _fixture.Build<Product>()
+                    .With(t => t.Price, 10)
+                .With(t => t.SalePrice, null as decimal?)
+                .With(t => t.Stock, 10)
+                    .CreateMany().ToList();
                 var addedProducts = new List<Product>();
 
                 // Act
@@ -203,11 +226,19 @@ namespace ECommerce.Test.RepositoryTests
             {
                 // Arrange
                 var repository = new ProductRepository(context);
-                var product = _fixture.Create<Product>();
+                var product = _fixture.Build<Product>()
+                    .With(t => t.Price, 10)
+                .With(t => t.SalePrice, null as decimal?)
+                .With(t => t.Stock, 10)
+                .Create();
                 context.Products.Add(product);
                 await context.SaveChangesAsync();
 
-                var updatedProduct = _fixture.Create<Product>();
+                var updatedProduct = _fixture.Build<Product>()
+                    .With(t => t.Price, 10)
+                .With(t => t.SalePrice, null as decimal?)
+                .With(t => t.Stock, 10)
+                .Create();
                 updatedProduct.Id = product.Id;
 
                 // Act
@@ -230,7 +261,11 @@ namespace ECommerce.Test.RepositoryTests
             {
                 // Arrange
                 var repository = new ProductRepository(context);
-                var product = _fixture.Create<Product>();
+                var product = _fixture.Build<Product>()
+                    .With(t => t.Price, 10)
+                .With(t => t.SalePrice, null as decimal?)
+                .With(t => t.Stock, 10)
+                .Create();
                 context.Products.Add(product);
                 await context.SaveChangesAsync();
 
