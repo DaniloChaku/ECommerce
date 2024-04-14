@@ -12,7 +12,7 @@ using ECommerce.Core.Enums;
 using ECommerce.UI.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace Ecommerce.Tests.ControllerTests
+namespace ECommerce.Tests.ControllerTests
 {
     public class ProductControllerTests
     {
