@@ -273,5 +273,68 @@ namespace ECommerce.Tests.ControllerTests
         }
 
         #endregion
+
+        #region ValidateSameName
+
+        [Fact]
+        public async Task ValidateSameName_NewName_ReturnsTrue()
+        {
+            // Arrange
+            _manufacturerGetterServiceMock.Setup(t => t.GetAllAsync())
+                .ReturnsAsync(new List<ManufacturerDto>());
+
+            var manufacturer = _fixture.Create<ManufacturerDto>();
+
+            var manufacturerController = CreateManufacturerController();
+
+            // Act
+            var result = await manufacturerController.ValidateSameName(manufacturer);
+
+            // Assert
+            var jsonResult = Assert.IsType<JsonResult>(result);
+            jsonResult.Value.Should().Be(true);
+        }
+
+        [Fact]
+        public async Task ValidateSameName_EmptyManufacturerId_ReturnsTrue()
+        {
+            // Arrange
+            var manufacturer = _fixture.Build<ManufacturerDto>()
+                .With(t => t.Id, Guid.Empty)
+                .Create();
+
+            var manufacturerController = CreateManufacturerController();
+
+            // Act
+            var result = await manufacturerController.ValidateSameName(manufacturer);
+
+            // Assert
+            var jsonResult = Assert.IsType<JsonResult>(result);
+            jsonResult.Value.Should().Be(true);
+        }
+
+        [Fact]
+        public async Task ValidateSameName_ExistingName_ReturnsFalse()
+        {
+            // Arrange
+            var manufacturer1 = _fixture.Create<ManufacturerDto>();
+            var manufacturer2 = _fixture.Build<ManufacturerDto>()
+                .With(t => t.Name, manufacturer1.Name)
+                .Create();
+
+            _manufacturerGetterServiceMock.Setup(t => t.GetAllAsync())
+                .ReturnsAsync(new List<ManufacturerDto>() { manufacturer1 });
+
+            var manufacturerController = CreateManufacturerController();
+
+            // Act
+            var result = await manufacturerController.ValidateSameName(manufacturer2);
+
+            // Assert
+            var jsonResult = Assert.IsType<JsonResult>(result);
+            jsonResult.Value.Should().Be(false);
+        }
+
+        #endregion
     }
 }

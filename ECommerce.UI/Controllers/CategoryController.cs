@@ -74,19 +74,22 @@ namespace ECommerce.UI.Controllers
             }
         }
 
-        public async Task<IActionResult> ValidateSameName(string name)
-        {
-            var categories = await _categoryGetterService.GetAllAsync();
+        #region API
 
-            if (categories.Any(t => t.Name == name))
+        public async Task<IActionResult> ValidateSameName(CategoryDto category)
+        {
+            if (category.Id != Guid.Empty)
             {
-                return Json(false);
+                var categorys = await _categoryGetterService.GetAllAsync();
+
+                if (categorys.Any(t => t.Name == category.Name))
+                {
+                    return Json(false);
+                }
             }
 
             return Json(true);
         }
-
-        #region API
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
@@ -121,7 +124,6 @@ namespace ECommerce.UI.Controllers
                     Success = true,
                     Message = "Category deleted successfully."
                 };
-                TempData["success"] = response.Message;
 
                 return Ok(response);
             }
@@ -131,10 +133,9 @@ namespace ECommerce.UI.Controllers
 
                 var response = new
                 {
-                    Success = false,
+                    success = false,
                     Message = "An error occurred while deleting Category. Please try again."
                 };
-                TempData["error"] = response.Message;
 
                 return BadRequest(response);
             }

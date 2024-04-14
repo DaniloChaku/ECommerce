@@ -74,19 +74,22 @@ namespace ECommerce.UI.Controllers
             }
         }
 
-        public async Task<IActionResult> ValidateSameName(string name)
-        {
-            var categories = await _manufacturerGetterService.GetAllAsync();
+        #region API
 
-            if (categories.Any(t => t.Name == name))
+        public async Task<IActionResult> ValidateSameName(ManufacturerDto manufacturer)
+        {
+            if (manufacturer.Id != Guid.Empty)
             {
-                return Json(false);
+                var manufacturers = await _manufacturerGetterService.GetAllAsync();
+
+                if (manufacturers.Any(t => t.Name == manufacturer.Name))
+                {
+                    return Json(false);
+                }
             }
 
             return Json(true);
         }
-
-        #region API
 
         [HttpGet]
         public async Task<IActionResult> GetAll()

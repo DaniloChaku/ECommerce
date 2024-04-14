@@ -274,5 +274,68 @@ namespace ECommerce.Tests.ControllerTests
         }
 
         #endregion
+
+        #region ValidateSameName
+
+        [Fact]
+        public async Task ValidateSameName_NewName_ReturnsTrue()
+        {
+            // Arrange
+            _categoryGetterServiceMock.Setup(t => t.GetAllAsync())
+                .ReturnsAsync(new List<CategoryDto>());
+
+            var category = _fixture.Create<CategoryDto>();
+
+            var categoryController = CreateCategoryController();
+
+            // Act
+            var result = await categoryController.ValidateSameName(category);
+
+            // Assert
+            var jsonResult = Assert.IsType<JsonResult>(result);
+            jsonResult.Value.Should().Be(true);
+        }
+
+        [Fact]
+        public async Task ValidateSameName_EmptyCategoryId_ReturnsTrue()
+        {
+            // Arrange
+            var category = _fixture.Build<CategoryDto>()
+                .With(t => t.Id, Guid.Empty)
+                .Create();
+
+            var categoryController = CreateCategoryController();
+
+            // Act
+            var result = await categoryController.ValidateSameName(category);
+
+            // Assert
+            var jsonResult = Assert.IsType<JsonResult>(result);
+            jsonResult.Value.Should().Be(true);
+        }
+
+        [Fact]
+        public async Task ValidateSameName_ExistingName_ReturnsFalse()
+        {
+            // Arrange
+            var category1 = _fixture.Create<CategoryDto>();
+            var category2 = _fixture.Build<CategoryDto>()
+                .With(t => t.Name, category1.Name)
+                .Create();
+
+            _categoryGetterServiceMock.Setup(t => t.GetAllAsync())
+                .ReturnsAsync(new List<CategoryDto>() { category1 });
+
+            var categoryController = CreateCategoryController();
+
+            // Act
+            var result = await categoryController.ValidateSameName(category2);
+
+            // Assert
+            var jsonResult = Assert.IsType<JsonResult>(result);
+            jsonResult.Value.Should().Be(false);
+        }
+
+        #endregion
     }
 }
