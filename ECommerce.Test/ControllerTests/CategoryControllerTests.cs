@@ -1,6 +1,6 @@
 ﻿using ECommerce.Core.DTO;
 using ECommerce.Core.ServiceContracts.Category;
-using ECommerce.UI.Views.Home;
+using ECommerce.UI.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;

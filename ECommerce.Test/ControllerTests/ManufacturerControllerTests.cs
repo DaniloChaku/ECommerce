@@ -1,6 +1,5 @@
 ﻿using ECommerce.Core.DTO;
 using ECommerce.Core.ServiceContracts.Manufacturer;
-using ECommerce.UI.Views.Home;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Mvc;
