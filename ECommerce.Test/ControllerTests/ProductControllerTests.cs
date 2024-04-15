@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Hosting;
 using ECommerce.Core.Enums;
 using ECommerce.UI.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using ECommerce.Core.ServiceContracts.Image;
 
 namespace ECommerce.Tests.ControllerTests
 {
@@ -27,6 +28,10 @@ namespace ECommerce.Tests.ControllerTests
         private readonly IManufacturerSorterService _manufacturerSorterService;
 
         private readonly IWebHostEnvironment _webHostEnvironment;
+
+        private readonly IImageUploaderService _imageUploaderService;
+        private readonly IImageDeleterService _imageDeleterService;
+
         private readonly ITempDataDictionary _tempData;
 
         private readonly Mock<IProductGetterService> _productGetterServiceMock;
@@ -40,6 +45,10 @@ namespace ECommerce.Tests.ControllerTests
         private readonly Mock<IManufacturerSorterService> _manufacturerSorterServiceMock;
 
         private readonly Mock<IWebHostEnvironment> _webHostEnvironmentMock;
+
+        private readonly Mock<IImageUploaderService> _imageUploaderServiceMock;
+        private readonly Mock<IImageDeleterService> _imageDeleterServiceMock;
+
         private readonly Mock<ITempDataDictionary> _tempDataMock;
 
         private readonly IFixture _fixture;
@@ -59,6 +68,10 @@ namespace ECommerce.Tests.ControllerTests
             _manufacturerSorterServiceMock = new Mock<IManufacturerSorterService>();
 
             _webHostEnvironmentMock = new Mock<IWebHostEnvironment>();
+
+            _imageUploaderServiceMock = new Mock<IImageUploaderService>();
+            _imageDeleterServiceMock = new Mock<IImageDeleterService>();
+
             _tempDataMock = new Mock<ITempDataDictionary>();
 
             _productGetterService = _productGetterServiceMock.Object;
@@ -72,6 +85,10 @@ namespace ECommerce.Tests.ControllerTests
             _manufacturerSorterService = _manufacturerSorterServiceMock.Object;
 
             _webHostEnvironment = _webHostEnvironmentMock.Object;
+
+            _imageUploaderService = _imageUploaderServiceMock.Object;
+            _imageDeleterService = _imageDeleterServiceMock.Object;
+
             _tempData = _tempDataMock.Object;
         }
 
@@ -80,7 +97,8 @@ namespace ECommerce.Tests.ControllerTests
             return new ProductController(_productGetterService,
                 _productAdderService, _productUpdaterService, _productDeleterService,
                 _categoryGetterService, _categorySorterService, _manufacturerGetterService,
-                _manufacturerSorterService, _webHostEnvironment)
+                _manufacturerSorterService, _webHostEnvironment, _imageUploaderService, 
+                _imageDeleterService)
             {
                 TempData = _tempData
             };
