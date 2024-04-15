@@ -12,7 +12,7 @@ function loadTableData() {
             { data: "salePrice", with: "5%"},
             {
                 data: "imageUrl",
-                render: url => url === null ? "+" : "-"      
+                render: url => url === null ? "-" : "+"      
             },
             { data: "stock", with: "10%"},
             { data: "categoryName", with: "10%"},
