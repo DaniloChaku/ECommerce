@@ -1,8 +1,10 @@
 using ECommerce.Core.Domain.RepositoryContracts;
 using ECommerce.Core.ServiceContracts.Category;
+using ECommerce.Core.ServiceContracts.Image;
 using ECommerce.Core.ServiceContracts.Manufacturer;
 using ECommerce.Core.ServiceContracts.Product;
 using ECommerce.Core.Services.Category;
+using ECommerce.Core.Services.Image;
 using ECommerce.Core.Services.Manufacturer;
 using ECommerce.Core.Services.Product;
 using ECommerce.Infrastructure.Db;
@@ -34,6 +36,9 @@ builder.Services.AddScoped<IProductAdderService, ProductAdderService>();
 builder.Services.AddScoped<IProductUpdaterService, ProductUpdaterService>();
 builder.Services.AddScoped<IProductDeleterService, ProductDeleterService>();
 builder.Services.AddScoped<IProductSorterService, ProductSorterService>();
+
+builder.Services.AddScoped<IImageUploaderService, ImageUploaderService>();
+builder.Services.AddScoped<IImageDeleterService, ImageDeleterService>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {

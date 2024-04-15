@@ -1,5 +1,7 @@
 ﻿using ECommerce.Core.DTO;
+using ECommerce.Core.Exceptions;
 using ECommerce.Core.ServiceContracts.Category;
+using ECommerce.Core.ServiceContracts.Image;
 using ECommerce.Core.ServiceContracts.Manufacturer;
 using ECommerce.Core.ServiceContracts.Product;
 using ECommerce.UI.Models;
@@ -22,11 +24,15 @@ namespace ECommerce.UI.Controllers
 
         private readonly IWebHostEnvironment _webHostEnvironment;
 
+        private readonly IImageUploaderService _imageUploaderService;
+        private readonly IImageDeleterService _imageDeleterService;
+
         public ProductController(IProductGetterService productGetterService,
             IProductAdderService productAdderService, IProductUpdaterService productUpdaterService,
             IProductDeleterService productDeleterService, ICategoryGetterService categoryGetterService,
             ICategorySorterService categorySorterService, IManufacturerGetterService manufacturerGetterService,
-            IManufacturerSorterService manufacturerSorterService, IWebHostEnvironment webHostEnvironment)
+            IManufacturerSorterService manufacturerSorterService, IWebHostEnvironment webHostEnvironment,
+            IImageUploaderService imageUploaderService, IImageDeleterService imageDeleterService)
         {
             _productGetterService = productGetterService;
             _productAdderService = productAdderService;
@@ -39,6 +45,9 @@ namespace ECommerce.UI.Controllers
             _manufacturerSorterService = manufacturerSorterService;
 
             _webHostEnvironment = webHostEnvironment;
+
+            _imageUploaderService = imageUploaderService;
+            _imageDeleterService = imageDeleterService;
         }
 
         public IActionResult Index()
@@ -95,30 +104,27 @@ namespace ECommerce.UI.Controllers
 
                 if (image is not null)
                 {
-                    string wwwrootPath = _webHostEnvironment.WebRootPath;
-
-                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
-                    string productPath = @"images/products/product-" + productResponse.Id;
-                    string finalPath = Path.Combine(wwwrootPath, productPath);
-
-                    if (!Directory.Exists(finalPath))
-                        Directory.CreateDirectory(finalPath);
-
-                    using (var fileStream = new FileStream(Path.Combine(finalPath, fileName), FileMode.Create))
+                    try
                     {
-                        await image.CopyToAsync(fileStream);
-                    }
+                        var imageUrl = await _imageUploaderService.UploadImageAsync(image, productResponse.Id.ToString());
 
-                    if (productResponse.ImageUrl is not null)
+                        _imageDeleterService.DeleteImage(productResponse.ImageUrl);
+
+                        productResponse.ImageUrl = imageUrl;
+
+                        await _productUpdaterService.UpdateAsync(productResponse);
+                    }
+                    catch (ImageUploadException ex)
                     {
-                        string existingImagePath = Path.Combine(wwwrootPath, productResponse.ImageUrl.TrimStart('/'));
-                        if (System.IO.File.Exists(existingImagePath))
-                            System.IO.File.Delete(existingImagePath);
+                        ModelState.AddModelError(nameof(ProductUpsertModel.Product.ImageUrl), ex.Message);
+                        TempData["error"] = ex.Message;
+                        return View(productModel);
                     }
-
-                    productResponse.ImageUrl = $"/{productPath}/{fileName}";
-
-                    await _productUpdaterService.UpdateAsync(productResponse);
+                    catch(Exception)
+                    {
+                        TempData["error"] = "Failed to add the image";
+                        return View(productModel);
+                    }
                 }
 
                 TempData["success"] = $"Product {(productModel.Product.Id == Guid.Empty
