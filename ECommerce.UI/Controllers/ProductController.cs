@@ -4,9 +4,11 @@ using ECommerce.Core.ServiceContracts.Category;
 using ECommerce.Core.ServiceContracts.Image;
 using ECommerce.Core.ServiceContracts.Manufacturer;
 using ECommerce.Core.ServiceContracts.Product;
+using ECommerce.Core.Settings;
 using ECommerce.UI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Options;
 
 namespace ECommerce.UI.Controllers
 {
@@ -26,13 +28,15 @@ namespace ECommerce.UI.Controllers
 
         private readonly IImageUploaderService _imageUploaderService;
         private readonly IImageDeleterService _imageDeleterService;
+        private readonly ImageUploadOptions _imageUploadOptions;
 
         public ProductController(IProductGetterService productGetterService,
             IProductAdderService productAdderService, IProductUpdaterService productUpdaterService,
             IProductDeleterService productDeleterService, ICategoryGetterService categoryGetterService,
             ICategorySorterService categorySorterService, IManufacturerGetterService manufacturerGetterService,
             IManufacturerSorterService manufacturerSorterService, IWebHostEnvironment webHostEnvironment,
-            IImageUploaderService imageUploaderService, IImageDeleterService imageDeleterService)
+            IImageUploaderService imageUploaderService, IImageDeleterService imageDeleterService,
+            IOptions<ImageUploadOptions> imageUploadOptions)
         {
             _productGetterService = productGetterService;
             _productAdderService = productAdderService;
@@ -48,6 +52,7 @@ namespace ECommerce.UI.Controllers
 
             _imageUploaderService = imageUploaderService;
             _imageDeleterService = imageDeleterService;
+            _imageUploadOptions = imageUploadOptions.Value;
         }
 
         public IActionResult Index()
@@ -69,7 +74,8 @@ namespace ECommerce.UI.Controllers
             var productUpsertModel = new ProductUpsertModel()
             {
                 Categories = categoriesSelectList,
-                Manufacturers = manufacturersSelectList
+                Manufacturers = manufacturersSelectList,
+                ImageUploadOptions = _imageUploadOptions
             };
 
             if (id is not null && id != Guid.Empty)
@@ -82,7 +88,7 @@ namespace ECommerce.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Upsert(ProductUpsertModel productModel, IFormFile? image)
+        public async Task<IActionResult> Upsert(ProductUpsertModel productModel)
         {
             if (!ModelState.IsValid)
             {
@@ -102,13 +108,14 @@ namespace ECommerce.UI.Controllers
                     productResponse = await _productUpdaterService.UpdateAsync(productModel.Product);
                 }
 
-                if (image is not null)
+                if (productModel.Image is not null)
                 {
                     try
                     {
-                        var imageUrl = await _imageUploaderService.UploadImageAsync(image, productResponse.Id.ToString());
+                        var imageUrl = await _imageUploaderService.UploadAsync(productModel.Image, 
+                            productResponse.Id.ToString());
 
-                        _imageDeleterService.DeleteImage(productResponse.ImageUrl);
+                        _imageDeleterService.Delete(productResponse.ImageUrl);
 
                         productResponse.ImageUrl = imageUrl;
 
@@ -116,7 +123,7 @@ namespace ECommerce.UI.Controllers
                     }
                     catch (ImageUploadException ex)
                     {
-                        ModelState.AddModelError(nameof(ProductUpsertModel.Product.ImageUrl), ex.Message);
+                        ModelState.AddModelError(nameof(productModel.Image), ex.Message);
                         TempData["error"] = ex.Message;
                         return View(productModel);
                     }

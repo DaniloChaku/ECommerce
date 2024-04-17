@@ -12,6 +12,8 @@ using ECommerce.Core.Enums;
 using ECommerce.UI.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ECommerce.Core.ServiceContracts.Image;
+using ECommerce.Core.Settings;
+using Microsoft.Extensions.Options;
 
 namespace ECommerce.Tests.ControllerTests
 {
@@ -31,6 +33,7 @@ namespace ECommerce.Tests.ControllerTests
 
         private readonly IImageUploaderService _imageUploaderService;
         private readonly IImageDeleterService _imageDeleterService;
+        private readonly IOptions<ImageUploadOptions> _imageUploadOptions;
 
         private readonly ITempDataDictionary _tempData;
 
@@ -48,6 +51,7 @@ namespace ECommerce.Tests.ControllerTests
 
         private readonly Mock<IImageUploaderService> _imageUploaderServiceMock;
         private readonly Mock<IImageDeleterService> _imageDeleterServiceMock;
+        private readonly Mock<IOptions<ImageUploadOptions>> _imageUploadOptionsMock;
 
         private readonly Mock<ITempDataDictionary> _tempDataMock;
 
@@ -71,6 +75,36 @@ namespace ECommerce.Tests.ControllerTests
 
             _imageUploaderServiceMock = new Mock<IImageUploaderService>();
             _imageDeleterServiceMock = new Mock<IImageDeleterService>();
+            var imageUploadOptions = new ImageUploadOptions()
+            {
+                AllowedTypes = new List<ExtensionMapping>()
+                {
+                    new ExtensionMapping()
+                    {
+                        Extension = ".jpg",
+                        ContentType = "image/jpeg"
+                    },
+                    new ExtensionMapping()
+                    {
+                        Extension = ".jpeg",
+                        ContentType = "image/jpeg"
+                    },
+                    new ExtensionMapping()
+                    {
+                        Extension = ".png",
+                        ContentType = "image/png"
+                    },
+                    new ExtensionMapping()
+                    {
+                        Extension = ".gif",
+                        ContentType = "image/gif"
+                    }
+                },
+                MaxImageSize = 1024 * 1024 * 10,
+            };
+
+            _imageUploadOptionsMock = new Mock<IOptions<ImageUploadOptions>>();
+            _imageUploadOptionsMock.Setup(m => m.Value).Returns(imageUploadOptions);
 
             _tempDataMock = new Mock<ITempDataDictionary>();
 
@@ -88,6 +122,7 @@ namespace ECommerce.Tests.ControllerTests
 
             _imageUploaderService = _imageUploaderServiceMock.Object;
             _imageDeleterService = _imageDeleterServiceMock.Object;
+            _imageUploadOptions = _imageUploadOptionsMock.Object;
 
             _tempData = _tempDataMock.Object;
         }
@@ -98,7 +133,7 @@ namespace ECommerce.Tests.ControllerTests
                 _productAdderService, _productUpdaterService, _productDeleterService,
                 _categoryGetterService, _categorySorterService, _manufacturerGetterService,
                 _manufacturerSorterService, _webHostEnvironment, _imageUploaderService, 
-                _imageDeleterService)
+                _imageDeleterService, _imageUploadOptions)
             {
                 TempData = _tempData
             };
@@ -150,7 +185,7 @@ namespace ECommerce.Tests.ControllerTests
             var productController = CreateProductController();
 
             // Act
-            var result = await productController.Upsert(null);
+            var result = await productController.Upsert(null as Guid?);
 
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
@@ -260,7 +295,7 @@ namespace ECommerce.Tests.ControllerTests
             productController.ModelState.AddModelError("Key", "Error message");
 
             // Act
-            var result = await productController.Upsert(expectedVm, null);
+            var result = await productController.Upsert(expectedVm);
 
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
@@ -269,7 +304,7 @@ namespace ECommerce.Tests.ControllerTests
         }
 
         [Fact]
-        public async Task Upsert_EmptyProductDtoId_ReturnsRedirectToActionResult()
+        public async Task Upsert_EmptyProductDtoId_CallsAddAsync()
         {
             // Arrange
             var categories = _fixture.CreateMany<SelectListItem>(5);
@@ -293,7 +328,7 @@ namespace ECommerce.Tests.ControllerTests
             _productAdderServiceMock.Setup(t => t.AddAsync(It.IsAny<ProductDto>()))
                 .ReturnsAsync(product);
 
-            var result = await productController.Upsert(vm, null);
+            var result = await productController.Upsert(vm);
 
             // Assert
             _productAdderServiceMock.Verify(t => t.AddAsync(product), Times.Once);
@@ -324,10 +359,56 @@ namespace ECommerce.Tests.ControllerTests
             _productUpdaterServiceMock.Setup(t => t.UpdateAsync(It.IsAny<ProductDto>()))
                 .ReturnsAsync(product);
 
-            var result = await productController.Upsert(vm, null);
+            var result = await productController.Upsert(vm);
 
             // Assert
             _productUpdaterServiceMock.Verify(t => t.UpdateAsync(product), Times.Once);
+            result.Should().BeOfType<RedirectToActionResult>();
+        }
+
+        [Fact]
+        public async Task Upsert_ValidIdAndNonEmptyImage_CallsUpdateAsyncAndUploadAsyncAndDelete()
+        {
+            // Arrange
+            var categories = _fixture.CreateMany<SelectListItem>(5);
+            var manufacturers = _fixture.CreateMany<SelectListItem>(5);
+
+            var product = _fixture.Build<ProductDto>()
+                .With(t => t.Price, 10)
+                .With(t => t.SalePrice, null as decimal?)
+                .With(t => t.Stock, 10)
+                .Create();
+
+            var imageMock = new Mock<IFormFile>();
+            imageMock.Setup(i => i.Length).Returns(1024);
+            imageMock.Setup(i => i.FileName).Returns("image.jpg");
+            imageMock.Setup(i => i.ContentType).Returns("image/jpeg");
+            var image = imageMock.Object;
+
+            var vm = new ProductUpsertModel()
+            {
+                Product = product,
+                Categories = categories,
+                Manufacturers = manufacturers,
+                Image = image
+            };
+
+            var productController = CreateProductController();
+
+            // Act
+            _productUpdaterServiceMock.Setup(t => t.UpdateAsync(It.IsAny<ProductDto>()))
+                .ReturnsAsync(product);
+            _imageUploaderServiceMock.Setup(s => s.UploadAsync(It.IsAny<IFormFile>(),
+                It.IsAny<string>())).ReturnsAsync("");
+            _imageDeleterServiceMock.Setup(s => s.Delete(It.IsAny<string>()));
+
+            var result = await productController.Upsert(vm);
+
+            // Assert
+            _productUpdaterServiceMock.Verify(t => t.UpdateAsync(product));
+            _imageUploaderServiceMock.Verify(s => s.UploadAsync(image, 
+                vm.Product.Id.ToString()), Times.Once);
+            _imageDeleterServiceMock.Verify(s => s.Delete(It.IsAny<string>()), Times.Once);
             result.Should().BeOfType<RedirectToActionResult>();
         }
 

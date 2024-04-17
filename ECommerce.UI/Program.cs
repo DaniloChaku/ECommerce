@@ -7,14 +7,18 @@ using ECommerce.Core.Services.Category;
 using ECommerce.Core.Services.Image;
 using ECommerce.Core.Services.Manufacturer;
 using ECommerce.Core.Services.Product;
+using ECommerce.Core.Settings;
 using ECommerce.Infrastructure.Db;
 using ECommerce.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.Configure<ImageUploadOptions>(builder.Configuration.GetSection("ImageUpload"));
 
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICategoryGetterService, CategoryGetterService>();

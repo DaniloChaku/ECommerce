@@ -17,7 +17,7 @@ namespace ECommerce.Core.Services.Image
             _webHostEnvironment = webHostEnvironment;
         }
 
-        public void DeleteImage(string? imageUrl)
+        public void Delete(string? imageUrl)
         {
             if (imageUrl is not null)
             {

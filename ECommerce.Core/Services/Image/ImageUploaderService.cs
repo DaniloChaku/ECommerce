@@ -1,7 +1,9 @@
 ﻿using ECommerce.Core.Exceptions;
 using ECommerce.Core.ServiceContracts.Image;
+using ECommerce.Core.Settings;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,32 +15,40 @@ namespace ECommerce.Core.Services.Image
     public class ImageUploaderService : IImageUploaderService
     {
         private readonly IWebHostEnvironment _webHostEnvironment;
-        public const long MaxFileSize = 10 * 1024 * 1024; 
-        public static string[] PermittedExtensions { get; } = { ".jpg", ".jpeg", ".png", ".gif" };
+        private readonly ImageUploadOptions _imageUploadSettings;
 
-        public ImageUploaderService(IWebHostEnvironment webHostEnvironment)
+        public ImageUploaderService(IWebHostEnvironment webHostEnvironment,
+            IOptions<ImageUploadOptions> imageUploadSettings)
         {
             _webHostEnvironment = webHostEnvironment;
+            _imageUploadSettings = imageUploadSettings.Value;
         }
 
-        public async Task<string> UploadImageAsync(IFormFile image, string productId)
+        public async Task<string> UploadAsync(IFormFile image, string productId)
         {
             if (image is null)
             {
                 throw new ImageUploadException("Image was not supplied");
             }
 
-            if (image.Length > MaxFileSize)
+            var maxImageSize = _imageUploadSettings.MaxImageSize;
+            if (image.Length > maxImageSize)
             {
                 throw new ImageUploadException($"File size exceeds the maximum allowed limit" +
-                    $" of {MaxFileSize / 1024 / 1024} MB.");
+                    $" of {maxImageSize / 1024 / 1024} MB.");
             }
 
             var ext = Path.GetExtension(image.FileName).ToLowerInvariant();
-            if (string.IsNullOrEmpty(ext) || !PermittedExtensions.Contains(ext))
+            var contentType = image.ContentType;
+
+            var allowedTypes = _imageUploadSettings.AllowedTypes;
+            var hasValidContentType = allowedTypes
+                .Any(t => t.Extension.Equals(ext) && t.ContentType.Equals(contentType));
+
+            if (!hasValidContentType)
             {
                 throw new ImageUploadException("Invalid file type. Only image files are allowed " +
-                    $"({string.Join(", ", PermittedExtensions)}).");
+                    $"({string.Join(", ", allowedTypes.Select(e => e.Extension))}).");
             }
 
             string wwwrootPath = _webHostEnvironment.WebRootPath;

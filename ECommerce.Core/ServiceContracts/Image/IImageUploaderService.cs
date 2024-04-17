@@ -9,6 +9,6 @@ namespace ECommerce.Core.ServiceContracts.Image
 {
     public interface IImageUploaderService
     {
-        Task<string> UploadImageAsync(IFormFile image, string productId);
+        Task<string> UploadAsync(IFormFile image, string productId);
     }
 }

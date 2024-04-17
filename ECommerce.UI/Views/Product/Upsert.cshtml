@@ -43,13 +43,21 @@
             <div class="mb-3">
                 <div class="row">
                     <div class="col-6">
-                        <label asp-for="Product.ImageUrl" class="form-label">Image</label>
-                        <input type="file" size="@ImageUploaderService.MaxFileSize"
-                               accept="@(string.Join(",", ImageUploaderService.PermittedExtensions))"
-                               name="image" asp-for="Product.ImageUrl" class="form-control" />
-                        <span asp-validation-for="Product.ImageUrl" class="text-danger"></span>
+                        <label asp-for="Image" class="form-label">Image</label>
+                        @if (Model.ImageUploadOptions is not null)
+                        {
+                            <input asp-for="Image" size="@Model.ImageUploadOptions.MaxImageSize"
+                                   accept="@string.Join(",", Model.ImageUploadOptions.AllowedTypes.Select(t => t.Extension))"
+                            class="form-control" />
+                        }
+                        else
+                        {
+                            <input asp-for="Image" class="form-control" />
+                        }
+                        <span asp-validation-for="Image" class="text-danger"></span>
                     </div>
                     <div class="col-6">
+                        <span class="mb-1">Current Image:</span>
                         @if (Model.Product.ImageUrl is not null)
                         {
                             <img src="@Model.Product.ImageUrl"

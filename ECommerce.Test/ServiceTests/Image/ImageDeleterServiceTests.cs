@@ -23,35 +23,35 @@ namespace ECommerce.Tests.ServiceTests.Image
         }
 
         [Fact]
-        public void DeleteImage_WithNullImageUrl_DoesNotDeleteFile()
+        public void Delete_WithNullImageUrl_DoesNotDeleteFile()
         {
             // Arrange
             var service = new ImageDeleterService(_mockWebHostEnvironment.Object);
             string? imageUrl = null;
 
             // Act
-            service.DeleteImage(imageUrl);
+            service.Delete(imageUrl);
 
             // Assert
             Directory.GetFiles(_tempDirectory).Should().BeEmpty();
         }
 
         [Fact]
-        public void DeleteImage_WithNonExistentImage_DoesNotDeleteFile()
+        public void Delete_WithNonExistentImage_DoesNotDeleteFile()
         {
             // Arrange
             var service = new ImageDeleterService(_mockWebHostEnvironment.Object);
             string imageUrl = "/images/product.jpg";
 
             // Act
-            service.DeleteImage(imageUrl);
+            service.Delete(imageUrl);
 
             // Assert
             Directory.GetFiles(_tempDirectory).Should().BeEmpty();
         }
 
         [Fact]
-        public void DeleteImage_WithExistingImage_DeletesFile()
+        public void Delete_WithExistingImage_DeletesFile()
         {
             // Arrange
             var service = new ImageDeleterService(_mockWebHostEnvironment.Object);
@@ -64,7 +64,7 @@ namespace ECommerce.Tests.ServiceTests.Image
             File.WriteAllText(imagePath, "dummy content");
 
             // Act
-            service.DeleteImage(imageUrl);
+            service.Delete(imageUrl);
 
             // Assert
             File.Exists(imagePath).Should().BeFalse();
