@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using ECommerce.Core.ServiceContracts.Image;
 using ECommerce.Core.Settings;
 using Microsoft.Extensions.Options;
+using ECommerce.Core.Domain.Entities;
+using System.Drawing;
 
 namespace ECommerce.Tests.ControllerTests
 {
@@ -477,7 +479,7 @@ namespace ECommerce.Tests.ControllerTests
 
             // Assert
             result.Should().NotBe(null);
-            result.Should().BeOfType<BadRequestObjectResult>();
+            result.Should().BeOfType<ObjectResult>();
         }
 
         [Fact]
@@ -574,6 +576,133 @@ namespace ECommerce.Tests.ControllerTests
             // Assert
             var jsonResult = Assert.IsType<JsonResult>(result);
             jsonResult.Value.Should().Be(false);
+        }
+
+        #endregion
+
+        #region HasAssociation
+
+        [Theory]
+        [InlineData("Category")]
+        [InlineData("Manufacturer")]
+        public async Task HasAssociation_ValidIdAndType_ReturnsOkObjectResult(string type)
+        {
+            // Arrange
+            Guid validId = Guid.NewGuid();
+            var products = new List<ProductDto>();
+
+            _productGetterServiceMock.Setup(s => s.GetByCategoryAsync(validId))
+                .ReturnsAsync(products);
+            _productGetterServiceMock.Setup(s => s.GetByManufacturerAsync(validId))
+                .ReturnsAsync(products);
+
+            var controller = CreateProductController();
+
+            // Act
+            var result = await controller.HasAssociation(type, validId);
+
+            // Assert
+            result.Should().NotBe(null);
+            result.Should().BeOfType<OkObjectResult>();
+        }
+
+        [Fact]
+        public async Task HasAssociation_InvalidId_ReturnsBadRequestObjectResult()
+        {
+            // Arrange
+            Guid emptyId = Guid.Empty;
+            var type = "category";
+
+            var controller = CreateProductController();
+
+            // Act
+            var result = await controller.HasAssociation(type, emptyId);
+
+            // Assert
+            result.Should().NotBe(null);
+            result.Should().BeOfType<BadRequestObjectResult>();
+        }
+
+        [Fact]
+        public async Task HasAssociation_InvalidType_ReturnsBadRequestObjectResult()
+        {
+            // Arrange
+            Guid validId = Guid.NewGuid();
+            var type = "";
+
+            var controller = CreateProductController();
+
+            // Act
+            var result = await controller.HasAssociation(type, validId);
+
+            // Assert
+            result.Should().NotBe(null);
+            result.Should().BeOfType<BadRequestObjectResult>();
+        }
+
+        #endregion
+
+        #region RemoveAssociation
+
+        [Theory]
+        [InlineData("category")]
+        [InlineData("manufacturer")]
+        public async Task RemoveAssociation_ValidTypeAndId_ReturnsOkResult(string type)
+        {
+            // Arrange
+            Guid validId = Guid.NewGuid();
+            var products = new List<ProductDto>();
+            var productDto = new ProductDto();
+
+            _productGetterServiceMock.Setup(s => s.GetByCategoryAsync(validId))
+                .ReturnsAsync(products);
+            _productGetterServiceMock.Setup(s => s.GetByManufacturerAsync(validId))
+                .ReturnsAsync(products);
+            _productUpdaterServiceMock.Setup(s => s.UpdateAsync(It.IsAny<ProductDto>()))
+                .ReturnsAsync(productDto);
+
+            var contoller = CreateProductController();
+
+            // Act
+            var result = await contoller.RemoveAssociation(type, validId);
+
+            // Assert
+            result.Should().NotBe(null);
+            result.Should().BeOfType<OkObjectResult>();
+        }
+
+        [Fact]
+        public async Task RemoveAssociation_InvalidId_ReturnsBadRequestObjectResult()
+        {
+            // Arrange
+            Guid emptyId = Guid.Empty;
+            var type = "category";
+
+            var controller = CreateProductController();
+
+            // Act
+            var result = await controller.RemoveAssociation(type, emptyId);
+
+            // Assert
+            result.Should().NotBe(null);
+            result.Should().BeOfType<BadRequestObjectResult>();
+        }
+
+        [Fact]
+        public async Task RemoveAssociation_InvalidType_ReturnsBadRequestObjectResult()
+        {
+            // Arrange
+            Guid validId = Guid.NewGuid();
+            var type = "";
+
+            var controller = CreateProductController();
+
+            // Act
+            var result = await controller.RemoveAssociation(type, validId);
+
+            // Assert
+            result.Should().NotBe(null);
+            result.Should().BeOfType<BadRequestObjectResult>();
         }
 
         #endregion

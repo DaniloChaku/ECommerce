@@ -112,7 +112,7 @@ namespace ECommerce.UI.Controllers
                 {
                     try
                     {
-                        var imageUrl = await _imageUploaderService.UploadAsync(productModel.Image, 
+                        var imageUrl = await _imageUploaderService.UploadAsync(productModel.Image,
                             productResponse.Id.ToString());
 
                         _imageDeleterService.Delete(productResponse.ImageUrl);
@@ -127,7 +127,7 @@ namespace ECommerce.UI.Controllers
                         TempData["error"] = ex.Message;
                         return View(productModel);
                     }
-                    catch(Exception)
+                    catch (Exception)
                     {
                         TempData["error"] = "Failed to add the image";
                         return View(productModel);
@@ -207,7 +207,120 @@ namespace ECommerce.UI.Controllers
                     Message = "An error occurred while deleting Product. Please try again."
                 };
 
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> HasAssociation(string type, Guid id)
+        {
+            if (id == Guid.Empty)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Associated entity's id can't be null"
+                });
+            }
+
+            try
+            {
+                var products = type.ToLower() switch
+                {
+                    "category" => await _productGetterService.GetByCategoryAsync(id),
+                    "manufacturer" => await _productGetterService.GetByManufacturerAsync(id),
+                    _ => throw new ArgumentException("The associated type is invalid")
+                };
+
+                if (products.Count is 0)
+                {
+                    return Ok(new { success = true, hasAssociations = false });
+                }
+
+                return Ok(new { success = true, hasAssociations = true });
+            }
+            catch (ArgumentException ex)
+            {
+                var response = new
+                {
+                    success = false,
+                    message = ex.Message
+                };
+
                 return BadRequest(response);
+            }
+            catch (Exception)
+            {
+                var response = new
+                {
+                    success = false,
+                    Message = "An error occurred. Please try again."
+                };
+
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
+            }
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> RemoveAssociation(string type, Guid id)
+        {
+            if (id == Guid.Empty)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Category Id can't be null"
+                });
+            }
+
+            try
+            {
+                var products = new List<ProductDto>();
+                switch (type.ToLower())
+                {
+                    case "category":
+                        products = await _productGetterService.GetByCategoryAsync(id);
+
+                        foreach (var product in products)
+                        {
+                            product.CategoryId = null;
+                            await _productUpdaterService.UpdateAsync(product);
+                        }
+                        break;
+                    case "manufacturer":
+                        products = await _productGetterService.GetByManufacturerAsync(id);
+
+                        foreach (var product in products)
+                        {
+                            product.ManufacturerId = null;
+                            await _productUpdaterService.UpdateAsync(product);
+                        }
+                        break;
+                    default:
+                        throw new ArgumentException("The associated type is invalid");
+                }
+
+                return Ok(new { success = true });
+            }
+            catch (ArgumentException ex)
+            {
+                var response = new
+                {
+                    success = false,
+                    message = ex.Message
+                };
+
+                return BadRequest(response);
+            }
+            catch (Exception)
+            {
+                var response = new
+                {
+                    success = false,
+                    Message = "An error occurred. Please try again."
+                };
+
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
         }
 
