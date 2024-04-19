@@ -11,7 +11,7 @@ namespace ECommerce.UI.Controllers
         private readonly ICategoryUpdaterService _categoryUpdaterService;
         private readonly ICategoryDeleterService _categoryDeleterService;
 
-        public CategoryController(ICategoryGetterService categoryGetterService, 
+        public CategoryController(ICategoryGetterService categoryGetterService,
             ICategoryAdderService categoryAdderService, ICategoryUpdaterService categoryUpdaterService,
             ICategoryDeleterService categoryDeleterService)
         {
@@ -29,7 +29,7 @@ namespace ECommerce.UI.Controllers
         [HttpGet]
         public async Task<IActionResult> Upsert(Guid? id)
         {
-            if (id is null || id == Guid.Empty) 
+            if (id is null || id == Guid.Empty)
             {
                 return View(new CategoryDto());
             }
@@ -62,7 +62,7 @@ namespace ECommerce.UI.Controllers
                     await _categoryUpdaterService.UpdateAsync(categoryDto);
                 }
 
-                TempData["success"] = $"Category {(categoryDto.Id == Guid.Empty 
+                TempData["success"] = $"Category {(categoryDto.Id == Guid.Empty
                     ? "created" : "updated")} successfully.";
                 return RedirectToAction(nameof(CategoryController.Index));
             }
@@ -76,16 +76,23 @@ namespace ECommerce.UI.Controllers
 
         #region API
 
-        public async Task<IActionResult> ValidateSameName(CategoryDto category)
+        public async Task<IActionResult> IsCategoryNameUnique(CategoryDto category)
         {
             if (category.Id != Guid.Empty)
             {
-                var categorys = await _categoryGetterService.GetAllAsync();
-
-                if (categorys.Any(t => t.Name == category.Name))
+                var existingCategory = await _categoryGetterService.GetByIdAsync(category.Id);
+                
+                if (existingCategory!.Name == category.Name)
                 {
-                    return Json(false);
+                    return Json(true);
                 }
+            }
+
+            var categorys = await _categoryGetterService.GetAllAsync();
+            
+            if (categorys.Any(t => t.Name == category.Name))
+            {
+                return Json(false);
             }
 
             return Json(true);
@@ -102,7 +109,7 @@ namespace ECommerce.UI.Controllers
             }
             catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, 
+                return StatusCode(StatusCodes.Status500InternalServerError,
                     new { error = "An error occurred while processing your request. Please try again later." });
             }
         }
@@ -127,7 +134,7 @@ namespace ECommerce.UI.Controllers
 
                 return Ok(response);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ModelState.AddModelError(nameof(id), ex.Message);
 

@@ -503,25 +503,90 @@ namespace ECommerce.Tests.ControllerTests
 
         #endregion
 
-        #region ValidateSameName
+        #region IsProductNameUnique
 
-        [Fact]
-        public async Task ValidateSameName_NewName_ReturnsTrue()
+        [Theory]
+        [InlineData(new string[] { "A", "B", "C" }, "D")]
+        public async Task IsProductNameUnique_EmptyIdAndNewName_ReturnsTrue(
+            string[] existingProductsNames, string newName)
         {
             // Arrange
-            _productGetterServiceMock.Setup(t => t.GetAllAsync())
-                .ReturnsAsync(new List<ProductDto>());
+            var existingProducts = new List<ProductDto>(); 
+            foreach(var name in existingProductsNames)
+            {
+                var productDto = _fixture.Build<ProductDto>()
+                    .With(t => t.Price, 10)
+                    .With(t => t.SalePrice, null as decimal?)
+                    .With(t => t.Stock, 10)
+                    .With(c => c.Name, name).Create();
+                existingProducts.Add(productDto);
+            }
 
             var product = _fixture.Build<ProductDto>()
+                .With(p => p.Id, Guid.Empty)
+                .With(c => c.Name, newName)
+                .With(t => t.Price, 10)
+                .With(t => t.SalePrice, null as decimal?)
+                .With(t => t.Stock, 10)
+                .Create(); 
+            var productController = CreateProductController();
+
+            _productGetterServiceMock.Setup(t => t.GetAllAsync()).ReturnsAsync(existingProducts);
+
+            // Act
+            var result = await productController.IsProductNameUnique(product);
+
+            // Assert
+            var jsonResult = Assert.IsType<JsonResult>(result);
+            jsonResult.Value.Should().Be(true); 
+        }
+
+        [Theory]
+        [InlineData(new string[] { "A", "B", "C" }, "D")]
+        public async Task IsProductNameUnique_ExistingIdAndNewName_ReturnsTrue(
+            string[] existingProductsNames, string newName)
+        {
+            // Arrange
+            var existingProducts = new List<ProductDto>();
+            foreach (var name in existingProductsNames)
+            {
+                var productDto = _fixture.Build<ProductDto>()
+                    .With(t => t.Price, 10)
+                    .With(t => t.SalePrice, null as decimal?)
+                    .With(t => t.Stock, 10)
+                    .With(c => c.Name, name).Create();
+                existingProducts.Add(productDto);
+            }
+
+            if (existingProducts.Count == 0)
+            {
+                var productDto = _fixture.Build<ProductDto>()
+                    .With(t => t.Price, 10)
+                    .With(t => t.SalePrice, null as decimal?)
+                    .With(t => t.Stock, 10)
+                    .Create();
+                existingProducts.Add(productDto);
+            }
+
+            var existingProduct = existingProducts[0];
+
+            var product = _fixture.Build<ProductDto>()
+                .With(c => c.Id, existingProduct.Id)
+                .With(c => c.Name, newName)
                 .With(t => t.Price, 10)
                 .With(t => t.SalePrice, null as decimal?)
                 .With(t => t.Stock, 10)
                 .Create();
 
+            _productGetterServiceMock.Setup(t => t.GetByIdAsync(It.IsAny<Guid>()))
+                .ReturnsAsync(existingProduct);
+            _productGetterServiceMock.Setup(t => t.GetAllAsync())
+                .ReturnsAsync(existingProducts);
+
             var productController = CreateProductController();
 
             // Act
-            var result = await productController.ValidateSameName(product);
+            var result = await productController.IsProductNameUnique(product);
 
             // Assert
             var jsonResult = Assert.IsType<JsonResult>(result);
@@ -529,20 +594,60 @@ namespace ECommerce.Tests.ControllerTests
         }
 
         [Fact]
-        public async Task ValidateSameName_EmptyProductId_ReturnsTrue()
+        public async Task IsProductNameUnique_EmptyIdAndExistingName_ReturnsFalse()
         {
             // Arrange
-            var product = _fixture.Build<ProductDto>()
-                .With(t => t.Id, Guid.Empty)
+            var existingProduct = _fixture.Build<ProductDto>()
+                .With(t => t.Price, 10)
+                .With(t => t.SalePrice, null as decimal?)
+                .With(t => t.Stock, 10)
+                .Create();
+            var allProducts = new List<ProductDto>() { existingProduct };
+            var newProduct = _fixture.Build<ProductDto>()
+                .With(c => c.Id, Guid.Empty)
+                .With(t => t.Name, existingProduct.Name)
                 .With(t => t.Price, 10)
                 .With(t => t.SalePrice, null as decimal?)
                 .With(t => t.Stock, 10)
                 .Create();
 
+            _productGetterServiceMock.Setup(t => t.GetAllAsync())
+                .ReturnsAsync(allProducts);
+
             var productController = CreateProductController();
 
             // Act
-            var result = await productController.ValidateSameName(product);
+            var result = await productController.IsProductNameUnique(newProduct);
+
+            // Assert
+            var jsonResult = Assert.IsType<JsonResult>(result);
+            jsonResult.Value.Should().Be(false);
+        }
+
+        [Fact]
+        public async Task IsProductNameUnique_ExistingIdAndSameName_ReturnsTrue()
+        {
+            // Arrange
+            var existingProduct = _fixture.Build<ProductDto>()
+                .With(t => t.Price, 10)
+                .With(t => t.SalePrice, null as decimal?)
+                .With(t => t.Stock, 10)
+                .Create();
+            var newProduct = _fixture.Build<ProductDto>()
+                .With(c => c.Id, existingProduct.Id)
+                .With(t => t.Name, existingProduct.Name)
+                .With(t => t.Price, 10)
+                .With(t => t.SalePrice, null as decimal?)
+                .With(t => t.Stock, 10)
+                .Create();
+
+            _productGetterServiceMock.Setup(t => t.GetByIdAsync(It.IsAny<Guid>()))
+                .ReturnsAsync(existingProduct);
+
+            var productController = CreateProductController();
+
+            // Act
+            var result = await productController.IsProductNameUnique(newProduct);
 
             // Assert
             var jsonResult = Assert.IsType<JsonResult>(result);
@@ -550,28 +655,38 @@ namespace ECommerce.Tests.ControllerTests
         }
 
         [Fact]
-        public async Task ValidateSameName_ExistingName_ReturnsFalse()
+        public async Task IsProductNameUnique_ExistingIdAndExistingNameButDifferentFromPrevious_ReturnsFalse()
         {
             // Arrange
-            var product1 = _fixture.Build<ProductDto>()
+            var existingProduct1 = _fixture.Build<ProductDto>()
                 .With(t => t.Price, 10)
                 .With(t => t.SalePrice, null as decimal?)
                 .With(t => t.Stock, 10)
                 .Create();
-            var product2 = _fixture.Build<ProductDto>()
-                .With(t => t.Name, product1.Name)
+            var existingProduct2 = _fixture.Build<ProductDto>()
+                .With(t => t.Price, 10)
+                .With(t => t.SalePrice, null as decimal?)
+                .With(t => t.Stock, 10)
+                .Create();
+            var allProducts = new List<ProductDto>() { existingProduct1, existingProduct2 };
+
+            var newProduct = _fixture.Build<ProductDto>()
+                .With(c => c.Id, existingProduct1.Id)
+                .With(t => t.Name, existingProduct2.Name)
                 .With(t => t.Price, 10)
                 .With(t => t.SalePrice, null as decimal?)
                 .With(t => t.Stock, 10)
                 .Create();
 
+            _productGetterServiceMock.Setup(t => t.GetByIdAsync(It.IsAny<Guid>()))
+                .ReturnsAsync(existingProduct1);
             _productGetterServiceMock.Setup(t => t.GetAllAsync())
-                .ReturnsAsync(new List<ProductDto>() { product1 });
+                .ReturnsAsync(allProducts);
 
             var productController = CreateProductController();
 
             // Act
-            var result = await productController.ValidateSameName(product2);
+            var result = await productController.IsProductNameUnique(newProduct);
 
             // Assert
             var jsonResult = Assert.IsType<JsonResult>(result);

@@ -1,4 +1,5 @@
-﻿using ECommerce.Core.DTO;
+﻿using ECommerce.Core.Domain.Entities;
+using ECommerce.Core.DTO;
 using ECommerce.Core.ServiceContracts.Manufacturer;
 using Microsoft.AspNetCore.Mvc;
 
@@ -76,16 +77,23 @@ namespace ECommerce.UI.Controllers
 
         #region API
 
-        public async Task<IActionResult> ValidateSameName(ManufacturerDto manufacturer)
+        public async Task<IActionResult> IsManufacturerNameUnique(ManufacturerDto manufacturer)
         {
             if (manufacturer.Id != Guid.Empty)
             {
-                var manufacturers = await _manufacturerGetterService.GetAllAsync();
+                var existingCategory = await _manufacturerGetterService.GetByIdAsync(manufacturer.Id);
 
-                if (manufacturers.Any(t => t.Name == manufacturer.Name))
+                if (existingCategory!.Name == manufacturer.Name)
                 {
-                    return Json(false);
+                    return Json(true);
                 }
+            }
+
+            var categorys = await _manufacturerGetterService.GetAllAsync();
+
+            if (categorys.Any(t => t.Name == manufacturer.Name))
+            {
+                return Json(false);
             }
 
             return Json(true);

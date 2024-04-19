@@ -11,7 +11,8 @@ namespace ECommerce.Core.DTO
     public class CategoryDto
     { 
         public Guid Id { get; set; }
-        [Remote(controller: "Category", action: "ValidateSameName", 
+        [Remote(controller: "Category", action: "IsCategoryNameUnique",
+            AdditionalFields = nameof(Id),
             ErrorMessage = "Category with the same name already exists")]
         public string Name { get; set; }
 

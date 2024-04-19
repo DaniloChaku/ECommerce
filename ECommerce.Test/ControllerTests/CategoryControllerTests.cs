@@ -275,39 +275,72 @@ namespace ECommerce.Tests.ControllerTests
 
         #endregion
 
-        #region ValidateSameName
+        #region IsCategoryNameUnique
 
-        [Fact]
-        public async Task ValidateSameName_NewName_ReturnsTrue()
+        [Theory]
+        [InlineData(new string[] { "A", "B", "C" }, "D")]
+        public async Task IsCategoryNameUnique_EmptyIdAndNewName_ReturnsTrue(
+            string[] existingCategoriesNames, string newName)
         {
             // Arrange
-            _categoryGetterServiceMock.Setup(t => t.GetAllAsync())
-                .ReturnsAsync(new List<CategoryDto>());
+            var existingCategories = new List<CategoryDto>(); 
+            foreach(var name in existingCategoriesNames)
+            {
+                var categoryDto = _fixture.Build<CategoryDto>()
+                    .With(c => c.Name, name).Create();
+                existingCategories.Add(categoryDto);
+            }
 
-            var category = _fixture.Create<CategoryDto>();
-
-            var categoryController = CreateCategoryController();
-
-            // Act
-            var result = await categoryController.ValidateSameName(category);
-
-            // Assert
-            var jsonResult = Assert.IsType<JsonResult>(result);
-            jsonResult.Value.Should().Be(true);
-        }
-
-        [Fact]
-        public async Task ValidateSameName_EmptyCategoryId_ReturnsTrue()
-        {
-            // Arrange
             var category = _fixture.Build<CategoryDto>()
-                .With(t => t.Id, Guid.Empty)
+                .With(c => c.Id, Guid.Empty)
+                .With(c => c.Name, newName).Create(); 
+            var categoryController = CreateCategoryController();
+
+            _categoryGetterServiceMock.Setup(t => t.GetAllAsync()).ReturnsAsync(existingCategories);
+
+            // Act
+            var result = await categoryController.IsCategoryNameUnique(category);
+
+            // Assert
+            var jsonResult = Assert.IsType<JsonResult>(result);
+            jsonResult.Value.Should().Be(true); 
+        }
+
+        [Theory]
+        [InlineData(new string[] { "A", "B", "C" }, "D")]
+        public async Task IsCategoryNameUnique_ExistingIdAndNewName_ReturnsTrue(
+            string[] existingCategoriesNames, string newName)
+        {
+            // Arrange
+            var existingCategories = new List<CategoryDto>();
+            foreach (var name in existingCategoriesNames)
+            {
+                var categoryDto = _fixture.Build<CategoryDto>()
+                    .With(c => c.Name, name).Create();
+                existingCategories.Add(categoryDto);
+            }
+
+            if (existingCategories.Count == 0)
+            {
+                existingCategories.Add(_fixture.Create<CategoryDto>());
+            }
+
+            var existingCategory = existingCategories[0];
+
+            var category = _fixture.Build<CategoryDto>()
+                .With(c => c.Id, existingCategory.Id)
+                .With(c => c.Name, newName)
                 .Create();
+
+            _categoryGetterServiceMock.Setup(t => t.GetByIdAsync(It.IsAny<Guid>()))
+                .ReturnsAsync(existingCategory);
+            _categoryGetterServiceMock.Setup(t => t.GetAllAsync())
+                .ReturnsAsync(existingCategories);
 
             var categoryController = CreateCategoryController();
 
             // Act
-            var result = await categoryController.ValidateSameName(category);
+            var result = await categoryController.IsCategoryNameUnique(category);
 
             // Assert
             var jsonResult = Assert.IsType<JsonResult>(result);
@@ -315,21 +348,74 @@ namespace ECommerce.Tests.ControllerTests
         }
 
         [Fact]
-        public async Task ValidateSameName_ExistingName_ReturnsFalse()
+        public async Task IsCategoryNameUnique_EmptyIdAndExistingName_ReturnsFalse()
         {
             // Arrange
-            var category1 = _fixture.Create<CategoryDto>();
-            var category2 = _fixture.Build<CategoryDto>()
-                .With(t => t.Name, category1.Name)
+            var existingCategory = _fixture.Create<CategoryDto>();
+            var allCategories = new List<CategoryDto>() { existingCategory };
+            var newCategory = _fixture.Build<CategoryDto>()
+                .With(c => c.Id, Guid.Empty)
+                .With(t => t.Name, existingCategory.Name)
                 .Create();
 
             _categoryGetterServiceMock.Setup(t => t.GetAllAsync())
-                .ReturnsAsync(new List<CategoryDto>() { category1 });
+                .ReturnsAsync(allCategories);
 
             var categoryController = CreateCategoryController();
 
             // Act
-            var result = await categoryController.ValidateSameName(category2);
+            var result = await categoryController.IsCategoryNameUnique(newCategory);
+
+            // Assert
+            var jsonResult = Assert.IsType<JsonResult>(result);
+            jsonResult.Value.Should().Be(false);
+        }
+
+        [Fact]
+        public async Task IsCategoryNameUnique_ExistingIdAndSameName_ReturnsTrue()
+        {
+            // Arrange
+            var existingCategory = _fixture.Create<CategoryDto>();
+            var newCategory = _fixture.Build<CategoryDto>()
+                .With(c => c.Id, existingCategory.Id)
+                .With(t => t.Name, existingCategory.Name)
+                .Create();
+
+            _categoryGetterServiceMock.Setup(t => t.GetByIdAsync(It.IsAny<Guid>()))
+                .ReturnsAsync(existingCategory);
+
+            var categoryController = CreateCategoryController();
+
+            // Act
+            var result = await categoryController.IsCategoryNameUnique(newCategory);
+
+            // Assert
+            var jsonResult = Assert.IsType<JsonResult>(result);
+            jsonResult.Value.Should().Be(true);
+        }
+
+        [Fact]
+        public async Task IsCategoryNameUnique_ExistingIdAndExistingNameButDifferentFromPrevious_ReturnsFalse()
+        {
+            // Arrange
+            var existingCategory1 = _fixture.Create<CategoryDto>();
+            var existingCategory2 = _fixture.Create<CategoryDto>();
+            var allCategories = new List<CategoryDto>() { existingCategory1, existingCategory2 };
+
+            var newCategory = _fixture.Build<CategoryDto>()
+                .With(c => c.Id, existingCategory1.Id)
+                .With(t => t.Name, existingCategory2.Name)
+                .Create();
+
+            _categoryGetterServiceMock.Setup(t => t.GetByIdAsync(It.IsAny<Guid>()))
+                .ReturnsAsync(existingCategory1);
+            _categoryGetterServiceMock.Setup(t => t.GetAllAsync())
+                .ReturnsAsync(allCategories);
+
+            var categoryController = CreateCategoryController();
+
+            // Act
+            var result = await categoryController.IsCategoryNameUnique(newCategory);
 
             // Assert
             var jsonResult = Assert.IsType<JsonResult>(result);

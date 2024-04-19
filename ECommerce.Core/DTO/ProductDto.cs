@@ -14,7 +14,8 @@ namespace ECommerce.Core.DTO
     {
         public Guid Id { get; set; }
         [Required]
-        [Remote(controller: "Product", action: "ValidateSameName",
+        [Remote(controller: "Product", action: "IsProductNameUnique",
+            AdditionalFields = nameof(Id),
             ErrorMessage = "Product with the same name already exists")]
         public string Name { get; set; }
         [MaxLength(400)]

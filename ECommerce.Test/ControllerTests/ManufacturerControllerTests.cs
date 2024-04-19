@@ -274,39 +274,72 @@ namespace ECommerce.Tests.ControllerTests
 
         #endregion
 
-        #region ValidateSameName
+        #region IsManufacturerNameUnique
 
-        [Fact]
-        public async Task ValidateSameName_NewName_ReturnsTrue()
+        [Theory]
+        [InlineData(new string[] { "A", "B", "C" }, "D")]
+        public async Task IsManufacturerNameUnique_EmptyIdAndNewName_ReturnsTrue(
+            string[] existingManufacturersNames, string newName)
         {
             // Arrange
-            _manufacturerGetterServiceMock.Setup(t => t.GetAllAsync())
-                .ReturnsAsync(new List<ManufacturerDto>());
+            var existingManufacturers = new List<ManufacturerDto>();
+            foreach (var name in existingManufacturersNames)
+            {
+                var manufacturerDto = _fixture.Build<ManufacturerDto>()
+                    .With(c => c.Name, name).Create();
+                existingManufacturers.Add(manufacturerDto);
+            }
 
-            var manufacturer = _fixture.Create<ManufacturerDto>();
-
-            var manufacturerController = CreateManufacturerController();
-
-            // Act
-            var result = await manufacturerController.ValidateSameName(manufacturer);
-
-            // Assert
-            var jsonResult = Assert.IsType<JsonResult>(result);
-            jsonResult.Value.Should().Be(true);
-        }
-
-        [Fact]
-        public async Task ValidateSameName_EmptyManufacturerId_ReturnsTrue()
-        {
-            // Arrange
             var manufacturer = _fixture.Build<ManufacturerDto>()
-                .With(t => t.Id, Guid.Empty)
+                .With(c => c.Id, Guid.Empty)
+                .With(c => c.Name, newName).Create();
+            var manufacturerController = CreateManufacturerController();
+
+            _manufacturerGetterServiceMock.Setup(t => t.GetAllAsync()).ReturnsAsync(existingManufacturers);
+
+            // Act
+            var result = await manufacturerController.IsManufacturerNameUnique(manufacturer);
+
+            // Assert
+            var jsonResult = Assert.IsType<JsonResult>(result);
+            jsonResult.Value.Should().Be(true);
+        }
+
+        [Theory]
+        [InlineData(new string[] { "A", "B", "C" }, "D")]
+        public async Task IsManufacturerNameUnique_ExistingIdAndNewName_ReturnsTrue(
+            string[] existingManufacturersNames, string newName)
+        {
+            // Arrange
+            var existingManufacturers = new List<ManufacturerDto>();
+            foreach (var name in existingManufacturersNames)
+            {
+                var manufacturerDto = _fixture.Build<ManufacturerDto>()
+                    .With(c => c.Name, name).Create();
+                existingManufacturers.Add(manufacturerDto);
+            }
+
+            if (existingManufacturers.Count == 0)
+            {
+                existingManufacturers.Add(_fixture.Create<ManufacturerDto>());
+            }
+
+            var existingManufacturer = existingManufacturers[0];
+
+            var manufacturer = _fixture.Build<ManufacturerDto>()
+                .With(c => c.Id, existingManufacturer.Id)
+                .With(c => c.Name, newName)
                 .Create();
+
+            _manufacturerGetterServiceMock.Setup(t => t.GetByIdAsync(It.IsAny<Guid>()))
+                .ReturnsAsync(existingManufacturer);
+            _manufacturerGetterServiceMock.Setup(t => t.GetAllAsync())
+                .ReturnsAsync(existingManufacturers);
 
             var manufacturerController = CreateManufacturerController();
 
             // Act
-            var result = await manufacturerController.ValidateSameName(manufacturer);
+            var result = await manufacturerController.IsManufacturerNameUnique(manufacturer);
 
             // Assert
             var jsonResult = Assert.IsType<JsonResult>(result);
@@ -314,21 +347,74 @@ namespace ECommerce.Tests.ControllerTests
         }
 
         [Fact]
-        public async Task ValidateSameName_ExistingName_ReturnsFalse()
+        public async Task IsManufacturerNameUnique_EmptyIdAndExistingName_ReturnsFalse()
         {
             // Arrange
-            var manufacturer1 = _fixture.Create<ManufacturerDto>();
-            var manufacturer2 = _fixture.Build<ManufacturerDto>()
-                .With(t => t.Name, manufacturer1.Name)
+            var existingManufacturer = _fixture.Create<ManufacturerDto>();
+            var allManufacturers = new List<ManufacturerDto>() { existingManufacturer };
+            var newManufacturer = _fixture.Build<ManufacturerDto>()
+                .With(c => c.Id, Guid.Empty)
+                .With(t => t.Name, existingManufacturer.Name)
                 .Create();
 
             _manufacturerGetterServiceMock.Setup(t => t.GetAllAsync())
-                .ReturnsAsync(new List<ManufacturerDto>() { manufacturer1 });
+                .ReturnsAsync(allManufacturers);
 
             var manufacturerController = CreateManufacturerController();
 
             // Act
-            var result = await manufacturerController.ValidateSameName(manufacturer2);
+            var result = await manufacturerController.IsManufacturerNameUnique(newManufacturer);
+
+            // Assert
+            var jsonResult = Assert.IsType<JsonResult>(result);
+            jsonResult.Value.Should().Be(false);
+        }
+
+        [Fact]
+        public async Task IsManufacturerNameUnique_ExistingIdAndSameName_ReturnsTrue()
+        {
+            // Arrange
+            var existingManufacturer = _fixture.Create<ManufacturerDto>();
+            var newManufacturer = _fixture.Build<ManufacturerDto>()
+                .With(c => c.Id, existingManufacturer.Id)
+                .With(t => t.Name, existingManufacturer.Name)
+                .Create();
+
+            _manufacturerGetterServiceMock.Setup(t => t.GetByIdAsync(It.IsAny<Guid>()))
+                .ReturnsAsync(existingManufacturer);
+
+            var manufacturerController = CreateManufacturerController();
+
+            // Act
+            var result = await manufacturerController.IsManufacturerNameUnique(newManufacturer);
+
+            // Assert
+            var jsonResult = Assert.IsType<JsonResult>(result);
+            jsonResult.Value.Should().Be(true);
+        }
+
+        [Fact]
+        public async Task IsManufacturerNameUnique_ExistingIdAndExistingNameButDifferentFromPrevious_ReturnsFalse()
+        {
+            // Arrange
+            var existingManufacturer1 = _fixture.Create<ManufacturerDto>();
+            var existingManufacturer2 = _fixture.Create<ManufacturerDto>();
+            var allManufacturers = new List<ManufacturerDto>() { existingManufacturer1, existingManufacturer2 };
+
+            var newManufacturer = _fixture.Build<ManufacturerDto>()
+                .With(c => c.Id, existingManufacturer1.Id)
+                .With(t => t.Name, existingManufacturer2.Name)
+                .Create();
+
+            _manufacturerGetterServiceMock.Setup(t => t.GetByIdAsync(It.IsAny<Guid>()))
+                .ReturnsAsync(existingManufacturer1);
+            _manufacturerGetterServiceMock.Setup(t => t.GetAllAsync())
+                .ReturnsAsync(allManufacturers);
+
+            var manufacturerController = CreateManufacturerController();
+
+            // Act
+            var result = await manufacturerController.IsManufacturerNameUnique(newManufacturer);
 
             // Assert
             var jsonResult = Assert.IsType<JsonResult>(result);

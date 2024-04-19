@@ -1,4 +1,5 @@
-﻿using ECommerce.Core.DTO;
+﻿using ECommerce.Core.Domain.Entities;
+using ECommerce.Core.DTO;
 using ECommerce.Core.Exceptions;
 using ECommerce.Core.ServiceContracts.Category;
 using ECommerce.Core.ServiceContracts.Image;
@@ -148,16 +149,23 @@ namespace ECommerce.UI.Controllers
 
         #region API
 
-        public async Task<IActionResult> ValidateSameName(ProductDto product)
+        public async Task<IActionResult> IsProductNameUnique(ProductDto product)
         {
             if (product.Id != Guid.Empty)
             {
-                var products = await _productGetterService.GetAllAsync();
+                var existingCategory = await _productGetterService.GetByIdAsync(product.Id);
 
-                if (products.Any(t => t.Name == product.Name))
+                if (existingCategory!.Name == product.Name)
                 {
-                    return Json(false);
+                    return Json(true);
                 }
+            }
+
+            var categorys = await _productGetterService.GetAllAsync();
+
+            if (categorys.Any(t => t.Name == product.Name))
+            {
+                return Json(false);
             }
 
             return Json(true);
