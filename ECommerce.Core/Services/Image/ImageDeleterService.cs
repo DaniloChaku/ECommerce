@@ -17,7 +17,7 @@ namespace ECommerce.Core.Services.Image
             _webHostEnvironment = webHostEnvironment;
         }
 
-        public void Delete(string? imageUrl)
+        public void DeleteImage(string? imageUrl)
         {
             if (imageUrl is not null)
             {
@@ -27,6 +27,18 @@ namespace ECommerce.Core.Services.Image
                 {
                     File.Delete(existingImagePath);
                 }
+            }
+        }
+
+        public void DeleteImageFolder(string productId)
+        {
+            string wwwrootPath = _webHostEnvironment.WebRootPath;
+            string productPath = @"images/products/product-" + productId;
+            string finalPath = Path.Combine(wwwrootPath, productPath);
+
+            if (Directory.Exists(finalPath))
+            {
+                Directory.Delete(finalPath, recursive: true);
             }
         }
     }

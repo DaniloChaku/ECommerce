@@ -1,4 +1,5 @@
-﻿using ECommerce.Core.Services.Image;
+﻿using ECommerce.Core.Domain.Entities;
+using ECommerce.Core.Services.Image;
 using Microsoft.AspNetCore.Hosting;
 using Moq;
 using System;
@@ -22,52 +23,69 @@ namespace ECommerce.Tests.ServiceTests.Image
             _mockWebHostEnvironment.Setup(e => e.WebRootPath).Returns(_tempDirectory);
         }
 
+        private ImageDeleterService CreateImageDeleterService()
+        {
+            return new ImageDeleterService(_mockWebHostEnvironment.Object);
+        }
+
+        private void CreateDirectoryWithImage(string imagePath, string? directory = null)
+        {
+            if (directory == null)
+            {
+                directory = Path.GetDirectoryName(imagePath)!;
+            }
+            Directory.CreateDirectory(directory);
+
+            File.WriteAllText(imagePath, "dummy content");
+        }
+
         [Fact]
-        public void Delete_WithNullImageUrl_DoesNotDeleteFile()
+        public void DeleteImage_WithNullImageUrl_DoesNotDeleteFile()
         {
             // Arrange
-            var service = new ImageDeleterService(_mockWebHostEnvironment.Object);
+            var service = CreateImageDeleterService();
             string? imageUrl = null;
 
             // Act
-            service.Delete(imageUrl);
+            service.DeleteImage(imageUrl);
 
             // Assert
             Directory.GetFiles(_tempDirectory).Should().BeEmpty();
         }
 
         [Fact]
-        public void Delete_WithNonExistentImage_DoesNotDeleteFile()
+        public void DeleteImage_WithExistingImage_DeletesFile()
         {
             // Arrange
-            var service = new ImageDeleterService(_mockWebHostEnvironment.Object);
-            string imageUrl = "/images/product.jpg";
-
-            // Act
-            service.Delete(imageUrl);
-
-            // Assert
-            Directory.GetFiles(_tempDirectory).Should().BeEmpty();
-        }
-
-        [Fact]
-        public void Delete_WithExistingImage_DeletesFile()
-        {
-            // Arrange
-            var service = new ImageDeleterService(_mockWebHostEnvironment.Object);
+            var service = CreateImageDeleterService();
             string imageUrl = "/images/product.jpg";
             string imagePath = Path.Combine(_tempDirectory, imageUrl.TrimStart('/'));
-            string imageDirectory = Path.GetDirectoryName(imagePath)!;
-
-            Directory.CreateDirectory(imageDirectory);
-
-            File.WriteAllText(imagePath, "dummy content");
+            CreateDirectoryWithImage(imagePath);
 
             // Act
-            service.Delete(imageUrl);
+            service.DeleteImage(imageUrl);
 
             // Assert
             File.Exists(imagePath).Should().BeFalse();
+        }
+
+        [Fact]
+        public void DeleteImageFolder_WithExistingFolder_DeletesFolderRecursively()
+        {
+            // Arrange
+            var service = CreateImageDeleterService();
+            var productId = "1";
+            string imageUrl = $"images/products/product-{productId}/image.jpg";
+            string imagePath = Path.Combine(_tempDirectory, imageUrl);
+            string imageDirectory = Path.GetDirectoryName(imagePath)!;
+
+            CreateDirectoryWithImage(imagePath, imageDirectory);
+
+            // Act
+            service.DeleteImageFolder(productId);
+
+            // Assert
+            Directory.Exists(imageDirectory).Should().BeFalse();
         }
 
         public void Dispose()

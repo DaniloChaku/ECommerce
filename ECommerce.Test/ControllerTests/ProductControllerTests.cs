@@ -402,7 +402,7 @@ namespace ECommerce.Tests.ControllerTests
                 .ReturnsAsync(product);
             _imageUploaderServiceMock.Setup(s => s.UploadAsync(It.IsAny<IFormFile>(),
                 It.IsAny<string>())).ReturnsAsync("");
-            _imageDeleterServiceMock.Setup(s => s.Delete(It.IsAny<string>()));
+            _imageDeleterServiceMock.Setup(s => s.DeleteImage(It.IsAny<string>()));
 
             var result = await productController.Upsert(vm);
 
@@ -410,7 +410,7 @@ namespace ECommerce.Tests.ControllerTests
             _productUpdaterServiceMock.Verify(t => t.UpdateAsync(product));
             _imageUploaderServiceMock.Verify(s => s.UploadAsync(image, 
                 vm.Product.Id.ToString()), Times.Once);
-            _imageDeleterServiceMock.Verify(s => s.Delete(It.IsAny<string>()), Times.Once);
+            _imageDeleterServiceMock.Verify(s => s.DeleteImage(It.IsAny<string>()), Times.Once);
             result.Should().BeOfType<RedirectToActionResult>();
         }
 
@@ -464,12 +464,15 @@ namespace ECommerce.Tests.ControllerTests
         #region Delete
 
         [Fact]
-        public async Task Delete_ExceptionOccurred_ReturnsOkResult()
+        public async Task Delete_ExceptionOccurred_ReturnsObjectResult()
         {
             // Arrange
             var id = Guid.NewGuid();
+            var productDto = new ProductDto();
 
-            _productDeleterServiceMock.Setup(t => t.DeleteAsync(id))
+            _productGetterServiceMock.Setup(s => s.GetByIdAsync(It.IsAny<Guid>()))
+                .ReturnsAsync(productDto);
+            _productDeleterServiceMock.Setup(s => s.DeleteAsync(It.IsAny<Guid>()))
                 .ReturnsAsync(false);
 
             var controller = CreateProductController();
@@ -487,8 +490,11 @@ namespace ECommerce.Tests.ControllerTests
         {
             // Arrange
             var id = Guid.NewGuid();
+            var productDto = new ProductDto();
 
-            _productDeleterServiceMock.Setup(t => t.DeleteAsync(id))
+            _productGetterServiceMock.Setup(s => s.GetByIdAsync(It.IsAny<Guid>()))
+                .ReturnsAsync(productDto);
+            _productDeleterServiceMock.Setup(s => s.DeleteAsync(It.IsAny<Guid>()))
                 .ReturnsAsync(true);
 
             var controller = CreateProductController();
@@ -497,6 +503,34 @@ namespace ECommerce.Tests.ControllerTests
             var result = await controller.Delete(id);
 
             // Assert
+            result.Should().NotBe(null);
+            result.Should().BeOfType<OkObjectResult>();
+        }
+
+        [Fact]
+        public async Task Delete_DeletedSuccessfullyWithImage_ReturnsOkResult()
+        {
+            // Arrange
+            var productDto = _fixture.Build<ProductDto>()
+                .With(t => t.Price, 10)
+                .With(t => t.SalePrice, null as decimal?)
+                .With(t => t.Stock, 10)
+                .Create();
+
+            _productGetterServiceMock.Setup(s => s.GetByIdAsync(It.IsAny<Guid>()))
+                .ReturnsAsync(productDto);
+            _productDeleterServiceMock.Setup(s => s.DeleteAsync(It.IsAny<Guid>()))
+                .ReturnsAsync(true);
+            _imageDeleterServiceMock.Setup(s => s.DeleteImageFolder(It.IsAny<string>()));
+
+            var controller = CreateProductController();
+
+            // Act
+            var result = await controller.Delete(productDto.Id);
+
+            // Assert
+            _imageDeleterServiceMock.Verify(s => s.DeleteImageFolder(It.IsAny<string>()), 
+                Times.Once);
             result.Should().NotBe(null);
             result.Should().BeOfType<OkObjectResult>();
         }

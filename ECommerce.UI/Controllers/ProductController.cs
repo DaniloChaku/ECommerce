@@ -116,7 +116,7 @@ namespace ECommerce.UI.Controllers
                         var imageUrl = await _imageUploaderService.UploadAsync(productModel.Image,
                             productResponse.Id.ToString());
 
-                        _imageDeleterService.Delete(productResponse.ImageUrl);
+                        _imageDeleterService.DeleteImage(productResponse.ImageUrl);
 
                         productResponse.ImageUrl = imageUrl;
 
@@ -192,12 +192,33 @@ namespace ECommerce.UI.Controllers
         {
             try
             {
+                var product = await _productGetterService.GetByIdAsync(id);
+
+                if (product is null)
+                {
+                    return BadRequest(
+                        new
+                        {
+                            Success = false,
+                            Message = "Failed to delete Product: Product was not found."
+                        });
+                }
+
                 var isDeleted = await _productDeleterService.DeleteAsync(id);
 
                 if (!isDeleted)
                 {
                     throw new InvalidOperationException("Failed to delete Product.");
                 }
+
+                try
+                {
+                    if (product.ImageUrl != null)
+                    {
+                        _imageDeleterService.DeleteImageFolder(id.ToString());
+                    }
+                }
+                catch(Exception) { }
 
                 var response = new
                 {

@@ -8,6 +8,7 @@ namespace ECommerce.Core.ServiceContracts.Image
 {
     public interface IImageDeleterService
     {
-        void Delete(string? imageUrl);
+        void DeleteImage(string? imageUrl);
+        void DeleteImageFolder(string productId);
     }
 }
