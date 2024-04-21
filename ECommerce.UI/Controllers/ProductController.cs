@@ -139,9 +139,8 @@ namespace ECommerce.UI.Controllers
                     ? "created" : "updated")} successfully.";
                 return RedirectToAction(nameof(Index));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                ModelState.AddModelError(nameof(productModel), ex.Message);
                 TempData["error"] = "An error occurred while processing your request. Please try again.";
                 return View(productModel);
             }
@@ -200,7 +199,7 @@ namespace ECommerce.UI.Controllers
                         new
                         {
                             Success = false,
-                            Message = "Failed to delete Product: Product was not found."
+                            Message = "Product not found."
                         });
                 }
 
@@ -208,7 +207,7 @@ namespace ECommerce.UI.Controllers
 
                 if (!isDeleted)
                 {
-                    throw new InvalidOperationException("Failed to delete Product.");
+                    throw new InvalidOperationException("Failed to delete the product. Please try again later.");
                 }
 
                 try
@@ -233,7 +232,7 @@ namespace ECommerce.UI.Controllers
                 var response = new
                 {
                     success = false,
-                    Message = "An error occurred while deleting Product. Please try again."
+                    Message = "An error occurred while deleting the product. Please try again later."
                 };
 
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
@@ -241,14 +240,14 @@ namespace ECommerce.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> HasAssociation(string type, Guid id)
+        public async Task<IActionResult> HasReference(string type, Guid id)
         {
             if (id == Guid.Empty)
             {
                 return BadRequest(new
                 {
                     success = false,
-                    message = "Associated entity's id can't be null"
+                    message = "Id cannot be null"
                 });
             }
 
@@ -258,7 +257,7 @@ namespace ECommerce.UI.Controllers
                 {
                     "category" => await _productGetterService.GetByCategoryAsync(id),
                     "manufacturer" => await _productGetterService.GetByManufacturerAsync(id),
-                    _ => throw new ArgumentException("The associated type is invalid")
+                    _ => throw new ArgumentException("The referenced type is invalid")
                 };
 
                 if (products.Count is 0)
@@ -283,7 +282,7 @@ namespace ECommerce.UI.Controllers
                 var response = new
                 {
                     success = false,
-                    Message = "An error occurred. Please try again."
+                    Message = "An error occurred. Please try again later."
                 };
 
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
@@ -291,14 +290,14 @@ namespace ECommerce.UI.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> RemoveAssociation(string type, Guid id)
+        public async Task<IActionResult> RemoveReference(string type, Guid id)
         {
             if (id == Guid.Empty)
             {
                 return BadRequest(new
                 {
                     success = false,
-                    message = "Category Id can't be null"
+                    message = "Id cannot be null"
                 });
             }
 
@@ -326,7 +325,7 @@ namespace ECommerce.UI.Controllers
                         }
                         break;
                     default:
-                        throw new ArgumentException("The associated type is invalid");
+                        throw new ArgumentException("The referenced type is invalid");
                 }
 
                 return Ok(new { success = true });
@@ -346,7 +345,7 @@ namespace ECommerce.UI.Controllers
                 var response = new
                 {
                     success = false,
-                    Message = "An error occurred. Please try again."
+                    Message = "An error occurred. Please try again later."
                 };
 
                 return StatusCode(StatusCodes.Status500InternalServerError, response);

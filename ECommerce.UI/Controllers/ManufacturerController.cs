@@ -65,12 +65,12 @@ namespace ECommerce.UI.Controllers
 
                 TempData["success"] = $"Manufacturer {(manufacturerDto.Id == Guid.Empty
                     ? "created" : "updated")} successfully.";
-                return RedirectToAction(nameof(ManufacturerController.Index));
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError(nameof(manufacturerDto), ex.Message);
-                TempData["error"] = "An error occurred while processing your request. Please try again.";
+                TempData["error"] = "An error occurred while processing your request. Please try again later.";
                 return View(manufacturerDto);
             }
         }
@@ -124,7 +124,7 @@ namespace ECommerce.UI.Controllers
 
                 if (!isDeleted)
                 {
-                    throw new InvalidOperationException("Failed to delete Manufacturer.");
+                    throw new InvalidOperationException("Failed to delete the manufacturer.");
                 }
 
                 var response = new
@@ -136,14 +136,12 @@ namespace ECommerce.UI.Controllers
 
                 return Ok(response);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                ModelState.AddModelError(nameof(id), ex.Message);
-
                 var response = new
                 {
                     Success = false,
-                    Message = "An error occurred while deleting Manufacturer. Please try again."
+                    Message = "An error occurred while deleting the anufacturer. Please try again later."
                 };
                 TempData["error"] = response.Message;
 

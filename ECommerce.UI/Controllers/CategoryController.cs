@@ -64,12 +64,11 @@ namespace ECommerce.UI.Controllers
 
                 TempData["success"] = $"Category {(categoryDto.Id == Guid.Empty
                     ? "created" : "updated")} successfully.";
-                return RedirectToAction(nameof(CategoryController.Index));
+                return RedirectToAction(nameof(Index));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                ModelState.AddModelError(nameof(categoryDto), ex.Message);
-                TempData["error"] = "An error occurred while processing your request. Please try again.";
+                TempData["error"] = "An error occurred while processing your request. Please try again later.";
                 return View(categoryDto);
             }
         }
@@ -123,7 +122,7 @@ namespace ECommerce.UI.Controllers
 
                 if (!isDeleted)
                 {
-                    throw new InvalidOperationException("Failed to delete Category.");
+                    throw new InvalidOperationException("Failed to delete the category.");
                 }
 
                 var response = new
@@ -134,14 +133,12 @@ namespace ECommerce.UI.Controllers
 
                 return Ok(response);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                ModelState.AddModelError(nameof(id), ex.Message);
-
                 var response = new
                 {
                     success = false,
-                    Message = "An error occurred while deleting Category. Please try again."
+                    Message = "An error occurred while deleting the category. Please try again later."
                 };
 
                 return BadRequest(response);

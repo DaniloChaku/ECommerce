@@ -729,12 +729,12 @@ namespace ECommerce.Tests.ControllerTests
 
         #endregion
 
-        #region HasAssociation
+        #region HasReference
 
         [Theory]
         [InlineData("Category")]
         [InlineData("Manufacturer")]
-        public async Task HasAssociation_ValidIdAndType_ReturnsOkObjectResult(string type)
+        public async Task HasReference_ValidIdAndType_ReturnsOkObjectResult(string type)
         {
             // Arrange
             Guid validId = Guid.NewGuid();
@@ -748,7 +748,7 @@ namespace ECommerce.Tests.ControllerTests
             var controller = CreateProductController();
 
             // Act
-            var result = await controller.HasAssociation(type, validId);
+            var result = await controller.HasReference(type, validId);
 
             // Assert
             result.Should().NotBe(null);
@@ -756,7 +756,7 @@ namespace ECommerce.Tests.ControllerTests
         }
 
         [Fact]
-        public async Task HasAssociation_InvalidId_ReturnsBadRequestObjectResult()
+        public async Task HasReference_InvalidId_ReturnsBadRequestObjectResult()
         {
             // Arrange
             Guid emptyId = Guid.Empty;
@@ -765,7 +765,7 @@ namespace ECommerce.Tests.ControllerTests
             var controller = CreateProductController();
 
             // Act
-            var result = await controller.HasAssociation(type, emptyId);
+            var result = await controller.HasReference(type, emptyId);
 
             // Assert
             result.Should().NotBe(null);
@@ -773,7 +773,7 @@ namespace ECommerce.Tests.ControllerTests
         }
 
         [Fact]
-        public async Task HasAssociation_InvalidType_ReturnsBadRequestObjectResult()
+        public async Task HasReference_InvalidType_ReturnsBadRequestObjectResult()
         {
             // Arrange
             Guid validId = Guid.NewGuid();
@@ -782,7 +782,7 @@ namespace ECommerce.Tests.ControllerTests
             var controller = CreateProductController();
 
             // Act
-            var result = await controller.HasAssociation(type, validId);
+            var result = await controller.HasReference(type, validId);
 
             // Assert
             result.Should().NotBe(null);
@@ -791,12 +791,12 @@ namespace ECommerce.Tests.ControllerTests
 
         #endregion
 
-        #region RemoveAssociation
+        #region RemoveReference
 
         [Theory]
         [InlineData("category")]
         [InlineData("manufacturer")]
-        public async Task RemoveAssociation_ValidTypeAndId_ReturnsOkResult(string type)
+        public async Task RemoveReference_ValidTypeAndId_ReturnsOkResult(string type)
         {
             // Arrange
             Guid validId = Guid.NewGuid();
@@ -813,7 +813,7 @@ namespace ECommerce.Tests.ControllerTests
             var contoller = CreateProductController();
 
             // Act
-            var result = await contoller.RemoveAssociation(type, validId);
+            var result = await contoller.RemoveReference(type, validId);
 
             // Assert
             result.Should().NotBe(null);
@@ -821,7 +821,7 @@ namespace ECommerce.Tests.ControllerTests
         }
 
         [Fact]
-        public async Task RemoveAssociation_InvalidId_ReturnsBadRequestObjectResult()
+        public async Task RemoveReference_InvalidId_ReturnsBadRequestObjectResult()
         {
             // Arrange
             Guid emptyId = Guid.Empty;
@@ -830,7 +830,7 @@ namespace ECommerce.Tests.ControllerTests
             var controller = CreateProductController();
 
             // Act
-            var result = await controller.RemoveAssociation(type, emptyId);
+            var result = await controller.RemoveReference(type, emptyId);
 
             // Assert
             result.Should().NotBe(null);
@@ -838,7 +838,7 @@ namespace ECommerce.Tests.ControllerTests
         }
 
         [Fact]
-        public async Task RemoveAssociation_InvalidType_ReturnsBadRequestObjectResult()
+        public async Task RemoveReference_InvalidType_ReturnsBadRequestObjectResult()
         {
             // Arrange
             Guid validId = Guid.NewGuid();
@@ -847,7 +847,7 @@ namespace ECommerce.Tests.ControllerTests
             var controller = CreateProductController();
 
             // Act
-            var result = await controller.RemoveAssociation(type, validId);
+            var result = await controller.RemoveReference(type, validId);
 
             // Assert
             result.Should().NotBe(null);

@@ -15,8 +15,8 @@ function loadTableData() {
                             <i class="bi bi-pencil-square text-warning" style="font-size: 1.1rem"></i>
                         </a>
                         <button class="btn btn-link p-0 m-0" onclick="removeItemWithAssociation(
-                            '/product/hasAssociation?type=manufacturer&id=${data}',
-                        '/product/removeAssociation?type=manufacturer&id=${data}', 
+                            '/product/hasReference?type=manufacturer&id=${data}',
+                        '/product/removeReference?type=manufacturer&id=${data}', 
                         '/manufacturer/delete?id=${data}', 'manufacturer', dataTable)">
                             <i class="bi bi-trash text-danger" style="font-size: 1.1rem"></i>
                         </button>
