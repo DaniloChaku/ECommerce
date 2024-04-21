@@ -7,15 +7,17 @@
 <section>
     <a asp-controller="Manufacturer" asp-action="Upsert" class="btn btn-primary mb-2">Add Manufacturer</a>
 
-    <table id="manufacturersTable" class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th></th>
-            </tr>
-        </thead>
-    </table>
+    <div class="table-responsive">
+        <table id="manufacturersTable" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th></th>
+                </tr>
+            </thead>
+        </table>
+    </div>
 </section>
 
 @section Scripts {
