@@ -11,14 +11,15 @@ namespace ECommerce.Core.Helpers
     {
         internal static void ValidateModel(object obj)
         {
-            ValidationContext validationContext = new ValidationContext(obj);
-            List<ValidationResult> validationResults = new List<ValidationResult>();
-            bool isValid =
+            var validationContext = new ValidationContext(obj);
+            var validationResults = new List<ValidationResult>();
+            var isValid =
                Validator.TryValidateObject(obj, validationContext, validationResults, true);
             if (!isValid)
             {
-                throw new ArgumentException
-                    (validationResults.FirstOrDefault()?.ErrorMessage);
+                var errorMessages = validationResults.Select(r => r.ErrorMessage);
+                throw new ValidationException($"Validation failed: {string.Join(", ", 
+                    errorMessages)}");
             }
         }
     }

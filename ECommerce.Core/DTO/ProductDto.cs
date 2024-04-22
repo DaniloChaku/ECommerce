@@ -1,5 +1,6 @@
 ﻿using ECommerce.Core.Domain.Entities;
 using ECommerce.Core.Helpers;
+using ECommerce.Core.Helpers.ValidationAttributes;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,8 @@ namespace ECommerce.Core.DTO
     public class ProductDto
     {
         public Guid Id { get; set; }
-        [Required]
+        [RegularExpression(@"^\S.*\S$", 
+            ErrorMessage = "The {0} field must not start or end with a whitespace characters and must contain at least one letter.")]
         [Remote(controller: "Product", action: "IsProductNameUnique",
             AdditionalFields = nameof(Id),
             ErrorMessage = "Product with the same name already exists")]
@@ -24,16 +26,19 @@ namespace ECommerce.Core.DTO
         [Display(Name = "Price")]
         [Range(typeof(decimal), "0.01", Constants.MaxDecimalValueString, 
             ParseLimitsInInvariantCulture = true, 
-            ErrorMessage = "{0} should be greater than 0")]
+            ErrorMessage = "{0} must be greater than 0")]
         public decimal Price { get; set; }
         [Display(Name = "Sale Price")]
         [Range(typeof(decimal), "0.01", Constants.MaxDecimalValueString,
             ParseLimitsInInvariantCulture = true,
-            ErrorMessage = "{0} should be greater than 0")]
+            ErrorMessage = "{0} must be greater than 0")]
+        [LessThan(nameof(Price), 
+            ErrorMessage = "{0} must be less than {1}")]
         public decimal? SalePrice { get; set; }
         public string? ImageUrl { get; set; }
         [Required]
-        [Range(0, long.MaxValue, ErrorMessage = "The number of products in stock should not be negative")]
+        [Range(0, long.MaxValue, 
+            ErrorMessage = "The number of products in stock must not be negative")]
         public long Stock { get; set; }
         public Guid? ManufacturerId { get; set; }
         public string? ManufacturerName { get; set; }
