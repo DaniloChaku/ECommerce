@@ -14,7 +14,7 @@ namespace ECommerce.Core.DTO
         [Remote(controller: "Category", action: "IsCategoryNameUnique",
             AdditionalFields = nameof(Id),
             ErrorMessage = "Category with the same name already exists")]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         public Category ToEntity()
         {

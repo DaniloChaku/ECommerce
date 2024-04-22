@@ -19,10 +19,9 @@ namespace ECommerce.Core.DTO
         [Remote(controller: "Product", action: "IsProductNameUnique",
             AdditionalFields = nameof(Id),
             ErrorMessage = "Product with the same name already exists")]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
         [MaxLength(400)]
         public string? Description { get; set; }
-        [Required]
         [Display(Name = "Price")]
         [Range(typeof(decimal), "0.01", Constants.MaxDecimalValueString, 
             ParseLimitsInInvariantCulture = true, 

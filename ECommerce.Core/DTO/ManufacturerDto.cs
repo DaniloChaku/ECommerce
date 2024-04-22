@@ -14,7 +14,7 @@ namespace ECommerce.Core.DTO
         [Remote(controller: "Manufacturer", action: "IsManufacturerNameUnique",
             AdditionalFields = nameof(Id),
             ErrorMessage = "Manufacturer with the same name already exists")]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
 
         public Manufacturer ToEntity()
