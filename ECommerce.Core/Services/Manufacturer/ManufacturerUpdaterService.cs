@@ -25,11 +25,6 @@ namespace ECommerce.Core.Services.Manufacturer
                 throw new ArgumentNullException(nameof(manufacturerDto), "Manufacturer data cannot be null");
             }
 
-            if (string.IsNullOrEmpty(manufacturerDto.Name))
-            {
-                throw new ArgumentException("Name cannot be null or empty", nameof(manufacturerDto.Name));
-            }
-
             if (manufacturerDto.Id == Guid.Empty)
             {
                 throw new ArgumentException("Id cannot be empty", nameof(manufacturerDto.Id));

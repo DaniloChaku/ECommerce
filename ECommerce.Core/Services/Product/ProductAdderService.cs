@@ -26,11 +26,6 @@ namespace ECommerce.Core.Services.Product
                 throw new ArgumentNullException(nameof(productDto), "Product data cannot be null");
             }
 
-            if (string.IsNullOrEmpty(productDto.Name))
-            {
-                throw new ArgumentException("Name cannot be null or empty", nameof(productDto.Name));
-            }
-
             if (productDto.Id != Guid.Empty)
             {
                 throw new ArgumentException("Id must be empty", nameof(productDto.Id));
@@ -43,8 +38,6 @@ namespace ECommerce.Core.Services.Product
             }
 
             var product = productDto.ToEntity();
-
-            ValidationHelper.ValidateModel(product);
 
             var productAdded = await _productRepository.AddAsync(product);
 

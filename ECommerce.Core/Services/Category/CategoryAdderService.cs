@@ -25,11 +25,6 @@ namespace ECommerce.Core.Services.Category
                 throw new ArgumentNullException(nameof(categoryDto), "Category data cannot be null");
             }
 
-            if (string.IsNullOrEmpty(categoryDto.Name))
-            {
-                throw new ArgumentException("Name cannot be null or empty", nameof(categoryDto.Name));
-            }
-
             if (categoryDto.Id != Guid.Empty)
             {
                 throw new ArgumentException("Id must be empty", nameof(categoryDto.Id));

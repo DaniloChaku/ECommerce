@@ -55,28 +55,6 @@ namespace ECommerce.Test.ServiceTests
         }
 
         [Fact]
-        public async Task AddAsync_NullName_ThrowsArgumentException()
-        {
-            // Arrange
-            var productDto = _fixture.Build<ProductDto>()
-                .With(t => t.Id, Guid.Empty)
-                .With(t => t.Name, null as string)
-                .With(t => t.Price, 10)
-                .With(t => t.SalePrice, null as decimal?)
-                .With(t => t.Stock, 10)
-                .Create();
-
-            // Act
-            var actoin = async () =>
-            {
-                await _productAdderService.AddAsync(productDto);
-            };
-
-            // Assert
-            await actoin.Should().ThrowAsync<ArgumentException>();
-        }
-
-        [Fact]
         public async Task AddAsync_NonEmptyId_ThrowsArgumentException()
         {
             // Arrange
@@ -123,26 +101,6 @@ namespace ECommerce.Test.ServiceTests
             var actoin = async () =>
             {
                 await _productAdderService.AddAsync(productDto2);
-            };
-
-            // Assert
-            await actoin.Should().ThrowAsync<ArgumentException>();
-        }
-
-        [Fact]
-        public async Task AddAsync_NegativePrice_ThrowsArgumentException()
-        {
-            // Arrange
-            var productDto = _fixture.Build<ProductDto>()
-                .With(t => t.Price, -10)
-                .With(t => t.SalePrice, null as decimal?)
-                .With(t => t.Stock, 10)
-                .Create();
-
-            // Act
-            var actoin = async () =>
-            {
-                await _productAdderService.AddAsync(productDto);
             };
 
             // Assert
@@ -428,28 +386,6 @@ namespace ECommerce.Test.ServiceTests
         }
 
         [Fact]
-        public async Task UpdateAsync_NullName_ThrowsArgumentException()
-        {
-            // Arrange
-            var productDto = _fixture.Build<ProductDto>()
-                .With(t => t.Id, Guid.NewGuid())
-                .With(t => t.Name, null as string)
-                .With(t => t.Price, 10)
-                .With(t => t.SalePrice, null as decimal?)
-                .With(t => t.Stock, 10)
-                .Create();
-
-            // Act
-            var action = async () =>
-            {
-                await _productUpdaterService.UpdateAsync(productDto);
-            };
-
-            // Assert
-            await action.Should().ThrowAsync<ArgumentException>();
-        }
-
-        [Fact]
         public async Task UpdateAsync_InvalidId_ThrowsArgumentException()
         {
             // Arrange
@@ -463,27 +399,6 @@ namespace ECommerce.Test.ServiceTests
 
             _productRepositoryMock.Setup(repo => repo.GetByIdAsync(invalidId))
                                    .ReturnsAsync(null as Product);
-
-            // Act
-            var action = async () =>
-            {
-                await _productUpdaterService.UpdateAsync(productDto);
-            };
-
-            // Assert
-            await action.Should().ThrowAsync<ArgumentException>();
-        }
-
-        [Fact]
-        public async Task UpdateAsync_NegativePrice_ThrowsArgumentException()
-        {
-            // Arrange
-            var productDto = _fixture.Build<ProductDto>()
-                .With(t => t.Price, -2)
-                .With(t => t.Price, 10)
-                .With(t => t.SalePrice, null as decimal?)
-                .With(t => t.Stock, 10)
-                .Create();
 
             // Act
             var action = async () =>

@@ -60,25 +60,6 @@ namespace ECommerce.Test.ServiceTests
             await action.Should().ThrowAsync<ArgumentNullException>();    
         }
 
-            [Fact]
-        public async Task AddAsync_NullName_ThrowsArgumentException()
-        {
-            // Arrange
-            var categoryDto = _fixture.Build<CategoryDto>()
-                .With(t => t.Id, Guid.Empty)
-                .With(t => t.Name, null as string)
-                .Create();
-
-            // Act
-            var action = async () =>
-            {
-                await _categoryAdderService.AddAsync(categoryDto!);
-            };
-
-            // Assert
-            await action.Should().ThrowAsync<ArgumentException>();
-        }
-
         [Fact]
         public async Task AddAsync_NonEmptyId_ThrowsArgumentException()
         {
@@ -282,25 +263,6 @@ namespace ECommerce.Test.ServiceTests
             // Arrange
             var categoryDto = _fixture.Build<CategoryDto>()
                 .With(t => t.Id, Guid.Empty)
-                .Create();
-
-            // Act
-            var action = async () =>
-            {
-                await _categoryUpdaterService.UpdateAsync(categoryDto!);
-            };
-
-            // Assert
-            await action.Should().ThrowAsync<ArgumentException>();
-        }
-
-        [Fact]
-        public async Task UpdateAsync_NullName_ThrowsArgumentException()
-        {
-            // Arrange
-            var categoryDto = _fixture.Build<CategoryDto>()
-                .With(t => t.Id, Guid.NewGuid())
-                .With(t => t.Name, null as string)
                 .Create();
 
             // Act

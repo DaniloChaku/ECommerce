@@ -60,25 +60,6 @@ namespace ECommerce.Test.ServiceTests
         }
 
         [Fact]
-        public async Task AddAsync_NullName_ThrowsArgumentException()
-        {
-            // Arrange
-            var manufacturerDto = _fixture.Build<ManufacturerDto>()
-                .With(t => t.Id, Guid.Empty)
-                .With(t => t.Name, null as string)
-                .Create();
-
-            // Act
-            var action = async () =>
-            {
-                await _manufacturerAdderService.AddAsync(manufacturerDto!);
-            };
-
-            // Assert
-            await action.Should().ThrowAsync<ArgumentException>();
-        }
-
-        [Fact]
         public async Task AddAsync_NonEmptyId_ThrowsArgumentException()
         {
             // Arrange
@@ -281,25 +262,6 @@ namespace ECommerce.Test.ServiceTests
             // Arrange
             var manufacturerDto = _fixture.Build<ManufacturerDto>()
                 .With(t => t.Id, Guid.Empty)
-                .Create();
-
-            // Act
-            var action = async () =>
-            {
-                await _manufacturerUpdaterService.UpdateAsync(manufacturerDto!);
-            };
-
-            // Assert
-            await action.Should().ThrowAsync<ArgumentException>();
-        }
-
-        [Fact]
-        public async Task UpdateAsync_NullName_ThrowsArgumentException()
-        {
-            // Arrange
-            var manufacturerDto = _fixture.Build<ManufacturerDto>()
-                .With(t => t.Id, Guid.NewGuid())
-                .With(t => t.Name, null as string)
                 .Create();
 
             // Act
