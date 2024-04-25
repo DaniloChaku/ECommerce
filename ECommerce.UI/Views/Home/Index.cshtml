@@ -1,3 +1,55 @@
-﻿@{
+﻿@model ProductPageModel
+
+@{
     ViewData["Title"] = "Home Page";
 }
+
+<section class="p-4">
+    <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 justify-content-center">
+        @foreach (var product in Model.Products)
+        {
+            <div class="col mb-5">
+                <div class="card h-100">
+                    <img class="card-img-top w-100" src="@product.ImageUrl" alt="An image of @product.Name" />
+                    <div class="card-body px-4 py-2">
+                        <div class="text-center">
+                            <h5 class="card-title fw-bolder">@product.Name</h5>
+                            @if (product.SalePrice is not null)
+                            {
+                                <span class="text-muted text-decoration-line-through">$@product.Price</span>
+                                <span>$@product.SalePrice</span>
+                            }
+                            else
+                            {
+                                <span>$@product.Price</span>
+                            }
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex flex-row justify-content-center pt-0 border-top-0 bg-transparent">
+                        <div class="text-center px-1"><a class="btn btn-outline-dark mt-auto" href="#">Edit</a></div>
+                        <div class="text-center px-1"><a class="btn btn-outline-dark mt-auto" href="#">Delete</a></div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+<nav>
+    <ul class="pagination d-flex justify-content-center">
+        <li class="page-item">
+            <a class="page-link" asp-action="Index" asp-controller="Home" 
+            asp-route-page="1">First</a>
+        </li>
+        @for(var i = Model.PaginationStart; i <= Model.PaginationEnd; i++)
+        {
+            <li class="page-item"><a class="page-link @(i == Model.CurrentPage ? "active" : "")" 
+                asp-action="Index" asp-controller="Home" asp-route-page="@i">
+                @i</a></li>
+        }
+        <li class="page-item">
+            <a class="page-link" asp-action="Index" asp-controller="Home" 
+            asp-route-page="@Model.TotalPages">Last</a>
+        </li>
+    </ul>
+</nav>
