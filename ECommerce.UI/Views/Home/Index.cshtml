@@ -26,8 +26,15 @@
                         </div>
                     </div>
                     <div class="card-footer d-flex flex-row justify-content-center pt-0 border-top-0 bg-transparent">
-                        <div class="text-center px-1"><a class="btn btn-outline-dark mt-auto" href="#">Edit</a></div>
-                        <div class="text-center px-1"><a class="btn btn-outline-dark mt-auto" href="#">Delete</a></div>
+                        <div class="text-center px-1">
+                            <a class="btn btn-outline-dark mt-auto"
+                               asp-controller="Product" asp-action="@nameof(ProductController.Upsert)" asp-route-id="@product.Id">Edit</a>
+                        </div>
+                        <div class="text-center px-1">
+                            <button class="btn btn-outline-dark mt-auto"
+                               asp-controller="Product" asp-action="Delete" 
+                               onclick="removeItem('product/delete?id=@product.Id')">Delete</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -38,18 +45,25 @@
 <nav>
     <ul class="pagination d-flex justify-content-center">
         <li class="page-item">
-            <a class="page-link" asp-action="Index" asp-controller="Home" 
-            asp-route-page="1">First</a>
+            <a class="page-link" asp-action="Index" asp-controller="Home"
+               asp-route-page="1">First</a>
         </li>
-        @for(var i = Model.PaginationStart; i <= Model.PaginationEnd; i++)
+        @for (var i = Model.PaginationStart; i <= Model.PaginationEnd; i++)
         {
-            <li class="page-item"><a class="page-link @(i == Model.CurrentPage ? "active" : "")" 
-                asp-action="Index" asp-controller="Home" asp-route-page="@i">
-                @i</a></li>
+            <li class="page-item">
+                <a class="page-link @(i == Model.CurrentPage ? "active" : "")"
+                   asp-action="Index" asp-controller="Home" asp-route-page="@i">
+                    @i
+                </a>
+            </li>
         }
         <li class="page-item">
-            <a class="page-link" asp-action="Index" asp-controller="Home" 
-            asp-route-page="@Model.TotalPages">Last</a>
+            <a class="page-link" asp-action="Index" asp-controller="Home"
+               asp-route-page="@Model.TotalPages">Last</a>
         </li>
     </ul>
 </nav>
+
+@section Scripts {
+    <script src="~/js/utilities.js"></script>
+}

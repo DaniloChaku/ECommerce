@@ -32,14 +32,18 @@ function removeItemWithAssociation(hasAssociationsUrl, removeAssociactionUrl, de
 }
 
 
-function removeEntity(url, dataTable) {
+function removeEntity(url, dataTable = null) {
     fetch(url, {
         method: 'DELETE'
     })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                dataTable.ajax.reload();
+                if (dataTable !== undefined && dataTable !== null) {
+                    dataTable.ajax.reload();
+                } else {
+                    window.location.reload();
+                }
                 toastr.success(data.message);
             } else {
                 toastr.error(data.message);
