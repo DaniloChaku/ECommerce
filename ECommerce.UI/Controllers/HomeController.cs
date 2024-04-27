@@ -1,3 +1,4 @@
+using ECommerce.Core.DTO;
 using ECommerce.Core.ServiceContracts.Product;
 using ECommerce.UI.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -14,9 +15,10 @@ namespace ECommerce.UI.Controllers
             _productGetterService = productGetterService;
         }
 
-        public async Task<IActionResult> Index(int page = 1)
+        public async Task<IActionResult> Index(int page = 1, ProductPageModel? productPage = null)
         {
-            var products = await _productGetterService.GetAllAsync();
+            var products = await _productGetterService
+                .GetBySearchQueryAsync(productPage?.SearchQuery);
             var productsPerPage = 10;
             int totalPages;
 

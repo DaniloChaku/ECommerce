@@ -48,7 +48,7 @@ namespace ECommerce.Tests.ControllerTests
             var products = ProductCreationHelper.CreateManyProductDtos(productCount)
                 .ToList();
 
-            _productGetterServiceMock.Setup(s => s.GetAllAsync())
+            _productGetterServiceMock.Setup(s => s.GetBySearchQueryAsync(It.IsAny<string>()))
                 .ReturnsAsync(products);
 
             var controller = CreateController();

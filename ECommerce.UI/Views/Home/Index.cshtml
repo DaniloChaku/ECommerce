@@ -11,7 +11,7 @@
             <div class="col-lg-6">
                 <div class="input-group">
                     <input type="search" class="form-control rounded-start" placeholder="Search"
-                           aria-label="Search" aria-describedby="search-addon" />
+                           asp-for="SearchQuery" />
                     <button type="button" class="btn btn-primary">
                         <i class="bi bi-search"></i>
                     </button>
@@ -46,11 +46,11 @@
                     <div class="card-footer d-flex flex-row justify-content-center pt-0 border-top-0 bg-transparent">
                         <div class="text-center px-1">
                             <a class="btn btn-outline-dark mt-auto"
-                               asp-controller="Product" asp-action="@nameof(ProductController.Upsert)" asp-route-id="@product.Id">Edit</a>
+                               asp-action="@nameof(ProductController.Upsert)" asp-route-id="@product.Id">Edit</a>
                         </div>
                         <div class="text-center px-1">
                             <button class="btn btn-outline-dark mt-auto"
-                                    asp-controller="Product" asp-action="Delete"
+                                    asp-action="Delete"
                                     onclick="removeItem('product/delete?id=@product.Id')">
                                 Delete
                             </button>
