@@ -6,7 +6,7 @@ using ECommerce.Core.ServiceContracts.Product;
 using ECommerce.Core.Services.Category;
 using ECommerce.Core.Services.Image;
 using ECommerce.Core.Services.Manufacturer;
-using ECommerce.Core.Services.Product;
+using ECommerce.Core.Services.Products;
 using ECommerce.Core.Settings;
 using ECommerce.Infrastructure.Db;
 using ECommerce.Infrastructure.Repositories;

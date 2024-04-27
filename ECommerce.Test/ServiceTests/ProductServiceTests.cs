@@ -3,7 +3,8 @@ using ECommerce.Core.Domain.RepositoryContracts;
 using ECommerce.Core.DTO;
 using ECommerce.Core.Enums;
 using ECommerce.Core.ServiceContracts.Product;
-using ECommerce.Core.Services.Product;
+using ECommerce.Core.Services.Products;
+using ECommerce.Tests.Helpers;
 using Moq;
 using System.Linq.Expressions;
 
@@ -295,6 +296,52 @@ namespace ECommerce.Test.ServiceTests
             // Assert
             result.Should().NotBeNull();
             result.Should().BeEquivalentTo(expected);
+        }
+
+        #endregion
+
+        #region GetBySearchQueryAsync
+
+        [Fact]
+        public async Task GetBySearchQueryAsync_NullSearchQuery_ReturnsAllProducts()
+        {
+            // Arrange
+            var products = ProductCreationHelper.CreateManyProducts(5).ToList();
+            var expectedProducts = products.Select(p => p.ToDto()).ToList();
+
+            _productRepositoryMock.Setup(repo => repo.GetAllAsync(
+                It.IsAny<Expression<Func<Product, bool>>>()))
+                .ReturnsAsync(products);
+
+            // Act
+            var result = await _productGetterService.GetBySearchQueryAsync(null);
+
+            // Assert
+            result.Should().BeEquivalentTo(expectedProducts);
+        }
+
+        [Fact]
+        public async Task GetBySearchQueryAsync_ValidSearchQuery_ReturnsMatchingProducts()
+        {
+            // Arrange
+            var searchQuery = "test";
+            var products = new List<Product>
+            {
+                ProductCreationHelper.CreateProduct(name: "Test Product 1"),
+                ProductCreationHelper.CreateProduct(name: "Another Product"),
+                ProductCreationHelper.CreateProduct(name: "Test Product 3"),
+            };
+            _productRepositoryMock.Setup(repo => repo.GetAllAsync(
+                It.IsAny<Expression<Func<Product, bool>>>()))
+                .ReturnsAsync(products.FindAll(p => p.Name.Contains(searchQuery, 
+                StringComparison.CurrentCultureIgnoreCase)));
+
+            // Act
+            var result = await _productGetterService.GetBySearchQueryAsync(searchQuery);
+
+            // Assert
+            result.Should().OnlyContain(dto => dto.Name.Contains(searchQuery, 
+                StringComparison.CurrentCultureIgnoreCase));
         }
 
         #endregion

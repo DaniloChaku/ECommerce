@@ -2,13 +2,14 @@
 using ECommerce.Core.Domain.RepositoryContracts;
 using ECommerce.Core.DTO;
 using ECommerce.Core.ServiceContracts.Product;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ECommerce.Core.Services.Product
+namespace ECommerce.Core.Services.Products
 {
     public class ProductGetterService : IProductGetterService
     {
@@ -30,20 +31,42 @@ namespace ECommerce.Core.Services.Product
         {
             var products = await _productRepository.GetAllAsync();
 
-            return products.Select(t => t.ToDto()).ToList();
+            return ConvertToProductDtos(products);
         }
 
         public async Task<List<ProductDto>> GetByCategoryAsync(Guid categoryId)
         {
             var products = await _productRepository.GetAllAsync(t => t.CategoryId == categoryId);
 
-            return products.Select(t => t.ToDto()).ToList();
+            return ConvertToProductDtos(products);
         }
 
         public async Task<List<ProductDto>> GetByManufacturerAsync(Guid manufacturerId)
         {
             var products = await _productRepository.GetAllAsync(t => t.ManufacturerId == manufacturerId);
 
+            return ConvertToProductDtos(products);
+        }
+
+        public async Task<List<ProductDto>> GetBySearchQueryAsync(string? searchQuery)
+        {
+            var searchQueryTrimmed = searchQuery?.Trim().ToLower();
+            List<Product> products;
+
+            if (string.IsNullOrWhiteSpace(searchQueryTrimmed)) {
+                products = await _productRepository.GetAllAsync();
+            }
+            else
+            {
+                products = await _productRepository.GetAllAsync(p => 
+                EF.Functions.Like(p.Name, $"%{searchQueryTrimmed}%"));
+            }
+
+            return ConvertToProductDtos(products);
+        }
+
+        private List<ProductDto> ConvertToProductDtos(IEnumerable<Product> products)
+        {
             return products.Select(t => t.ToDto()).ToList();
         }
     }
