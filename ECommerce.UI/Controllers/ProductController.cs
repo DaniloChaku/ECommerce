@@ -10,6 +10,7 @@ using ECommerce.UI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
+using System.Collections;
 
 namespace ECommerce.UI.Controllers
 {
@@ -64,18 +65,10 @@ namespace ECommerce.UI.Controllers
         [HttpGet]
         public async Task<IActionResult> Upsert(Guid? id)
         {
-            var categoriesSelectList = _categorySorterService.Sort(await
-                _categoryGetterService.GetAllAsync()).Select(t =>
-                new SelectListItem() { Text = t.Name, Value = t.Id.ToString() });
-
-            var manufacturersSelectList = _manufacturerSorterService.Sort(await
-                _manufacturerGetterService.GetAllAsync()).Select(t =>
-                new SelectListItem() { Text = t.Name, Value = t.Id.ToString() });
-
             var productUpsertModel = new ProductUpsertModel()
             {
-                Categories = categoriesSelectList,
-                Manufacturers = manufacturersSelectList,
+                Categories = await GetCategoriesSelectList(),
+                Manufacturers = await GetManufacturersSelectList(),
                 ImageUploadOptions = _imageUploadOptions
             };
 
@@ -91,6 +84,16 @@ namespace ECommerce.UI.Controllers
         [HttpPost]
         public async Task<IActionResult> Upsert(ProductUpsertModel productModel)
         {
+            if (!productModel.Categories.Any())
+            {
+                productModel.Categories = await GetCategoriesSelectList();
+            }
+            if (!productModel.Manufacturers.Any())
+            {
+                productModel.Manufacturers = await GetManufacturersSelectList();
+            }
+            productModel.ImageUploadOptions ??= _imageUploadOptions;
+            
             if (!ModelState.IsValid)
             {
                 return View(productModel);
@@ -353,5 +356,19 @@ namespace ECommerce.UI.Controllers
         }
 
         #endregion
+
+        private async Task<IEnumerable<SelectListItem>> GetCategoriesSelectList()
+        {
+            return _categorySorterService.Sort(await
+                _categoryGetterService.GetAllAsync()).Select(t =>
+                new SelectListItem() { Text = t.Name, Value = t.Id.ToString() });
+        }
+
+        private async Task<IEnumerable<SelectListItem>> GetManufacturersSelectList()
+        {
+            return _manufacturerSorterService.Sort(await
+                _manufacturerGetterService.GetAllAsync()).Select(t =>
+                new SelectListItem() { Text = t.Name, Value = t.Id.ToString() });
+        }
     }
 }
