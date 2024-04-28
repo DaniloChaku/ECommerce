@@ -45,7 +45,7 @@ namespace ECommerce.Core.Helpers.ValidationAttributes
                     _comparisonProperty);
 
                 return new ValidationResult(string.Format(
-                    ErrorMessage ?? $"The {0} must be less than {1}.", 
+                    ErrorMessage ?? "The {0} must be less than {1}.", 
                     currentPropertyDisplayName, comparisonPropertyDisplayName));
             }
 
