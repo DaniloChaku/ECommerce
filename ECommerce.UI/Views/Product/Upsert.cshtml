@@ -10,10 +10,8 @@
         <div class="col-lg-6 col-12 justify-content-center">
             <h1 class="mb-4">@ViewBag.Title</h1>
 
-            <input asp-for="Product.Id" hidden/>
-            <input asp-for="Product.ImageUrl" hidden/>
-            <input asp-for="Categories" hidden/>
-            <input asp-for="Manufacturers" hidden/>
+            <input asp-for="Product.Id" hidden />
+            <input asp-for="Product.ImageUrl" hidden />
 
             <div class="mb-3">
                 <label asp-for="Product.Name" class="form-label">Name</label>
@@ -48,7 +46,7 @@
                         {
                             <input asp-for="Image" size="@Model.ImageUploadOptions.MaxImageSize"
                                    accept="@string.Join(",", Model.ImageUploadOptions.AllowedTypes.Select(t => t.Extension))"
-                            class="form-control" />
+                                   class="form-control" />
                         }
                         else
                         {
@@ -61,8 +59,8 @@
                         @if (Model.Product.ImageUrl is not null)
                         {
                             <img src="@Model.Product.ImageUrl"
-                            alt="Failed to load the image for @Model.Product.Name"
-                            class="img-fluid"/>
+                                 alt="Failed to load the image for @Model.Product.Name"
+                                 class="img-fluid" />
                         }
                         else
                         {
@@ -70,7 +68,7 @@
                         }
                     </div>
                 </div>
-                
+
             </div>
 
             <div class="mb-3">
