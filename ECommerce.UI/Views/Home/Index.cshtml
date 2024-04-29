@@ -46,7 +46,8 @@
                     <div class="card-footer d-flex flex-row justify-content-center pt-0 border-top-0 bg-transparent">
                         <div class="text-center px-1">
                             <a class="btn btn-outline-dark mt-auto"
-                               asp-action="@nameof(ProductController.Upsert)" asp-route-id="@product.Id">Edit</a>
+                               asp-action="@nameof(ProductController.Upsert)" 
+                               asp-controller="Product" asp-route-id="@product.Id">Edit</a>
                         </div>
                         <div class="text-center px-1">
                             <button class="btn btn-outline-dark mt-auto"
