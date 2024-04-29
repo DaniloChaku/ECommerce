@@ -12,6 +12,7 @@ namespace ECommerce.UI.Models
         public ProductDto Product { get; set; } = new ProductDto();
         public IEnumerable<SelectListItem> Categories { get; set; } = Enumerable.Empty<SelectListItem>();
         public IEnumerable<SelectListItem> Manufacturers { get; set; } = Enumerable.Empty<SelectListItem>();
+        public IEnumerable<SelectListItem> PriceTypes { get; set; } = Enumerable.Empty<SelectListItem>();
         [DataType(DataType.Upload)]
         [ImageSize(1024, 1024)]
         public IFormFile? Image { get; set; }

@@ -1,5 +1,6 @@
 ﻿using ECommerce.Core.Domain.Entities;
 using ECommerce.Core.DTO;
+using ECommerce.Core.Enums;
 using ECommerce.Core.Exceptions;
 using ECommerce.Core.ServiceContracts.Category;
 using ECommerce.Core.ServiceContracts.Image;
@@ -369,6 +370,12 @@ namespace ECommerce.UI.Controllers
             return _manufacturerSorterService.Sort(await
                 _manufacturerGetterService.GetAllAsync()).Select(t =>
                 new SelectListItem() { Text = t.Name, Value = t.Id.ToString() });
+        }
+
+        private IEnumerable<SelectListItem> GetPriceTypesSelectList()
+        {
+            return Enum.GetNames(typeof(PriceType)).Select(
+                t => new SelectListItem() { Text = t, Value = t });
         }
     }
 }

@@ -25,6 +25,7 @@ namespace ECommerce.Infrastructure.Repositories
             existingProduct.Description = product.Description;
             existingProduct.Price = product.Price;
             existingProduct.SalePrice = product.SalePrice;
+            existingProduct.PriceType = product.PriceType;
             existingProduct.Stock = product.Stock;
             existingProduct.ImageUrl = product.ImageUrl;
             existingProduct.ManufacturerId = product.ManufacturerId;

@@ -28,7 +28,7 @@
             <div class="mb-3">
                 <label asp-for="Product.Price" class="form-label">Price, $</label>
                 <span class="text-danger">*</span>
-                <input asp-for="Product.Price" type="number" min="0.01" value="0.01" step="0.01" class="form-control" />
+                <input asp-for="Product.Price" type="number" min="0.01" step="0.01" class="form-control" />
                 <span asp-validation-for="Product.Price" class="text-danger"></span>
             </div>
 
@@ -36,6 +36,21 @@
                 <label asp-for="Product.SalePrice" class="form-label">Sale Price, $</label>
                 <input asp-for="Product.SalePrice" type="number" min="0" step="0.01" class="form-control" />
                 <span asp-validation-for="Product.SalePrice" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Product.PriceType" class="form-label">Price Type</label>
+                @{
+                    var priceTypes = Enum.GetNames(typeof(PriceType));
+                }
+                @foreach (string priceType in priceTypes)
+                {
+                    <div class="form-check">
+                    <input type="radio" asp-for="Product.PriceType" id="@priceType" value="@priceType"
+                               class="form-check-input" />
+                    <label for="@priceType" class="form-check-label">@priceType</label>
+                    </div>
+                }
             </div>
 
             <div class="mb-3">

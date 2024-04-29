@@ -41,6 +41,10 @@
                             {
                                 <span>$@product.Price</span>
                             }
+                            @if (product.PriceType == PriceType.PerKilo)
+                            {
+                                <span>per kilo</span>
+                            }
                         </div>
                     </div>
                     <div class="card-footer d-flex flex-row justify-content-center pt-0 border-top-0 bg-transparent">

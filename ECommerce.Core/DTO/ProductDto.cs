@@ -1,4 +1,5 @@
 ﻿using ECommerce.Core.Domain.Entities;
+using ECommerce.Core.Enums;
 using ECommerce.Core.Helpers;
 using ECommerce.Core.Helpers.ValidationAttributes;
 using Microsoft.AspNetCore.Mvc;
@@ -34,6 +35,7 @@ namespace ECommerce.Core.DTO
         [LessThan(nameof(Price), 
             ErrorMessage = "{0} must be less than {1}")]
         public decimal? SalePrice { get; set; }
+        public PriceType PriceType { get; set; }
         public string? ImageUrl { get; set; }
         [Required]
         [Range(0, long.MaxValue, 
@@ -53,11 +55,31 @@ namespace ECommerce.Core.DTO
                 Description = Description,
                 Price = Price,
                 SalePrice = SalePrice,
+                PriceType = PriceType,
                 ImageUrl = ImageUrl,
                 Stock = Stock,
                 ManufacturerId = ManufacturerId,
                 CategoryId = CategoryId
             };
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is ProductDto product)
+            {
+                return Id == product.Id
+               && Name == product.Name
+               && Description == product.Description
+               && Price == product.Price
+               && SalePrice == product.SalePrice
+               && PriceType == product.PriceType
+               && ImageUrl == product.ImageUrl
+               && Stock == product.Stock
+               && ManufacturerId == product.ManufacturerId
+               && CategoryId == product.CategoryId;
+            }
+
+            return false;
         }
     }
 
@@ -72,6 +94,7 @@ namespace ECommerce.Core.DTO
                 Description = product.Description,
                 Price = product.Price,
                 SalePrice = product.SalePrice,
+                PriceType = product.PriceType,
                 ImageUrl = product.ImageUrl,
                 Stock = product.Stock,
                 ManufacturerId = product.ManufacturerId,
