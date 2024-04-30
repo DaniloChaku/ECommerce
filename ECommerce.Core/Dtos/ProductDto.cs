@@ -15,7 +15,7 @@ namespace ECommerce.Core.DTO
     public class ProductDto
     {
         public Guid Id { get; set; }
-        [RegularExpression(@"^\S.*\S$", 
+        [RegularExpression(@"^\S(.*\S)?$", 
             ErrorMessage = "The {0} field must not start or end with a whitespace characters and must contain at least one letter.")]
         [Remote(controller: "Product", action: "IsProductNameUnique",
             AdditionalFields = nameof(Id),
