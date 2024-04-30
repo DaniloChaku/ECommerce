@@ -1,4 +1,5 @@
-﻿using ECommerce.Core.Domain.RepositoryContracts;
+﻿using ECommerce.Core.Domain.IdentityEntities;
+using ECommerce.Core.Domain.RepositoryContracts;
 using ECommerce.Core.ServiceContracts.Category;
 using ECommerce.Core.ServiceContracts.Image;
 using ECommerce.Core.ServiceContracts.Manufacturer;
@@ -10,6 +11,8 @@ using ECommerce.Core.Services.Products;
 using ECommerce.Core.Settings;
 using ECommerce.Infrastructure.Db;
 using ECommerce.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace ECommerce.UI.StartupExtensions
@@ -51,6 +54,10 @@ namespace ECommerce.UI.StartupExtensions
             {
                 options.UseSqlServer(configuration.GetConnectionString("Default"));
             });
+
+            services.AddIdentity<ApplicationUser, ApplicationRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
+
 
             return services;
         }
