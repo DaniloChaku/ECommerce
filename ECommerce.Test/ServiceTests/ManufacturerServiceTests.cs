@@ -1,6 +1,6 @@
 ﻿using ECommerce.Core.Domain.Entities;
 using ECommerce.Core.Domain.RepositoryContracts;
-using ECommerce.Core.DTO;
+using ECommerce.Core.Dtos;
 using ECommerce.Core.Enums;
 using ECommerce.Core.ServiceContracts.Manufacturer;
 using ECommerce.Core.Services.Manufacturer;

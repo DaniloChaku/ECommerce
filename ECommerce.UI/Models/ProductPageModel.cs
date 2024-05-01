@@ -1,4 +1,4 @@
-﻿using ECommerce.Core.DTO;
+﻿using ECommerce.Core.Dtos;
 
 namespace ECommerce.UI.Models
 {

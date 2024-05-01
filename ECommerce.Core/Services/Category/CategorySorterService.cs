@@ -1,5 +1,5 @@
 ﻿using ECommerce.Core.Domain.RepositoryContracts;
-using ECommerce.Core.DTO;
+using ECommerce.Core.Dtos;
 using ECommerce.Core.Enums;
 using ECommerce.Core.ServiceContracts.Category;
 using System;

@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ECommerce.Core.DTO
+namespace ECommerce.Core.Dtos
 {
     public class ProductDto
     {

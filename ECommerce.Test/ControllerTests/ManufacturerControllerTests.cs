@@ -1,4 +1,4 @@
-﻿using ECommerce.Core.DTO;
+﻿using ECommerce.Core.Dtos;
 using ECommerce.Core.ServiceContracts.Manufacturer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;

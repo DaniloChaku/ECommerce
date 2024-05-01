@@ -1,5 +1,5 @@
 ﻿using ECommerce.Core.Domain.Entities;
-using ECommerce.Core.DTO;
+using ECommerce.Core.Dtos;
 using ECommerce.Core.ServiceContracts.Manufacturer;
 using Microsoft.AspNetCore.Mvc;
 

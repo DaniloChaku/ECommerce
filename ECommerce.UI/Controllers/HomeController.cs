@@ -1,4 +1,4 @@
-using ECommerce.Core.DTO;
+using ECommerce.Core.Dtos;
 using ECommerce.Core.ServiceContracts.Product;
 using ECommerce.UI.Models;
 using Microsoft.AspNetCore.Mvc;

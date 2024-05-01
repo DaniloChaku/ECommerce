@@ -1,5 +1,5 @@
 ﻿using ECommerce.Core.Domain.RepositoryContracts;
-using ECommerce.Core.DTO;
+using ECommerce.Core.Dtos;
 using ECommerce.Core.ServiceContracts.Manufacturer;
 using System;
 using System.Collections.Generic;

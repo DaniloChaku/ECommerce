@@ -1,4 +1,4 @@
-﻿using ECommerce.Core.DTO;
+﻿using ECommerce.Core.Dtos;
 using ECommerce.Core.Helpers.ValidationAttributes;
 using ECommerce.Core.Settings;
 using Microsoft.AspNetCore.Mvc.Rendering;

@@ -1,6 +1,6 @@
 ﻿using ECommerce.Core.Domain.Entities;
 using ECommerce.Core.Domain.RepositoryContracts;
-using ECommerce.Core.DTO;
+using ECommerce.Core.Dtos;
 using ECommerce.Core.ServiceContracts.Product;
 using Microsoft.EntityFrameworkCore;
 using System;
