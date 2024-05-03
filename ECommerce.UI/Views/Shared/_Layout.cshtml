@@ -16,8 +16,8 @@
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-primary border-bottom box-shadow mb-3">
             <div class="container-fluid px-4 mx-4">
                 <a class="navbar-brand me-3">ABC</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
-                data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -26,22 +26,39 @@
                         <li class="nav-item me-1">
                             <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Management
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" asp-controller="Category" asp-action="Index">Categories</a></li>
-                                <li><a class="dropdown-item" asp-controller="Manufacturer" asp-action="Index">Manufacturers</a></li>
-                                <li><a class="dropdown-item" asp-controller="Product" asp-action="Index">Products</a></li>
-                            </ul>
-                        </li>
+                        @if (User.IsInRole(UserRole.Admin.ToString()))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Management
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" asp-controller="Category" asp-action="Index">Categories</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Manufacturer" asp-action="Index">Manufacturers</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Product" asp-action="Index">Products</a></li>
+                                </ul>
+                            </li>
+                        }
                     </ul>
 
-                    <div class="navbar-text">
-                        <a asp-action="@nameof(AccountController.Login)" asp-controller="Account" class="text-decoration-none">
-                            Login
-                        </a>
+                    <div class="navbar-text d-flex">
+                        @if (User.Identity!.IsAuthenticated)
+                        {
+                            <div class="nav-item fw-bol me-4">@User.Identity.Name</div>
+                            <div class="nav-item">
+                                <a asp-action="@nameof(AccountController.Logout)" asp-controller="Account"
+                                   class="nav-link">Log out</a>
+                            </div>
+
+                        }
+                        else
+                        {
+
+                            <a asp-action="@nameof(AccountController.Login)" asp-controller="Account"
+                               class="nav-link">
+                                Login
+                            </a>
+                        }
                     </div>
                 </div>
             </div>

@@ -8,7 +8,7 @@
     <div class="col-lg-6 col-12 my-1">
         <div class="card mx-5 p-1">
             <div class="card-body">
-                <form asp-action="Login" method="post">
+                <form asp-action="SignUp" method="post">
                     <div class="mb-3 text-center display-1">
                         <i class="bi bi-person-circle"></i>
                     </div>
@@ -49,6 +49,7 @@
 
                     <div class="text-center mb-4">
                         <button class="btn btn-primary py-2 px-5">Sign up</button>
+                        <div asp-validation-summary="All" class="text-danger"></div>
                     </div>
 
                     <div class="text-center pt-2">

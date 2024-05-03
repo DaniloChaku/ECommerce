@@ -4,6 +4,7 @@ using ECommerce.Infrastructure.Db;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ECommerce.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240502152122_SeedUserRolesAndAdminAccount")]
+    partial class SeedUserRolesAndAdminAccount
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -153,7 +156,7 @@ namespace ECommerce.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("82611e95-6ac2-4336-96c9-86af74e843bd"),
+                            Id = new Guid("fc839d07-4ece-43da-8377-4b82110d5651"),
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         });
@@ -167,9 +170,6 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
-
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -234,18 +234,18 @@ namespace ECommerce.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("1cfdba08-dda0-4ee9-9cb2-cd9f3a35f760"),
+                            Id = new Guid("49bda4f3-b395-4723-8e83-f448d4f7fa8e"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "34b0b70e-a518-4d2f-9b7c-ea86c20aa431",
+                            ConcurrencyStamp = "6703a3fc-f9c2-4b5f-b131-30410e4d49cf",
                             Email = "admin@example.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             Name = "Unknown",
                             NormalizedEmail = "ADMIN@EXAMPLE.COM",
                             NormalizedUserName = "ADMIN@EXAMPLE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEOfOMOgHZ21Tx9AE6prqffCWYe3iVZHlm8KNb2sCT0SqDh8m83PxRcEIirsUnxKIVw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEH0z24HTY/ip5gPB/sg8zs5hatXJGltfonGzCQrMjEIXMQsXm0oNDOd/nAo3+LMyRg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "155486ef-53c4-470a-8cff-a8e01dbe3d6d",
+                            SecurityStamp = "53183e33-0bf0-489a-b659-3a4a8260a968",
                             TwoFactorEnabled = false,
                             UserName = "admin@example.com"
                         });
@@ -337,7 +337,7 @@ namespace ECommerce.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = new Guid("1cfdba08-dda0-4ee9-9cb2-cd9f3a35f760"),
+                            UserId = new Guid("49bda4f3-b395-4723-8e83-f448d4f7fa8e"),
                             RoleId = new Guid("d1ef53ac-aab9-4fa0-ba8c-c3f69505a62e")
                         });
                 });

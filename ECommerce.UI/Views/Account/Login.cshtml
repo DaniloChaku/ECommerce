@@ -32,8 +32,12 @@
                     </div>
 
                     <div class="text-center pt-2">
-                        <span>Don't have an account? <a asp-action="@nameof(AccountController.SignUp)">
-                            Sign up</a></span>
+                        <span>
+                            Don't have an account? <a asp-action="@nameof(AccountController.SignUp)">
+                                Sign up
+                            </a>
+                        </span>
+                        <div asp-validation-summary="All" class="text-danger"></div>
                     </div>
 
                 </form>

@@ -55,7 +55,9 @@ namespace ECommerce.UI.StartupExtensions
                 options.UseSqlServer(configuration.GetConnectionString("Default"));
             });
 
-            services.AddIdentity<ApplicationUser, ApplicationRole>()
+            services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+                options.Password.RequireNonAlphanumeric = false
+            )
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
 
