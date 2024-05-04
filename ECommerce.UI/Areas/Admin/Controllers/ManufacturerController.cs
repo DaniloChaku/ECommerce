@@ -1,10 +1,13 @@
 ﻿using ECommerce.Core.Domain.Entities;
 using ECommerce.Core.Dtos;
 using ECommerce.Core.ServiceContracts.Manufacturer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ECommerce.UI.Controllers
+namespace ECommerce.UI.Areas.Admin.Controllers
 {
+    [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class ManufacturerController : Controller
     {
         private readonly IManufacturerGetterService _manufacturerGetterService;

@@ -1,6 +1,5 @@
 ﻿using ECommerce.Core.Dtos;
 using ECommerce.Core.ServiceContracts.Product;
-using ECommerce.UI.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +15,7 @@ using ECommerce.Core.Settings;
 using Microsoft.Extensions.Options;
 using ECommerce.Core.Domain.Entities;
 using System.Drawing;
+using ECommerce.UI.Areas.Admin.Controllers;
 
 namespace ECommerce.Tests.ControllerTests
 {

@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ECommerce.UI.Controllers;
+using ECommerce.UI.Areas.Admin.Controllers;
 
 namespace ECommerce.Tests.ControllerTests
 {

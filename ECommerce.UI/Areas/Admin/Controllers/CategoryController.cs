@@ -1,9 +1,12 @@
 ﻿using ECommerce.Core.Dtos;
 using ECommerce.Core.ServiceContracts.Category;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ECommerce.UI.Controllers
+namespace ECommerce.UI.Areas.Admin.Controllers
 {
+    [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class CategoryController : Controller
     {
         private readonly ICategoryGetterService _categoryGetterService;
@@ -80,7 +83,7 @@ namespace ECommerce.UI.Controllers
             if (category.Id != Guid.Empty)
             {
                 var existingCategory = await _categoryGetterService.GetByIdAsync(category.Id);
-                
+
                 if (existingCategory!.Name == category.Name)
                 {
                     return Json(true);
@@ -88,7 +91,7 @@ namespace ECommerce.UI.Controllers
             }
 
             var categorys = await _categoryGetterService.GetAllAsync();
-            
+
             if (categorys.Any(t => t.Name == category.Name))
             {
                 return Json(false);

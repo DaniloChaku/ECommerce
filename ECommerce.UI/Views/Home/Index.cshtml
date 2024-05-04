@@ -48,18 +48,36 @@
                         </div>
                     </div>
                     <div class="card-footer d-flex flex-row justify-content-center pt-0 border-top-0 bg-transparent">
-                        <div class="text-center px-1">
-                            <a class="btn btn-outline-dark mt-auto"
-                               asp-action="@nameof(ProductController.Upsert)" 
-                               asp-controller="Product" asp-route-id="@product.Id">Edit</a>
-                        </div>
-                        <div class="text-center px-1">
-                            <button class="btn btn-outline-dark mt-auto"
-                                    asp-action="Delete"
-                                    onclick="removeItem('product/delete?id=@product.Id')">
-                                Delete
-                            </button>
-                        </div>
+                        @if (User.IsInRole(UserRole.Admin.ToString()))
+                        {
+                            <div class="text-center px-1">
+                                <a class="btn btn-outline-dark mt-auto"
+                                   asp-area="Admin"
+                                   asp-action="Upsert"
+                                   asp-controller="Product" asp-route-id="@product.Id">
+                                    Edit
+                                </a>
+                            </div>
+                            <div class="text-center px-1">
+                                <button class="btn btn-outline-dark mt-auto"
+                                        onclick="removeItem('admin/product/delete?id=@product.Id')">
+                                    Delete
+                                </button>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="text-center px-1">
+                                <a class="btn btn-outline-dark mt-auto" href="#">
+                                    Add to cart
+                                </a>
+                            </div>
+                            <div class="text-center px-1">
+                                <a class="btn btn-outline-dark mt-auto" href="#">
+                                    View Details
+                                </a>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>

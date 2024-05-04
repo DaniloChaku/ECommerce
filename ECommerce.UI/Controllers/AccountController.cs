@@ -1,10 +1,8 @@
 ﻿using ECommerce.Core.Domain.IdentityEntities;
 using ECommerce.Core.Dtos;
 using ECommerce.Core.Enums;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Runtime.InteropServices;
 
 namespace ECommerce.UI.Controllers
 {
@@ -39,6 +37,9 @@ namespace ECommerce.UI.Controllers
 
             if (result.Succeeded)
             {
+                var user = await _userManager.FindByEmailAsync(loginDto.Email);
+                var userRoles = await _userManager.GetRolesAsync(user!);
+
                 return RedirectToAction(nameof(Index), "Home");
             }
 

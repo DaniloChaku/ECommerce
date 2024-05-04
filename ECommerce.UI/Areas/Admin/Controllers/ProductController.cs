@@ -8,13 +8,16 @@ using ECommerce.Core.ServiceContracts.Manufacturer;
 using ECommerce.Core.ServiceContracts.Product;
 using ECommerce.Core.Settings;
 using ECommerce.UI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
 using System.Collections;
 
-namespace ECommerce.UI.Controllers
+namespace ECommerce.UI.Areas.Admin.Controllers
 {
+    [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class ProductController : Controller
     {
         private readonly IProductGetterService _productGetterService;
@@ -94,7 +97,7 @@ namespace ECommerce.UI.Controllers
                 productModel.Manufacturers = await GetManufacturersSelectList();
             }
             productModel.ImageUploadOptions ??= _imageUploadOptions;
-            
+
             if (!ModelState.IsValid)
             {
                 return View(productModel);
@@ -221,7 +224,7 @@ namespace ECommerce.UI.Controllers
                         _imageDeleterService.DeleteImageFolder(id.ToString());
                     }
                 }
-                catch(Exception) { }
+                catch (Exception) { }
 
                 var response = new
                 {
