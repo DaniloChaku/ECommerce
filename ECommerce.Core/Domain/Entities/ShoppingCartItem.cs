@@ -18,18 +18,16 @@ namespace ECommerce.Core.Domain.Entities
         public Guid CustomerId { get; set; }
         public Guid ProductId { get; set; }
         [ForeignKey(nameof(ProductId))]
-        [ValidateNever]
         public Product? Product { get; set; }
         [Range(1, int.MaxValue, ErrorMessage = "Count must not be less than 1")]
-        [LessThan("Product.Stock")]
         public int Count { get; set; }
 
         public override bool Equals(object? obj)
         {
-            if (obj is ShoppingCartItem item)
+            if (obj is ShoppingCartItem other)
             {
-                return item.Id == Id && item.Count == Count && item.CustomerId == CustomerId &&
-                    item.ProductId == item.ProductId;
+                return other.Id == Id && other.Count == Count && other.CustomerId == CustomerId &&
+                    other.ProductId == other.ProductId;
             }
 
             return false;

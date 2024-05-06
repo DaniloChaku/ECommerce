@@ -21,6 +21,27 @@ namespace ECommerce.Tests.Helpers
                 .CreateMany(count);
         }
 
+        public static ProductDto CreateProductDto(bool isEmptyId = true, string? name = null)
+        {
+            var product = _fixture.Build<ProductDto>()
+                .With(p => p.Price, 10)
+                .With(p => p.SalePrice, null as decimal?)
+                .With(p => p.Stock, 10)
+                .Create();
+
+            if (isEmptyId)
+            {
+                product.Id = Guid.Empty;
+            }
+
+            if (name is not null)
+            {
+                product.Name = name;
+            }
+
+            return product;
+        }
+
         public static IEnumerable<Product> CreateManyProducts(int count)
         {
             return _fixture.Build<Product>()
@@ -30,7 +51,7 @@ namespace ECommerce.Tests.Helpers
                 .CreateMany(count);
         }
 
-        public static Product CreateProduct(bool isEmptyId = false, string? name = null)
+        public static Product CreateProduct(bool isEmptyId = true, string? name = null)
         {
             var product = _fixture.Build<Product>()
                 .With(p => p.Price, 10)
