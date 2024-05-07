@@ -2,6 +2,7 @@
 using ECommerce.Core.Dtos;
 using ECommerce.Core.Enums;
 using ECommerce.Core.Exceptions;
+using ECommerce.Core.Helpers;
 using ECommerce.Core.ServiceContracts.Category;
 using ECommerce.Core.ServiceContracts.Image;
 using ECommerce.Core.ServiceContracts.Manufacturer;
@@ -12,12 +13,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
-using System.Collections;
 
 namespace ECommerce.UI.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = Constants.ROLE_ADMIN)]
     public class ProductController : Controller
     {
         private readonly IProductGetterService _productGetterService;

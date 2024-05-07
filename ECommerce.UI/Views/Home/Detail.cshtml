@@ -1,0 +1,97 @@
+﻿@model ProductDetailViewModel
+@{
+    ViewBag.Title = "Detail";
+}
+
+<form method="post" asp-action="@nameof(HomeController.Detail)">
+    <input hidden asp-for="Product.Id" />
+    <input hidden asp-for="Product.Price" />
+    <input hidden asp-for="ShoppingCartItemId">
+
+    <div class="card shadow border-1 mt-4 mb-4">
+        <div class="card-header py-4">
+            <h3 class="h3 text-center">@Model.Product.Name</h3>
+        </div>
+        <div class="card-body">
+            <div class="py-3">
+                <div class="row">
+                    <div class="col-6 col-md-2 offset-lg-1 mb-4">
+                        <a asp-action="Index" class="btn btn-outline-primary bg-gradient fw-semibold btn-sm text-uppercase">
+                            <small>Back to home</small>
+                        </a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-lg-3 offset-lg-1 text-center mb-3">
+                        <img class="img-fluid mb-3" src="@Model.Product.ImageUrl" alt="Image of @Model.Product.Name" />
+                        <div class="d-flex justify-content-center gap-3">
+                            @if (Model.Product.CategoryId is not null)
+                            {
+                                <span class="bg-primary rounded-pill py-1 px-2 text-secondary">@Model.Product.CategoryName</span>
+                            }
+                            @if (Model.Product.ManufacturerId is not null)
+                            {
+                                <span class="bg-info rounded-pill p-1 px-2 text-secondary">@Model.Product.ManufacturerName</span>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 offset-lg-1 d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="mb-3">
+                                @Model.Product.Description
+                            </div>
+                        </div>
+                        <div>
+                            <div class="mb-1">
+                                <h5 class="h6">
+                                    Price:
+                                    @if (Model.Product.SalePrice is not null)
+                                    {
+                                        <span><s class="text-muted">@Model.Product.Price</s> @Model.Product.SalePrice</span>
+                                    }
+                                    else
+                                    {
+                                        <span>@Model.Product.Price</span>
+                                    }
+                                </h5>
+                            </div>
+                            <div class="mb-4">
+                                <h5 class="h6">Available: @Model.Product.Stock</h5>
+                            </div>
+                            <div class="pl-2 mb-3">
+                                <div class="col-md-4">
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text bg-primary text-white border-0 fw-semibold"
+                                              id="inputGroup-sizing-default">
+                                            Count
+                                        </span>
+                                        <input type="number" class="form-control text-end"
+                                               asp-for="Count" min="1" max="@Model.Product.Stock" />
+                                        <span asp-validation-for="Count"></span>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="col-12 col-md-6 pb-1">
+                                    <button type="submit"
+                                            class="btn btn-primary bg-gradient  w-100 py-2 text-uppercase fw-semibold">
+                                        @if (Model.ShoppingCartItemId is not null)
+                                        {
+                                            <span>Update</span>
+                                        }
+                                        else
+                                        {
+                                            <span>Add to Cart</span>
+                                        }
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

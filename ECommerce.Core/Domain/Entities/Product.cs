@@ -21,11 +21,11 @@ namespace ECommerce.Core.Domain.Entities
         public string Name { get; set; } = string.Empty;
         [MaxLength(400)]
         public string? Description { get; set; }
-        [Range(typeof(decimal), "0.01", Constants.MaxDecimalValueString,
+        [Range(typeof(decimal), "0.01", Constants.MAX_DECIMAL_VALUE_STRING,
             ParseLimitsInInvariantCulture = true)]
         [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
-        [Range(typeof(decimal), "0.01", Constants.MaxDecimalValueString,
+        [Range(typeof(decimal), "0.01", Constants.MAX_DECIMAL_VALUE_STRING,
             ParseLimitsInInvariantCulture = true)]
         [LessThan(nameof(Price))]
         [Column(TypeName = "decimal(18,2)")]

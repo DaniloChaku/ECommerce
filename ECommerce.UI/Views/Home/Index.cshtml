@@ -48,12 +48,12 @@
                         </div>
                     </div>
                     <div class="card-footer d-flex flex-row justify-content-center pt-0 border-top-0 bg-transparent">
-                        @if (User.IsInRole(UserRole.Admin.ToString()))
+                        @if (User.IsInRole(Constants.ROLE_ADMIN))
                         {
                             <div class="text-center px-1">
                                 <a class="btn btn-outline-dark mt-auto"
                                    asp-area="Admin"
-                                   asp-action="Upsert"
+                                   asp-action="@nameof(ProductController.Upsert)"
                                    asp-controller="Product" asp-route-id="@product.Id">
                                     Edit
                                 </a>
@@ -73,7 +73,8 @@
                                 </a>
                             </div>
                             <div class="text-center px-1">
-                                <a class="btn btn-outline-dark mt-auto" href="#">
+                                <a class="btn btn-outline-dark mt-auto" asp-action="@nameof(HomeController.Detail)"
+                                asp-route-id="@product.Id">
                                     More
                                 </a>
                             </div>

@@ -24,12 +24,12 @@ namespace ECommerce.Core.Dtos
         [MaxLength(400)]
         public string? Description { get; set; }
         [Display(Name = "Price")]
-        [Range(typeof(decimal), "0.01", Constants.MaxDecimalValueString, 
+        [Range(typeof(decimal), "0.01", Constants.MAX_DECIMAL_VALUE_STRING, 
             ParseLimitsInInvariantCulture = true, 
             ErrorMessage = "{0} must be greater than 0")]
         public decimal Price { get; set; }
         [Display(Name = "Sale Price")]
-        [Range(typeof(decimal), "0.01", Constants.MaxDecimalValueString,
+        [Range(typeof(decimal), "0.01", Constants.MAX_DECIMAL_VALUE_STRING,
             ParseLimitsInInvariantCulture = true,
             ErrorMessage = "{0} must be greater than 0")]
         [LessThan(nameof(Price), 

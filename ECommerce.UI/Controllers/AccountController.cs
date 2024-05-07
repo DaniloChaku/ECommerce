@@ -1,6 +1,7 @@
 ﻿using ECommerce.Core.Domain.IdentityEntities;
 using ECommerce.Core.Dtos;
 using ECommerce.Core.Enums;
+using ECommerce.Core.Helpers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -75,7 +76,7 @@ namespace ECommerce.UI.Controllers
             {
                 await _signInManager.PasswordSignInAsync(user, signUpDto.Password, 
                     isPersistent: true, lockoutOnFailure: false);
-                await _userManager.AddToRoleAsync(user, UserRole.Customer.ToString());
+                await _userManager.AddToRoleAsync(user, Constants.ROLE_CUSTOMER);
 
                 return RedirectToAction(nameof(HomeController.Index), "Home");
             }

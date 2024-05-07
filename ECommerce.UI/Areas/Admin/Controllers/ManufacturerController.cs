@@ -1,5 +1,6 @@
 ﻿using ECommerce.Core.Domain.Entities;
 using ECommerce.Core.Dtos;
+using ECommerce.Core.Helpers;
 using ECommerce.Core.ServiceContracts.Manufacturer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ECommerce.UI.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = Constants.ROLE_ADMIN)]
     public class ManufacturerController : Controller
     {
         private readonly IManufacturerGetterService _manufacturerGetterService;

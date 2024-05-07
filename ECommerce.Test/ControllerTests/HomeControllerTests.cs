@@ -6,11 +6,6 @@ using ECommerce.UI.Controllers;
 using ECommerce.UI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECommerce.Tests.ControllerTests
 {
@@ -19,10 +14,12 @@ namespace ECommerce.Tests.ControllerTests
         private readonly IProductGetterService _productGetterService;
         private readonly IShoppingCartItemAdderService _shoppingCartItemAdderService;
         private readonly IShoppingCartItemGetterService _shoppingCartItemGetterService;
+        private readonly IShoppingCartItemUpdaterService _shoppingCartItemUpdaterService;
 
         private readonly Mock<IProductGetterService> _productGetterServiceMock;
         private readonly Mock<IShoppingCartItemAdderService> _shoppingCartItemAdderServiceMock;
         private readonly Mock<IShoppingCartItemGetterService> _shoppingCartItemGetterServiceMock;
+        private readonly Mock<IShoppingCartItemUpdaterService> _shoppingCartItemUpdaterServiceMock;
 
         private readonly IFixture _fixture;
 
@@ -31,10 +28,12 @@ namespace ECommerce.Tests.ControllerTests
             _productGetterServiceMock = new Mock<IProductGetterService>();
             _shoppingCartItemAdderServiceMock = new Mock<IShoppingCartItemAdderService>();
             _shoppingCartItemGetterServiceMock = new Mock<IShoppingCartItemGetterService>();
+            _shoppingCartItemUpdaterServiceMock = new Mock<IShoppingCartItemUpdaterService>();
 
             _productGetterService = _productGetterServiceMock.Object;
             _shoppingCartItemAdderService = _shoppingCartItemAdderServiceMock.Object;
             _shoppingCartItemGetterService = _shoppingCartItemGetterServiceMock.Object;
+            _shoppingCartItemUpdaterService = _shoppingCartItemUpdaterServiceMock.Object;
 
             _fixture = new Fixture();
         }
@@ -42,7 +41,7 @@ namespace ECommerce.Tests.ControllerTests
         public HomeController CreateController()
         {
             return new HomeController(_productGetterService, _shoppingCartItemAdderService,
-                _shoppingCartItemGetterService);
+                _shoppingCartItemGetterService, _shoppingCartItemUpdaterService);
         }
 
         [Theory]

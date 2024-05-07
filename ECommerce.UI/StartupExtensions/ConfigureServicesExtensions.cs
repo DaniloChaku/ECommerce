@@ -4,10 +4,12 @@ using ECommerce.Core.ServiceContracts.Category;
 using ECommerce.Core.ServiceContracts.Image;
 using ECommerce.Core.ServiceContracts.Manufacturer;
 using ECommerce.Core.ServiceContracts.Product;
+using ECommerce.Core.ServiceContracts.ShoppingCartItems;
 using ECommerce.Core.Services.Category;
 using ECommerce.Core.Services.Image;
 using ECommerce.Core.Services.Manufacturer;
 using ECommerce.Core.Services.Products;
+using ECommerce.Core.Services.ShoppingCartItem;
 using ECommerce.Core.Settings;
 using ECommerce.Infrastructure.Db;
 using ECommerce.Infrastructure.Repositories;
@@ -49,6 +51,11 @@ namespace ECommerce.UI.StartupExtensions
 
             services.AddScoped<IImageUploaderService, ImageUploaderService>();
             services.AddScoped<IImageDeleterService, ImageDeleterService>();
+
+            services.AddScoped<IShoppingCartItemRepository, ShoppingCartItemRepository>();
+            services.AddScoped<IShoppingCartItemAdderService, ShoppingCartItemAdderService>();
+            services.AddScoped<IShoppingCartItemGetterService, ShoppingCartItemGetterService>();
+            services.AddScoped<IShoppingCartItemUpdaterService, ShoppingCartItemUpdaterService>();
 
             services.AddDbContext<ApplicationDbContext>(options =>
             {
