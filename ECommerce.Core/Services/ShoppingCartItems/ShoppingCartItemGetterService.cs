@@ -6,25 +6,40 @@ namespace ECommerce.Core.Services.ShoppingCartItem
 {
     public class ShoppingCartItemGetterService : IShoppingCartItemGetterService
     {
-        private readonly IShoppingCartItemRepository _shoppingartItemRepository;
+        private readonly IShoppingCartItemRepository _shoppingCartItemRepository;
 
         public ShoppingCartItemGetterService(IShoppingCartItemRepository shoppingcartitemRepository)
         {
-            _shoppingartItemRepository = shoppingcartitemRepository;
+            _shoppingCartItemRepository = shoppingcartitemRepository;
         }
 
         public async Task<List<ShoppingCartItemDto>> GetAllAsync()
         {
-            var categories = await _shoppingartItemRepository.GetAllAsync();
+            var shoppingCartItems = await _shoppingCartItemRepository.GetAllAsync();
 
-            return categories.Select(t => t.ToDto()).ToList();
+            return shoppingCartItems.Select(t => t.ToDto()).ToList();
+        }
+
+        public async Task<ShoppingCartItemDto?> GetByCustomerAndProductIdAsync(Guid customerId, Guid productId)
+        {
+            var shoppingCartItems = await _shoppingCartItemRepository.GetAllAsync(i => 
+            i.CustomerId == customerId && i.ProductId == productId);
+
+            return shoppingCartItems.FirstOrDefault()?.ToDto();
+        }
+
+        public async Task<List<ShoppingCartItemDto>> GetByCustomerIdAsync(Guid customerId)
+        {
+            var shoppingCartItems = await _shoppingCartItemRepository.GetAllAsync(i => i.CustomerId == customerId);
+
+            return shoppingCartItems.Select(t => t.ToDto()).ToList();
         }
 
         public async Task<ShoppingCartItemDto?> GetByIdAsync(Guid id)
         {
-            var shoppingcartitem = await _shoppingartItemRepository.GetByIdAsync(id);
+            var shoppingCartItem = await _shoppingCartItemRepository.GetByIdAsync(id);
 
-            return shoppingcartitem?.ToDto();
+            return shoppingCartItem?.ToDto();
         }
     }
 }

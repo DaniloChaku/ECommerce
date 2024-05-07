@@ -1,5 +1,6 @@
 ﻿using ECommerce.Core.Dtos;
 using ECommerce.Core.ServiceContracts.Product;
+using ECommerce.Core.ServiceContracts.ShoppingCartItems;
 using ECommerce.Tests.Helpers;
 using ECommerce.UI.Controllers;
 using ECommerce.UI.Models;
@@ -16,22 +17,32 @@ namespace ECommerce.Tests.ControllerTests
     public class HomeControllerTests
     {
         private readonly IProductGetterService _productGetterService;
+        private readonly IShoppingCartItemAdderService _shoppingCartItemAdderService;
+        private readonly IShoppingCartItemGetterService _shoppingCartItemGetterService;
+
         private readonly Mock<IProductGetterService> _productGetterServiceMock;
+        private readonly Mock<IShoppingCartItemAdderService> _shoppingCartItemAdderServiceMock;
+        private readonly Mock<IShoppingCartItemGetterService> _shoppingCartItemGetterServiceMock;
 
         private readonly IFixture _fixture;
 
         public HomeControllerTests()
         {
             _productGetterServiceMock = new Mock<IProductGetterService>();
+            _shoppingCartItemAdderServiceMock = new Mock<IShoppingCartItemAdderService>();
+            _shoppingCartItemGetterServiceMock = new Mock<IShoppingCartItemGetterService>();
 
             _productGetterService = _productGetterServiceMock.Object;
+            _shoppingCartItemAdderService = _shoppingCartItemAdderServiceMock.Object;
+            _shoppingCartItemGetterService = _shoppingCartItemGetterServiceMock.Object;
 
             _fixture = new Fixture();
         }
 
         public HomeController CreateController()
         {
-            return new HomeController(_productGetterService);
+            return new HomeController(_productGetterService, _shoppingCartItemAdderService,
+                _shoppingCartItemGetterService);
         }
 
         [Theory]

@@ -6,5 +6,7 @@ namespace ECommerce.Core.ServiceContracts.ShoppingCartItems
     {
         Task<List<ShoppingCartItemDto>> GetAllAsync();
         Task<ShoppingCartItemDto?> GetByIdAsync(Guid id);
+        Task<List<ShoppingCartItemDto>> GetByCustomerIdAsync(Guid customerId);
+        Task<ShoppingCartItemDto?> GetByCustomerAndProductIdAsync(Guid customerId, Guid productId);
     }
 }

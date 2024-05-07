@@ -21,7 +21,7 @@ namespace ECommerce.Test.ServiceTests
         private readonly IProductGetterService _productGetterService;
 
         private readonly Mock<IShoppingCartItemRepository> _shoppingCartItemRepositoryMock;
-        private readonly Mock<IProductGetterService> _productGetterServiceMock; 
+        private readonly Mock<IProductGetterService> _productGetterServiceMock;
         private readonly IShoppingCartItemRepository _shoppingCartItemRepository;
 
         private readonly IFixture _fixture;
@@ -187,6 +187,59 @@ namespace ECommerce.Test.ServiceTests
             result.Should().NotBeEmpty();
             result.Should().BeEquivalentTo(shoppingcartitems.Select(t => t.ToDto()));
         }
+
+        #endregion
+
+        #region GetByCustomerAndProductIdAsync
+
+        [Fact]
+        public async Task GetByCustomerAndProductIdAsync_ReturnsMatchingItems()
+        {
+            // Arrange
+            var customerId = Guid.NewGuid();
+            var productId = Guid.NewGuid();
+            var expectedItem = _helper.CreateShoppingCartItem();
+            expectedItem.ProductId = productId;
+            expectedItem.CustomerId = customerId;
+
+            _shoppingCartItemRepositoryMock.Setup(repo => repo.GetAllAsync(It.IsAny<Expression<Func<ShoppingCartItem, bool>>>()))
+                .ReturnsAsync(new List<ShoppingCartItem>() { expectedItem });
+
+            // Act
+            var result = await _shoppingCartItemGetterService.GetByCustomerAndProductIdAsync(customerId, productId);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Should().BeEquivalentTo(expectedItem.ToDto());
+        }
+
+
+        #endregion
+
+        #region GetByCustomerIdAsync
+
+        [Fact]
+        public async Task GetByCustomerIdAsync_ReturnsMatchingItems()
+        {
+            // Arrange
+            var customerId = Guid.NewGuid();
+            var expectedItems = _helper.CreateManyShoppingCartItems();
+            foreach (var item in expectedItems)
+            {
+                item.CustomerId = customerId;
+            }
+
+            _shoppingCartItemRepositoryMock.Setup(repo => repo.GetAllAsync(It.IsAny<Expression<Func<ShoppingCartItem, bool>>>()))
+                .ReturnsAsync(expectedItems);
+
+            // Act
+            var result = await _shoppingCartItemGetterService.GetByCustomerIdAsync(customerId);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Should().BeEquivalentTo(expectedItems.Select(t => t.ToDto()));
+        }
+
 
         #endregion
 
@@ -384,7 +437,7 @@ namespace ECommerce.Test.ServiceTests
                 .Create();
             var updatedShoppingCartItem = updatedShoppingCartItemDto.ToEntity();
             var expectedProductDto = new ProductDto() { Stock = 10 };
-            
+
             _shoppingCartItemRepositoryMock.Setup(repo => repo.GetByIdAsync(It.IsAny<Guid>()))
                 .ReturnsAsync(existingShoppingCartItem);
 
