@@ -26,6 +26,15 @@
                         <li class="nav-item me-1">
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
+                        @if (User.IsInRole(Constants.ROLE_CUSTOMER))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-action="@nameof(ShoppingCartController.Index)"
+                                   asp-controller="ShoppingCart">
+                                    @await Component.InvokeAsync("ShoppingCart")
+                                </a>
+                            </li>
+                        }
                         @if (User.IsInRole(Constants.ROLE_ADMIN))
                         {
                             <li class="nav-item dropdown">
@@ -33,12 +42,18 @@
                                     Management
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" asp-area="Admin" 
-                                        asp-controller="Category" asp-action="Index">Categories</a></li>
-                                    <li><a class="dropdown-item" asp-area="Admin" 
-                                        asp-controller="Manufacturer" asp-action="Index">Manufacturers</a></li>
-                                    <li><a class="dropdown-item" asp-area="Admin" 
-                                        asp-controller="Product" asp-action="Index">Products</a></li>
+                                    <li>
+                                        <a class="dropdown-item" asp-area="Admin"
+                                           asp-controller="Category" asp-action="Index">Categories</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-area="Admin"
+                                           asp-controller="Manufacturer" asp-action="Index">Manufacturers</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-area="Admin"
+                                           asp-controller="Product" asp-action="Index">Products</a>
+                                    </li>
                                 </ul>
                             </li>
                         }
@@ -50,7 +65,7 @@
                             <div class="nav-item fw-bol me-4">@User.Identity.Name</div>
                             <div class="nav-item">
                                 <a asp-action="@nameof(AccountController.Logout)" asp-controller="Account"
-                                asp-area=""
+                                   asp-area=""
                                    class="nav-link">Log out</a>
                             </div>
 
