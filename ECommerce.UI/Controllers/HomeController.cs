@@ -3,12 +3,11 @@ using ECommerce.Core.Exceptions;
 using ECommerce.Core.Helpers;
 using ECommerce.Core.ServiceContracts.Product;
 using ECommerce.Core.ServiceContracts.ShoppingCartItems;
+using ECommerce.Core.ServiceContracts.Users;
 using ECommerce.UI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NuGet.Protocol;
 using System.Diagnostics;
-using System.Reflection.Metadata;
 using System.Security.Claims;
 
 namespace ECommerce.UI.Controllers
@@ -19,16 +18,19 @@ namespace ECommerce.UI.Controllers
         private readonly IShoppingCartItemAdderService _shoppingCartItemAdderService;
         private readonly IShoppingCartItemGetterService _shoppingCartItemGetterService;
         private readonly IShoppingCartItemUpdaterService _shoppingCartItemUpdaterService;
+        private readonly IUserContextService _userContextService;
 
         public HomeController(IProductGetterService productGetterService,
             IShoppingCartItemAdderService shoppingCartItemAdderService,
             IShoppingCartItemGetterService shoppingCartItemGetterService,
-            IShoppingCartItemUpdaterService shoppingCartItemUpdaterService)
+            IShoppingCartItemUpdaterService shoppingCartItemUpdaterService,
+            IUserContextService userContextService)
         {
             _productGetterService = productGetterService;
             _shoppingCartItemAdderService = shoppingCartItemAdderService;
             _shoppingCartItemGetterService = shoppingCartItemGetterService;
             _shoppingCartItemUpdaterService = shoppingCartItemUpdaterService;
+            _userContextService = userContextService;
         }
 
         public async Task<IActionResult> Index(int page = 1, ProductPageModel? productPage = null)
@@ -83,7 +85,7 @@ namespace ECommerce.UI.Controllers
                 Product = product
             };
 
-            var customerId = GetCustomerId();
+            var customerId = _userContextService.GetCustomerId(User.Identity as ClaimsIdentity);
 
             if (customerId is not null)
             {
@@ -109,7 +111,7 @@ namespace ECommerce.UI.Controllers
                 return View(model);
             }
 
-            var customerId = GetCustomerId();
+            var customerId = _userContextService.GetCustomerId(User.Identity as ClaimsIdentity);
 
             var shoppingCartItem = new ShoppingCartItemDto()
             {
@@ -158,19 +160,6 @@ namespace ECommerce.UI.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
-
-        private Guid? GetCustomerId()
-        {
-            var claimsIdentity = User.Identity as ClaimsIdentity;
-            var cutomerId = claimsIdentity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-            if (cutomerId is null)
-            {
-                return null;
-            }
-
-            return new Guid(cutomerId);
         }
     }
 }
