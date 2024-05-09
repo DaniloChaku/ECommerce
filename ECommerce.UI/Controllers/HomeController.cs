@@ -151,6 +151,42 @@ namespace ECommerce.UI.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public async Task<IActionResult> Buy(Guid id, int currentPage)
+        {
+            var customerId = _userContextService.GetCustomerId(User.Identity as ClaimsIdentity);
+
+            var cart = await _shoppingCartItemGetterService
+                .GetByCustomerAndProductIdAsync(customerId!.Value, id);
+
+            if (cart is null)
+            {
+                var shoppingCartItem = new ShoppingCartItemDto()
+                {
+                    ProductId = id,
+                    CustomerId = customerId!.Value,
+                    Count = 1
+                };
+
+                try
+                {
+                    await _shoppingCartItemAdderService.AddAsync(shoppingCartItem);
+                    TempData["success"] = "The product was successfully added to your shopping cart";
+                }
+                catch (Exception)
+                {
+                    TempData["error"] = "An error occurred. Please, try again later";
+                }
+            }
+            else
+            {
+                cart.Count += 1;
+                await _shoppingCartItemUpdaterService.UpdateAsync(cart);
+                TempData["success"] = "The product was successfully added to your shopping cart";
+            }
+
+            return RedirectToAction(nameof(Index), new { page = currentPage });
+        }
+
         public IActionResult Privacy()
         {
             return View();

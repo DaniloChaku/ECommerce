@@ -68,7 +68,8 @@
                         else
                         {
                             <div class="text-center px-1">
-                                <a class="btn btn-outline-dark mt-auto" href="#">
+                                <a class="btn btn-outline-dark mt-auto" asp-action="@nameof(HomeController.Buy)"
+                                asp-route-id="@product.Id" asp-route-currentPage="@Model.CurrentPage">
                                     Buy
                                 </a>
                             </div>
