@@ -1,4 +1,5 @@
-﻿using ECommerce.Core.Helpers;
+﻿using ECommerce.Core.Exceptions;
+using ECommerce.Core.Helpers;
 using ECommerce.Core.ServiceContracts.ShoppingCartItems;
 using ECommerce.Core.ServiceContracts.Users;
 using ECommerce.UI.Models;
@@ -81,7 +82,18 @@ namespace ECommerce.UI.Controllers
             else
             {
                 cart.Count += 1;
-                await _shoppingCartItemUpdaterService.UpdateAsync(cart);
+                try
+                {
+                    await _shoppingCartItemUpdaterService.UpdateAsync(cart);
+                }
+                catch (QuantityExceedsStockException ex)
+                {
+                    TempData["error"] = ex.Message;
+                }
+                catch (Exception)
+                {
+                    TempData["error"] = "An error occurred. Please, try again later";
+                }
             }
 
             return RedirectToAction(nameof(Index));
@@ -98,7 +110,14 @@ namespace ECommerce.UI.Controllers
             }
             else
             {
-                await _shoppingCartItemDeleterService.DeleteAsync(id);
+                try
+                {
+                    await _shoppingCartItemDeleterService.DeleteAsync(id);
+                }
+                catch (Exception)
+                {
+                    TempData["error"] = "An error occurred. Please, try again later";
+                }
             }
 
             return RedirectToAction(nameof(Index));
