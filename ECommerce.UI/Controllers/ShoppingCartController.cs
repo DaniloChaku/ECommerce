@@ -1,4 +1,5 @@
-﻿using ECommerce.Core.ServiceContracts.ShoppingCartItems;
+﻿using ECommerce.Core.Helpers;
+using ECommerce.Core.ServiceContracts.ShoppingCartItems;
 using ECommerce.Core.ServiceContracts.Users;
 using ECommerce.UI.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -7,6 +8,7 @@ using System.Security.Claims;
 
 namespace ECommerce.UI.Controllers
 {
+    [Authorize(Roles = Constants.ROLE_CUSTOMER)]
     public class ShoppingCartController : Controller
     {
         private readonly IShoppingCartItemGetterService _shoppingCartItemGetterService;
@@ -26,7 +28,6 @@ namespace ECommerce.UI.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> Index()
         {
             var customerId = _userContextService.GetCustomerId(User.Identity as ClaimsIdentity);
