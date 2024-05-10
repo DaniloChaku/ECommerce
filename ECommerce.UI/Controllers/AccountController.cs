@@ -77,6 +77,7 @@ namespace ECommerce.UI.Controllers
                 await _signInManager.PasswordSignInAsync(user, signUpDto.Password, 
                     isPersistent: true, lockoutOnFailure: false);
                 await _userManager.AddToRoleAsync(user, Constants.ROLE_CUSTOMER);
+                await _signInManager.RefreshSignInAsync(user);
 
                 return RedirectToAction(nameof(HomeController.Index), "Home");
             }
