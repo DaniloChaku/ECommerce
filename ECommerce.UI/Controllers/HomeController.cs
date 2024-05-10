@@ -158,31 +158,38 @@ namespace ECommerce.UI.Controllers
             var cart = await _shoppingCartItemGetterService
                 .GetByCustomerAndProductIdAsync(customerId!.Value, id);
 
-            if (cart is null)
+            try
             {
-                var shoppingCartItem = new ShoppingCartItemDto()
+                if (cart is null)
                 {
-                    ProductId = id,
-                    CustomerId = customerId!.Value,
-                    Count = 1
-                };
+                    var shoppingCartItem = new ShoppingCartItemDto()
+                    {
+                        ProductId = id,
+                        CustomerId = customerId!.Value,
+                        Count = 1
+                    };
 
-                try
-                {
                     await _shoppingCartItemAdderService.AddAsync(shoppingCartItem);
                     TempData["success"] = "The product was successfully added to your shopping cart.";
+
                 }
-                catch (Exception)
+                else
                 {
-                    TempData["error"] = "An error occurred. Please, try again later.";
+                    cart.Count += 1;
+                    await _shoppingCartItemUpdaterService.UpdateAsync(cart);
+                    TempData["success"] = "The product was successfully added to your shopping cart.";
+
                 }
             }
-            else
+            catch (QuantityExceedsStockException ex)
             {
-                cart.Count += 1;
-                await _shoppingCartItemUpdaterService.UpdateAsync(cart);
-                TempData["success"] = "The product was successfully added to your shopping cart.";
+                TempData["error"] = ex.Message;
             }
+            catch (Exception)
+            {
+                TempData["error"] = "An error occurred. Please, try again later.";
+            }
+
 
             return RedirectToAction(nameof(Index), new { page = currentPage });
         }
