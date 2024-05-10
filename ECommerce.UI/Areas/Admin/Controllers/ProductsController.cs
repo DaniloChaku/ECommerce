@@ -159,9 +159,9 @@ namespace ECommerce.UI.Areas.Admin.Controllers
         {
             if (product.Id != Guid.Empty)
             {
-                var existingCategory = await _productGetterService.GetByIdAsync(product.Id);
+                var existingProduct = await _productGetterService.GetByIdAsync(product.Id);
 
-                if (existingCategory!.Name == product.Name)
+                if (existingProduct is not null && existingProduct.Name == product.Name)
                 {
                     return Json(true);
                 }

@@ -85,15 +85,15 @@ namespace ECommerce.UI.Areas.Admin.Controllers
             {
                 var existingCategory = await _categoryGetterService.GetByIdAsync(category.Id);
 
-                if (existingCategory!.Name == category.Name)
+                if (existingCategory is not null && existingCategory.Name == category.Name)
                 {
                     return Json(true);
                 }
             }
 
-            var categorys = await _categoryGetterService.GetAllAsync();
+            var categories = await _categoryGetterService.GetAllAsync();
 
-            if (categorys.Any(t => t.Name == category.Name))
+            if (categories.Any(t => t.Name == category.Name))
             {
                 return Json(false);
             }

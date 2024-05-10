@@ -85,17 +85,17 @@ namespace ECommerce.UI.Areas.Admin.Controllers
         {
             if (manufacturer.Id != Guid.Empty)
             {
-                var existingCategory = await _manufacturerGetterService.GetByIdAsync(manufacturer.Id);
+                var existingManufacturer = await _manufacturerGetterService.GetByIdAsync(manufacturer.Id);
 
-                if (existingCategory!.Name == manufacturer.Name)
+                if (existingManufacturer is not null && existingManufacturer.Name == manufacturer.Name)
                 {
                     return Json(true);
                 }
             }
 
-            var categorys = await _manufacturerGetterService.GetAllAsync();
+            var manufacturers = await _manufacturerGetterService.GetAllAsync();
 
-            if (categorys.Any(t => t.Name == manufacturer.Name))
+            if (manufacturers.Any(t => t.Name == manufacturer.Name))
             {
                 return Json(false);
             }
