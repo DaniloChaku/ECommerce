@@ -1,5 +1,5 @@
 ﻿using ECommerce.Core.Dtos;
-using ECommerce.Core.ServiceContracts.Product;
+using ECommerce.Core.ServiceContracts.Products;
 using ECommerce.Core.ServiceContracts.ShoppingCartItems;
 using ECommerce.Core.ServiceContracts.Users;
 using ECommerce.Tests.Helpers;

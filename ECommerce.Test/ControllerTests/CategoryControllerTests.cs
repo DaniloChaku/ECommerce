@@ -1,5 +1,5 @@
 ﻿using ECommerce.Core.Dtos;
-using ECommerce.Core.ServiceContracts.Category;
+using ECommerce.Core.ServiceContracts.Categories;
 using ECommerce.UI.Areas.Admin.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

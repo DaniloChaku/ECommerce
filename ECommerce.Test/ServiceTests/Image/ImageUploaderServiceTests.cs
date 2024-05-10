@@ -1,5 +1,5 @@
 ﻿using ECommerce.Core.Exceptions;
-using ECommerce.Core.Services.Image;
+using ECommerce.Core.Services.Images;
 using ECommerce.Core.Settings;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;

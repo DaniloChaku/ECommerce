@@ -1,5 +1,5 @@
 ﻿using ECommerce.Core.Domain.Entities;
-using ECommerce.Core.Services.Image;
+using ECommerce.Core.Services.Images;
 using Microsoft.AspNetCore.Hosting;
 using Moq;
 using System;

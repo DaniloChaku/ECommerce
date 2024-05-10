@@ -1,10 +1,10 @@
 ﻿using ECommerce.Core.Domain.RepositoryContracts;
 using ECommerce.Core.Dtos;
 using ECommerce.Core.Exceptions;
-using ECommerce.Core.ServiceContracts.Product;
+using ECommerce.Core.ServiceContracts.Products;
 using ECommerce.Core.ServiceContracts.ShoppingCartItems;
 
-namespace ECommerce.Core.Services.ShoppingCartItem
+namespace ECommerce.Core.Services.ShoppingCartItems
 {
     public class ShoppingCartItemUpdaterService : IShoppingCartItemUpdaterService
     {

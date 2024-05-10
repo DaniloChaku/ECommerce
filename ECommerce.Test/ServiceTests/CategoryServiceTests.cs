@@ -2,8 +2,8 @@
 using ECommerce.Core.Domain.RepositoryContracts;
 using ECommerce.Core.Dtos;
 using ECommerce.Core.Enums;
-using ECommerce.Core.ServiceContracts.Category;
-using ECommerce.Core.Services.Category;
+using ECommerce.Core.ServiceContracts.Categories;
+using ECommerce.Core.Services.Categories;
 using Moq;
 using System;
 using System.Collections.Generic;

@@ -2,7 +2,7 @@
 using ECommerce.Core.Dtos;
 using ECommerce.Core.ServiceContracts.ShoppingCartItems;
 
-namespace ECommerce.Core.Services.ShoppingCartItem
+namespace ECommerce.Core.Services.ShoppingCartItems
 {
     public class ShoppingCartItemGetterService : IShoppingCartItemGetterService
     {

@@ -1,6 +1,6 @@
 ﻿using ECommerce.Core.Dtos;
 using ECommerce.Core.Helpers;
-using ECommerce.Core.ServiceContracts.Category;
+using ECommerce.Core.ServiceContracts.Categories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

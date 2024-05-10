@@ -1,7 +1,7 @@
 ﻿using ECommerce.Core.Domain.RepositoryContracts;
 using ECommerce.Core.ServiceContracts.ShoppingCartItems;
 
-namespace ECommerce.Core.Services.ShoppingCartItem
+namespace ECommerce.Core.Services.ShoppingCartItems
 {
     public class ShoppingCartItemDeleterService : IShoppingCartItemDeleterService
     {

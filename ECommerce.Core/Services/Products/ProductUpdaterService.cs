@@ -1,7 +1,7 @@
 ﻿using ECommerce.Core.Domain.RepositoryContracts;
 using ECommerce.Core.Dtos;
 using ECommerce.Core.Helpers;
-using ECommerce.Core.ServiceContracts.Product;
+using ECommerce.Core.ServiceContracts.Products;
 using System;
 using System.Collections.Generic;
 using System.Linq;

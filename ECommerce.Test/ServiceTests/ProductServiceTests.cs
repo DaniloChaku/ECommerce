@@ -2,7 +2,7 @@
 using ECommerce.Core.Domain.RepositoryContracts;
 using ECommerce.Core.Dtos;
 using ECommerce.Core.Enums;
-using ECommerce.Core.ServiceContracts.Product;
+using ECommerce.Core.ServiceContracts.Products;
 using ECommerce.Core.Services.Products;
 using ECommerce.Tests.Helpers;
 using Moq;
