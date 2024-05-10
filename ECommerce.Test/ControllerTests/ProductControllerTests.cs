@@ -526,7 +526,7 @@ namespace ECommerce.Tests.ControllerTests
                 existingProducts.Add(productDto);
             }
 
-            var product = _productCreationHelper.CreateProductDto(false, newName); 
+            var product = _productCreationHelper.CreateProductDto(true, newName); 
             var productController = CreateProductController();
 
             _productGetterServiceMock.Setup(s => s.GetAllAsync()).ReturnsAsync(existingProducts);
