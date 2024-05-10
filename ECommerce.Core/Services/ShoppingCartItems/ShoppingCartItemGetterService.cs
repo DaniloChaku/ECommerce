@@ -17,7 +17,7 @@ namespace ECommerce.Core.Services.ShoppingCartItems
         {
             var shoppingCartItems = await _shoppingCartItemRepository.GetAllAsync();
 
-            return shoppingCartItems.Select(t => t.ToDto()).ToList();
+            return shoppingCartItems.Select(i => i.ToDto()).ToList();
         }
 
         public async Task<ShoppingCartItemDto?> GetByCustomerAndProductIdAsync(Guid customerId, Guid productId)
@@ -32,7 +32,7 @@ namespace ECommerce.Core.Services.ShoppingCartItems
         {
             var shoppingCartItems = await _shoppingCartItemRepository.GetAllAsync(i => i.CustomerId == customerId);
 
-            return shoppingCartItems.Select(t => t.ToDto()).ToList();
+            return shoppingCartItems.Select(i => i.ToDto()).ToList();
         }
 
         public async Task<ShoppingCartItemDto?> GetByIdAsync(Guid id)

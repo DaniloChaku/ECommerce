@@ -83,26 +83,26 @@ namespace ECommerce.Test.RepositoryTests
                 var repository = new ManufacturerRepository(context);
 
                 var manufacturer1 = fixture.Build<Manufacturer>()
-                    .With(c => c.Name, "ABC").Create();
+                    .With(m => m.Name, "ABC").Create();
                 context.Manufacturers.Add(manufacturer1);
 
                 var manufacturer2 = fixture.Build<Manufacturer>()
-                    .With(c => c.Name, "P Corp").Create();
+                    .With(m => m.Name, "P Corp").Create();
                 context.Manufacturers.Add(manufacturer2);
 
                 var manufacturer3 = fixture.Build<Manufacturer>()
-                    .With(c => c.Name, "BCA").Create();
+                    .With(m => m.Name, "BCA").Create();
                 context.Manufacturers.Add(manufacturer3);
 
                 await context.SaveChangesAsync();
 
                 // Act
-                var result = await repository.GetAllAsync(c => c.Name == "BCA");
+                var result = await repository.GetAllAsync(m => m.Name == "BCA");
 
                 // Assert
-                result.Should().ContainSingle(c => c.Id == manufacturer3.Id);
-                result.Should().NotContain(c => c.Id == manufacturer2.Id);
-                result.Should().NotContain(c => c.Id == manufacturer1.Id);
+                result.Should().ContainSingle(m => m.Id == manufacturer3.Id);
+                result.Should().NotContain(m => m.Id == manufacturer2.Id);
+                result.Should().NotContain(m => m.Id == manufacturer1.Id);
             }
         }
 

@@ -17,10 +17,10 @@ namespace ECommerce.Core.Services.Manufacturers
         {
             if (sortOrder == SortOrder.ASC)
             {
-                return manufacturers.OrderBy(t => t.Name).ToList();
+                return manufacturers.OrderBy(m => m.Name).ToList();
             }
 
-            return manufacturers.OrderByDescending(t => t.Name).ToList();
+            return manufacturers.OrderByDescending(m => m.Name).ToList();
         }
     }
 }

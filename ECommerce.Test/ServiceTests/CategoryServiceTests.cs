@@ -65,7 +65,7 @@ namespace ECommerce.Test.ServiceTests
         {
             // Arrange
             var categoryDto = _fixture.Build<CategoryDto>()
-                .With(t => t.Id, Guid.NewGuid())
+                .With(c => c.Id, Guid.NewGuid())
                 .Create();
 
             // Act
@@ -83,12 +83,12 @@ namespace ECommerce.Test.ServiceTests
         {
             // Arrange
             var categoryDto1 = _fixture.Build<CategoryDto>()
-                .With(t => t.Id, Guid.Empty)
-                .With(t => t.Name, "Test")
+                .With(c => c.Id, Guid.Empty)
+                .With(c => c.Name, "Test")
                 .Create();
             var categoryDto2 = _fixture.Build<CategoryDto>()
-                .With(t => t.Id, Guid.Empty)
-                .With(t => t.Name, "Test")
+                .With(c => c.Id, Guid.Empty)
+                .With(c => c.Name, "Test")
                 .Create();
 
             _categoryRepositoryMock.Setup(repo => repo.GetAllAsync(
@@ -109,7 +109,7 @@ namespace ECommerce.Test.ServiceTests
         {
             // Arrange
             var categoryDto = _fixture.Build<CategoryDto>()
-                .With(t => t.Id, Guid.Empty).Create();
+                .With(c => c.Id, Guid.Empty).Create();
             var addedCategory = categoryDto.ToEntity();
 
             _categoryRepositoryMock.Setup(repo => repo.GetAllAsync(It.IsAny<Expression<Func<Category, bool>>?>()))
@@ -156,7 +156,7 @@ namespace ECommerce.Test.ServiceTests
 
             // Assert
             result.Should().NotBeEmpty();
-            result.Should().BeEquivalentTo(categories.Select(t => t.ToDto()));
+            result.Should().BeEquivalentTo(categories.Select(c => c.ToDto()));
         }
 
         #endregion
@@ -222,7 +222,7 @@ namespace ECommerce.Test.ServiceTests
             // Arrange
             var categoryId = Guid.NewGuid();
             var existingCategory = _fixture.Build<Category>()
-                .With(t => t.Id, categoryId).Create();
+                .With(c => c.Id, categoryId).Create();
 
             _categoryRepositoryMock.Setup(repo => repo.GetByIdAsync(categoryId))
                                    .ReturnsAsync(existingCategory);
@@ -262,7 +262,7 @@ namespace ECommerce.Test.ServiceTests
         {
             // Arrange
             var categoryDto = _fixture.Build<CategoryDto>()
-                .With(t => t.Id, Guid.Empty)
+                .With(c => c.Id, Guid.Empty)
                 .Create();
 
             // Act
@@ -281,7 +281,7 @@ namespace ECommerce.Test.ServiceTests
             // Arrange
             var invalidId = Guid.NewGuid(); 
             var categoryDto = _fixture.Build<CategoryDto>()
-                .With(t => t.Id, invalidId)
+                .With(c => c.Id, invalidId)
                 .Create();
 
             _categoryRepositoryMock.Setup(repo => repo.GetByIdAsync(invalidId))
@@ -303,10 +303,10 @@ namespace ECommerce.Test.ServiceTests
             // Arrange
             var categoryId = Guid.NewGuid();
             var existingCategory = _fixture.Build<Category>()
-                .With(t => t.Id, categoryId)
+                .With(c => c.Id, categoryId)
                 .Create();
             var updatedCategoryDto = _fixture.Build<CategoryDto>()
-                .With(t => t.Id, categoryId)
+                .With(c => c.Id, categoryId)
                 .Create();
             var updatedCategory = updatedCategoryDto.ToEntity();
 
@@ -334,7 +334,7 @@ namespace ECommerce.Test.ServiceTests
             // Arrange
             var categories = _fixture.CreateMany<CategoryDto>();
 
-            var sortedCategories = categories.OrderBy(t => t.Name);
+            var sortedCategories = categories.OrderBy(c => c.Name);
 
             // Act
             var result = _categorySorterService.Sort(categories);
@@ -350,7 +350,7 @@ namespace ECommerce.Test.ServiceTests
             // Arrange
             var categories = _fixture.CreateMany<CategoryDto>();
 
-            var sortedCategories = categories.OrderByDescending(t => t.Name);
+            var sortedCategories = categories.OrderByDescending(c => c.Name);
 
             // Act
             var result = _categorySorterService.Sort(categories, SortOrder.DESC);

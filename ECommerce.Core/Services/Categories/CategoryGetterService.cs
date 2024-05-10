@@ -22,7 +22,7 @@ namespace ECommerce.Core.Services.Categories
         {
             var categories = await _categoryRepository.GetAllAsync();
 
-            return categories.Select(t => t.ToDto()).ToList();
+            return categories.Select(c => c.ToDto()).ToList();
         }
 
         public async Task<CategoryDto?> GetByIdAsync(Guid id)

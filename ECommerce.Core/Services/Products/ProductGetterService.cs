@@ -36,14 +36,14 @@ namespace ECommerce.Core.Services.Products
 
         public async Task<List<ProductDto>> GetByCategoryAsync(Guid categoryId)
         {
-            var products = await _productRepository.GetAllAsync(t => t.CategoryId == categoryId);
+            var products = await _productRepository.GetAllAsync(p => p.CategoryId == categoryId);
 
             return ConvertToProductDtos(products);
         }
 
         public async Task<List<ProductDto>> GetByManufacturerAsync(Guid manufacturerId)
         {
-            var products = await _productRepository.GetAllAsync(t => t.ManufacturerId == manufacturerId);
+            var products = await _productRepository.GetAllAsync(p => p.ManufacturerId == manufacturerId);
 
             return ConvertToProductDtos(products);
         }
@@ -67,7 +67,7 @@ namespace ECommerce.Core.Services.Products
 
         private List<ProductDto> ConvertToProductDtos(IEnumerable<Product> products)
         {
-            return products.Select(t => t.ToDto()).ToList();
+            return products.Select(p => p.ToDto()).ToList();
         }
     }
 }

@@ -17,10 +17,10 @@ namespace ECommerce.Core.Services.Categories
         {
             if (sortOrder == SortOrder.ASC)
             {
-                return categories.OrderBy(t => t.Name).ToList();
+                return categories.OrderBy(c => c.Name).ToList();
             }
 
-            return categories.OrderByDescending(t => t.Name).ToList();
+            return categories.OrderByDescending(c => c.Name).ToList();
         }
     }
 }

@@ -62,7 +62,7 @@ namespace ECommerce.Tests.ControllerTests
         public void Index_ReturnsViewResult()
         {
             // Arrange
-            _categoryGetterServiceMock.Setup(t => t.GetAllAsync()).ReturnsAsync(new List<CategoryDto>());
+            _categoryGetterServiceMock.Setup(s => s.GetAllAsync()).ReturnsAsync(new List<CategoryDto>());
 
             var categoryController = CreateCategoryController();
 
@@ -81,7 +81,7 @@ namespace ECommerce.Tests.ControllerTests
         public async Task Upsert_EmptyId_ReturnsViewResultWithEmptyCategory()
         {
             // Arrange
-            _categoryGetterServiceMock.Setup(t => t.GetByIdAsync(
+            _categoryGetterServiceMock.Setup(s => s.GetByIdAsync(
                 It.IsAny<Guid>())).ReturnsAsync(default(CategoryDto));
 
             var categoryController = CreateCategoryController();
@@ -101,8 +101,8 @@ namespace ECommerce.Tests.ControllerTests
             // Arrange
             var categoryId = Guid.NewGuid();
             var categoryDto = _fixture.Build<CategoryDto>()
-                .With(t => t.Id, categoryId).Create();
-            _categoryGetterServiceMock.Setup(t => t.GetByIdAsync(
+                .With(m => m.Id, categoryId).Create();
+            _categoryGetterServiceMock.Setup(s => s.GetByIdAsync(
                 categoryId)).ReturnsAsync(categoryDto);
 
             var categoryController = CreateCategoryController();
@@ -121,7 +121,7 @@ namespace ECommerce.Tests.ControllerTests
         {
             // Arrange
             var categoryId = Guid.NewGuid();
-            _categoryGetterServiceMock.Setup(t => t.GetByIdAsync(categoryId))
+            _categoryGetterServiceMock.Setup(s => s.GetByIdAsync(categoryId))
                 .ReturnsAsync(default(CategoryDto));
 
             var categoryController = CreateCategoryController();
@@ -158,17 +158,17 @@ namespace ECommerce.Tests.ControllerTests
         {
             // Arrange
             var categoryDto = _fixture.Build<CategoryDto>()
-                .With(t => t.Id, Guid.Empty).Create();
+                .With(m => m.Id, Guid.Empty).Create();
             var categoryController = CreateCategoryController();
 
             // Act
-            _categoryAdderServiceMock.Setup(t => t.AddAsync(It.IsAny<CategoryDto>()))
+            _categoryAdderServiceMock.Setup(s => s.AddAsync(It.IsAny<CategoryDto>()))
                 .ReturnsAsync(categoryDto);
 
             var result = await categoryController.Upsert(categoryDto);
 
             // Assert
-            _categoryAdderServiceMock.Verify(t => t.AddAsync(categoryDto), Times.Once);
+            _categoryAdderServiceMock.Verify(s => s.AddAsync(categoryDto), Times.Once);
             result.Should().BeOfType<RedirectToActionResult>();
         }
 
@@ -181,13 +181,13 @@ namespace ECommerce.Tests.ControllerTests
             var categoryController = CreateCategoryController();
 
             // Act
-            _categoryUpdaterServiceMock.Setup(t => t.UpdateAsync(It.IsAny<CategoryDto>()))
+            _categoryUpdaterServiceMock.Setup(s => s.UpdateAsync(It.IsAny<CategoryDto>()))
                 .ReturnsAsync(categoryDto);
 
             var result = await categoryController.Upsert(categoryDto);
 
             // Assert
-            _categoryUpdaterServiceMock.Verify(t => t.UpdateAsync(categoryDto), Times.Once);
+            _categoryUpdaterServiceMock.Verify(s => s.UpdateAsync(categoryDto), Times.Once);
             result.Should().BeOfType<RedirectToActionResult>();
         }
 
@@ -199,7 +199,7 @@ namespace ECommerce.Tests.ControllerTests
         public async Task GetAll_ExceptionOccurred_ReturnsObjectResultWith500StatusCode()
         {
             // Arrange
-            _categoryGetterServiceMock.Setup(t => t.GetAllAsync()).Throws(new Exception());
+            _categoryGetterServiceMock.Setup(s => s.GetAllAsync()).Throws(new Exception());
 
             var controller = CreateCategoryController();
 
@@ -219,7 +219,7 @@ namespace ECommerce.Tests.ControllerTests
             // Arrange
             List<CategoryDto> categoryDtos = _fixture.CreateMany<CategoryDto>().ToList();
 
-            _categoryGetterServiceMock.Setup(t => t.GetAllAsync()).ReturnsAsync(categoryDtos);
+            _categoryGetterServiceMock.Setup(s => s.GetAllAsync()).ReturnsAsync(categoryDtos);
 
             var controller = CreateCategoryController();
 
@@ -241,7 +241,7 @@ namespace ECommerce.Tests.ControllerTests
             // Arrange
             var id = Guid.NewGuid();
 
-            _categoryDeleterServiceMock.Setup(t => t.DeleteAsync(id))
+            _categoryDeleterServiceMock.Setup(s => s.DeleteAsync(id))
                 .ReturnsAsync(false);
 
             var controller = CreateCategoryController();
@@ -260,7 +260,7 @@ namespace ECommerce.Tests.ControllerTests
             // Arrange
             var id = Guid.NewGuid();
 
-            _categoryDeleterServiceMock.Setup(t => t.DeleteAsync(id))
+            _categoryDeleterServiceMock.Setup(s => s.DeleteAsync(id))
                 .ReturnsAsync(true);
 
             var controller = CreateCategoryController();
@@ -287,16 +287,16 @@ namespace ECommerce.Tests.ControllerTests
             foreach(var name in existingCategoriesNames)
             {
                 var categoryDto = _fixture.Build<CategoryDto>()
-                    .With(c => c.Name, name).Create();
+                    .With(m => m.Name, name).Create();
                 existingCategories.Add(categoryDto);
             }
 
             var category = _fixture.Build<CategoryDto>()
-                .With(c => c.Id, Guid.Empty)
-                .With(c => c.Name, newName).Create(); 
+                .With(m => m.Id, Guid.Empty)
+                .With(m => m.Name, newName).Create(); 
             var categoryController = CreateCategoryController();
 
-            _categoryGetterServiceMock.Setup(t => t.GetAllAsync()).ReturnsAsync(existingCategories);
+            _categoryGetterServiceMock.Setup(s => s.GetAllAsync()).ReturnsAsync(existingCategories);
 
             // Act
             var result = await categoryController.IsCategoryNameUnique(category);
@@ -316,7 +316,7 @@ namespace ECommerce.Tests.ControllerTests
             foreach (var name in existingCategoriesNames)
             {
                 var categoryDto = _fixture.Build<CategoryDto>()
-                    .With(c => c.Name, name).Create();
+                    .With(m => m.Name, name).Create();
                 existingCategories.Add(categoryDto);
             }
 
@@ -328,13 +328,13 @@ namespace ECommerce.Tests.ControllerTests
             var existingCategory = existingCategories[0];
 
             var category = _fixture.Build<CategoryDto>()
-                .With(c => c.Id, existingCategory.Id)
-                .With(c => c.Name, newName)
+                .With(m => m.Id, existingCategory.Id)
+                .With(m => m.Name, newName)
                 .Create();
 
-            _categoryGetterServiceMock.Setup(t => t.GetByIdAsync(It.IsAny<Guid>()))
+            _categoryGetterServiceMock.Setup(s => s.GetByIdAsync(It.IsAny<Guid>()))
                 .ReturnsAsync(existingCategory);
-            _categoryGetterServiceMock.Setup(t => t.GetAllAsync())
+            _categoryGetterServiceMock.Setup(s => s.GetAllAsync())
                 .ReturnsAsync(existingCategories);
 
             var categoryController = CreateCategoryController();
@@ -354,11 +354,11 @@ namespace ECommerce.Tests.ControllerTests
             var existingCategory = _fixture.Create<CategoryDto>();
             var allCategories = new List<CategoryDto>() { existingCategory };
             var newCategory = _fixture.Build<CategoryDto>()
-                .With(c => c.Id, Guid.Empty)
-                .With(t => t.Name, existingCategory.Name)
+                .With(m => m.Id, Guid.Empty)
+                .With(m => m.Name, existingCategory.Name)
                 .Create();
 
-            _categoryGetterServiceMock.Setup(t => t.GetAllAsync())
+            _categoryGetterServiceMock.Setup(s => s.GetAllAsync())
                 .ReturnsAsync(allCategories);
 
             var categoryController = CreateCategoryController();
@@ -377,11 +377,11 @@ namespace ECommerce.Tests.ControllerTests
             // Arrange
             var existingCategory = _fixture.Create<CategoryDto>();
             var newCategory = _fixture.Build<CategoryDto>()
-                .With(c => c.Id, existingCategory.Id)
-                .With(t => t.Name, existingCategory.Name)
+                .With(m => m.Id, existingCategory.Id)
+                .With(m => m.Name, existingCategory.Name)
                 .Create();
 
-            _categoryGetterServiceMock.Setup(t => t.GetByIdAsync(It.IsAny<Guid>()))
+            _categoryGetterServiceMock.Setup(s => s.GetByIdAsync(It.IsAny<Guid>()))
                 .ReturnsAsync(existingCategory);
 
             var categoryController = CreateCategoryController();
@@ -403,13 +403,13 @@ namespace ECommerce.Tests.ControllerTests
             var allCategories = new List<CategoryDto>() { existingCategory1, existingCategory2 };
 
             var newCategory = _fixture.Build<CategoryDto>()
-                .With(c => c.Id, existingCategory1.Id)
-                .With(t => t.Name, existingCategory2.Name)
+                .With(m => m.Id, existingCategory1.Id)
+                .With(m => m.Name, existingCategory2.Name)
                 .Create();
 
-            _categoryGetterServiceMock.Setup(t => t.GetByIdAsync(It.IsAny<Guid>()))
+            _categoryGetterServiceMock.Setup(s => s.GetByIdAsync(It.IsAny<Guid>()))
                 .ReturnsAsync(existingCategory1);
-            _categoryGetterServiceMock.Setup(t => t.GetAllAsync())
+            _categoryGetterServiceMock.Setup(s => s.GetAllAsync())
                 .ReturnsAsync(allCategories);
 
             var categoryController = CreateCategoryController();

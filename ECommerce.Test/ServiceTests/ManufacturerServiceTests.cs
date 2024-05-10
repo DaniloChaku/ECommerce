@@ -64,7 +64,7 @@ namespace ECommerce.Test.ServiceTests
         {
             // Arrange
             var manufacturerDto = _fixture.Build<ManufacturerDto>()
-                .With(t => t.Id, Guid.NewGuid())
+                .With(m => m.Id, Guid.NewGuid())
                 .Create();
 
             // Act
@@ -82,12 +82,12 @@ namespace ECommerce.Test.ServiceTests
         {
             // Arrange
             var manufacturerDto1 = _fixture.Build<ManufacturerDto>()
-                .With(t => t.Id, Guid.Empty)
-                .With(t => t.Name, "Test")
+                .With(m => m.Id, Guid.Empty)
+                .With(m => m.Name, "Test")
                 .Create();
             var manufacturerDto2 = _fixture.Build<ManufacturerDto>()
-                .With(t => t.Id, Guid.Empty)
-                .With(t => t.Name, "Test")
+                .With(m => m.Id, Guid.Empty)
+                .With(m => m.Name, "Test")
                 .Create();
 
             _manufacturerRepositoryMock.Setup(repo => repo.GetAllAsync(
@@ -108,7 +108,7 @@ namespace ECommerce.Test.ServiceTests
         {
             // Arrange
             var manufacturerDto = _fixture.Build<ManufacturerDto>()
-                .With(t => t.Id, Guid.Empty).Create();
+                .With(m => m.Id, Guid.Empty).Create();
             var addedManufacturer = manufacturerDto.ToEntity();
 
             _manufacturerRepositoryMock.Setup(repo => repo.GetAllAsync(It.IsAny<Expression<Func<Manufacturer, bool>>?>()))
@@ -155,7 +155,7 @@ namespace ECommerce.Test.ServiceTests
 
             // Assert
             result.Should().NotBeEmpty();
-            result.Should().BeEquivalentTo(manufacturers.Select(t => t.ToDto()));
+            result.Should().BeEquivalentTo(manufacturers.Select(m => m.ToDto()));
         }
 
         #endregion
@@ -221,7 +221,7 @@ namespace ECommerce.Test.ServiceTests
             // Arrange
             var manufacturerId = Guid.NewGuid();
             var existingManufacturer = _fixture.Build<Manufacturer>()
-                .With(t => t.Id, manufacturerId).Create();
+                .With(m => m.Id, manufacturerId).Create();
 
             _manufacturerRepositoryMock.Setup(repo => repo.GetByIdAsync(manufacturerId))
                                    .ReturnsAsync(existingManufacturer);
@@ -261,7 +261,7 @@ namespace ECommerce.Test.ServiceTests
         {
             // Arrange
             var manufacturerDto = _fixture.Build<ManufacturerDto>()
-                .With(t => t.Id, Guid.Empty)
+                .With(m => m.Id, Guid.Empty)
                 .Create();
 
             // Act
@@ -280,7 +280,7 @@ namespace ECommerce.Test.ServiceTests
             // Arrange
             var invalidId = Guid.NewGuid();
             var manufacturerDto = _fixture.Build<ManufacturerDto>()
-                .With(t => t.Id, invalidId)
+                .With(m => m.Id, invalidId)
                 .Create();
 
             _manufacturerRepositoryMock.Setup(repo => repo.GetByIdAsync(invalidId))
@@ -302,10 +302,10 @@ namespace ECommerce.Test.ServiceTests
             // Arrange
             var manufacturerId = Guid.NewGuid();
             var existingManufacturer = _fixture.Build<Manufacturer>()
-                .With(t => t.Id, manufacturerId)
+                .With(m => m.Id, manufacturerId)
                 .Create();
             var updatedManufacturerDto = _fixture.Build<ManufacturerDto>()
-                .With(t => t.Id, manufacturerId)
+                .With(m => m.Id, manufacturerId)
                 .Create();
             var updatedManufacturer = updatedManufacturerDto.ToEntity();
 
@@ -333,7 +333,7 @@ namespace ECommerce.Test.ServiceTests
             // Arrange
             var manufacturers = _fixture.CreateMany<ManufacturerDto>();
 
-            var sortedManufacturers = manufacturers.OrderBy(t => t.Name);
+            var sortedManufacturers = manufacturers.OrderBy(m => m.Name);
 
             // Act
             var result = _manufacturerSorterService.Sort(manufacturers);
@@ -349,7 +349,7 @@ namespace ECommerce.Test.ServiceTests
             // Arrange
             var manufacturers = _fixture.CreateMany<ManufacturerDto>();
 
-            var sortedManufacturers = manufacturers.OrderByDescending(t => t.Name);
+            var sortedManufacturers = manufacturers.OrderByDescending(m => m.Name);
 
             // Act
             var result = _manufacturerSorterService.Sort(manufacturers, SortOrder.DESC);
