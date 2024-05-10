@@ -92,7 +92,7 @@ namespace ECommerce.UI.Controllers
                 }
                 catch (Exception)
                 {
-                    TempData["error"] = "An error occurred. Please, try again later.";
+                    TempData["error"] = Constants.GENERIC_ERROR_MESSAGE;
                 }
             }
 
@@ -116,7 +116,7 @@ namespace ECommerce.UI.Controllers
                 }
                 catch (Exception)
                 {
-                    TempData["error"] = "An error occurred. Please, try again later.";
+                    TempData["error"] = Constants.GENERIC_ERROR_MESSAGE;
                 }
             }
 

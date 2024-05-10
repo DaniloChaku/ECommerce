@@ -72,7 +72,7 @@ namespace ECommerce.UI.Areas.Admin.Controllers
             }
             catch (Exception)
             {
-                TempData["error"] = "An error occurred. Please, try again later.";
+                TempData["error"] = Constants.GENERIC_ERROR_MESSAGE;
                 return View(categoryDto);
             }
         }
@@ -113,7 +113,7 @@ namespace ECommerce.UI.Areas.Admin.Controllers
             catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
-                    new { error = "An error occurred. Please, try again later." });
+                    new { error = Constants.GENERIC_ERROR_MESSAGE });
             }
         }
 

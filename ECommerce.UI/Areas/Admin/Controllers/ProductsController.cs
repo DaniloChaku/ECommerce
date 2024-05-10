@@ -189,7 +189,7 @@ namespace ECommerce.UI.Areas.Admin.Controllers
             catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
-                    new { error = "An error occurred. Please try again later." });
+                    new { error = Constants.GENERIC_ERROR_MESSAGE });
             }
         }
 
@@ -289,7 +289,7 @@ namespace ECommerce.UI.Areas.Admin.Controllers
                 var response = new
                 {
                     success = false,
-                    Message = "An error occurred. Please try again later."
+                    Message = Constants.GENERIC_ERROR_MESSAGE
                 };
 
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
@@ -352,7 +352,7 @@ namespace ECommerce.UI.Areas.Admin.Controllers
                 var response = new
                 {
                     success = false,
-                    Message = "An error occurred. Please try again later."
+                    Message = Constants.GENERIC_ERROR_MESSAGE
                 };
 
                 return StatusCode(StatusCodes.Status500InternalServerError, response);

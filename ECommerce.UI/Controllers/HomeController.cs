@@ -144,7 +144,7 @@ namespace ECommerce.UI.Controllers
             catch (Exception)
             {
                 model.Product = await _productGetterService.GetByIdAsync(model.Product.Id);
-                TempData["error"] = "An error occurred. Please, try again later.";
+                TempData["error"] = Constants.GENERIC_ERROR_MESSAGE;
                 return View(model);
             }
 
@@ -187,7 +187,7 @@ namespace ECommerce.UI.Controllers
             }
             catch (Exception)
             {
-                TempData["error"] = "An error occurred. Please, try again later.";
+                TempData["error"] = Constants.GENERIC_ERROR_MESSAGE;
             }
 
 
