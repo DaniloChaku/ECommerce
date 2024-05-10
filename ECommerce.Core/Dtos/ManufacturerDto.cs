@@ -11,7 +11,7 @@ namespace ECommerce.Core.Dtos
     public class ManufacturerDto
     {
         public Guid Id { get; set; }
-        [Remote(controller: "Manufacturer", action: "IsManufacturerNameUnique",
+        [Remote(controller: "Manufacturers", action: "IsManufacturerNameUnique",
             AdditionalFields = nameof(Id),
             ErrorMessage = "Manufacturer with the same name already exists")]
         public string Name { get; set; } = string.Empty;

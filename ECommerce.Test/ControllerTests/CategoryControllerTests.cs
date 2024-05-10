@@ -47,9 +47,9 @@ namespace ECommerce.Tests.ControllerTests
             _tempData = _tempDataMock.Object;
         }
 
-        private CategoryController CreateCategoryController()
+        private CategoriesController CreateCategoryController()
         {
-            return new CategoryController(_categoryGetterService,
+            return new CategoriesController(_categoryGetterService,
                 _categoryAdderService, _categoryUpdaterService, _categoryDeleterService)
             {
                 TempData = _tempData

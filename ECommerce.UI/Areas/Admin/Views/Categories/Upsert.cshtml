@@ -4,7 +4,7 @@
     ViewBag.Title = $"{ViewBag.Action} Category";
 }
 
-<form asp-controller="Category" asp-action="Upsert" method="post">
+<form asp-action="Upsert" method="post">
     <div class="row">
         <div class="col-lg-3"></div>
         <div class="col-lg-6 col-12 justify-content-center">
@@ -24,7 +24,7 @@
                     <button type="submit" class="btn btn-primary form-control">@ViewBag.Action</button>
                 </div>
                 <div class="col-6 col-md-3">
-                    <a asp-controller="Category" asp-action="Index"
+                    <a asp-action="Index"
                        class="btn btn-outline-secondary form-control">Back</a>
                 </div>
             </div>

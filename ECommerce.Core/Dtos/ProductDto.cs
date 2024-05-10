@@ -17,7 +17,7 @@ namespace ECommerce.Core.Dtos
         public Guid Id { get; set; }
         [RegularExpression(@"^\S(.*\S)?$", 
             ErrorMessage = "The {0} field must not start or end with a whitespace characters and must contain at least one letter.")]
-        [Remote(controller: "Product", action: "IsProductNameUnique",
+        [Remote(controller: "Products", action: "IsProductNameUnique",
             AdditionalFields = nameof(Id),
             ErrorMessage = "Product with the same name already exists")]
         public string Name { get; set; } = string.Empty;

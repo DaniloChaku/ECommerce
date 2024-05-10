@@ -46,9 +46,9 @@ namespace ECommerce.Tests.ControllerTests
             _tempData = _tempDataMock.Object;
         }
 
-        private ManufacturerController CreateManufacturerController()
+        private ManufacturersController CreateManufacturerController()
         {
-            return new ManufacturerController(_manufacturerGetterService,
+            return new ManufacturersController(_manufacturerGetterService,
                 _manufacturerAdderService, _manufacturerUpdaterService, _manufacturerDeleterService)
             {
                 TempData = _tempData

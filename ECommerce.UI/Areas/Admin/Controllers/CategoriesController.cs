@@ -8,14 +8,14 @@ namespace ECommerce.UI.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Authorize(Roles = Constants.ROLE_ADMIN)]
-    public class CategoryController : Controller
+    public class CategoriesController : Controller
     {
         private readonly ICategoryGetterService _categoryGetterService;
         private readonly ICategoryAdderService _categoryAdderService;
         private readonly ICategoryUpdaterService _categoryUpdaterService;
         private readonly ICategoryDeleterService _categoryDeleterService;
 
-        public CategoryController(ICategoryGetterService categoryGetterService,
+        public CategoriesController(ICategoryGetterService categoryGetterService,
             ICategoryAdderService categoryAdderService, ICategoryUpdaterService categoryUpdaterService,
             ICategoryDeleterService categoryDeleterService)
         {

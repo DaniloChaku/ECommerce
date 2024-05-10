@@ -18,7 +18,7 @@ namespace ECommerce.UI.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Authorize(Roles = Constants.ROLE_ADMIN)]
-    public class ProductController : Controller
+    public class ProductsController : Controller
     {
         private readonly IProductGetterService _productGetterService;
         private readonly IProductAdderService _productAdderService;
@@ -36,7 +36,7 @@ namespace ECommerce.UI.Areas.Admin.Controllers
         private readonly IImageDeleterService _imageDeleterService;
         private readonly ImageUploadOptions _imageUploadOptions;
 
-        public ProductController(IProductGetterService productGetterService,
+        public ProductsController(IProductGetterService productGetterService,
             IProductAdderService productAdderService, IProductUpdaterService productUpdaterService,
             IProductDeleterService productDeleterService, ICategoryGetterService categoryGetterService,
             ICategorySorterService categorySorterService, IManufacturerGetterService manufacturerGetterService,

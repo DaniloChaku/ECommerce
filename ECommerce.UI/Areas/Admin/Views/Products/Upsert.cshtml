@@ -4,7 +4,7 @@
     ViewBag.Title = $"{ViewBag.Action} Product";
 }
 
-<form asp-controller="Product" asp-action="Upsert" method="post" enctype="multipart/form-data">
+<form asp-action="Upsert" method="post" enctype="multipart/form-data">
     <div class="row">
         <div class="col-lg-3"></div>
         <div class="col-lg-6 col-12 justify-content-center">
@@ -112,7 +112,7 @@
                     <button type="submit" class="btn btn-primary form-control">@ViewBag.Action</button>
                 </div>
                 <div class="col-6 col-md-3">
-                    <a asp-controller="Product" asp-action="Index"
+                    <a asp-action="Index"
                        class="btn btn-outline-secondary form-control">Back</a>
                 </div>
                 <div asp-validation-summary="All" class="text-danger"></div>

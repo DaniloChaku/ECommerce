@@ -9,14 +9,14 @@ namespace ECommerce.UI.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Authorize(Roles = Constants.ROLE_ADMIN)]
-    public class ManufacturerController : Controller
+    public class ManufacturersController : Controller
     {
         private readonly IManufacturerGetterService _manufacturerGetterService;
         private readonly IManufacturerAdderService _manufacturerAdderService;
         private readonly IManufacturerUpdaterService _manufacturerUpdaterService;
         private readonly IManufacturerDeleterService _manufacturerDeleterService;
 
-        public ManufacturerController(IManufacturerGetterService manufacturerGetterService,
+        public ManufacturersController(IManufacturerGetterService manufacturerGetterService,
             IManufacturerAdderService manufacturerAdderService, IManufacturerUpdaterService manufacturerUpdaterService,
             IManufacturerDeleterService manufacturerDeleterService)
         {

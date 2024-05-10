@@ -129,9 +129,9 @@ namespace ECommerce.Tests.ControllerTests
             _tempData = _tempDataMock.Object;
         }
 
-        private ProductController CreateProductController()
+        private ProductsController CreateProductController()
         {
-            return new ProductController(_productGetterService,
+            return new ProductsController(_productGetterService,
                 _productAdderService, _productUpdaterService, _productDeleterService,
                 _categoryGetterService, _categorySorterService, _manufacturerGetterService,
                 _manufacturerSorterService, _webHostEnvironment, _imageUploaderService, 

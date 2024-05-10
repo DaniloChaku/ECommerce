@@ -53,14 +53,14 @@
                             <div class="text-center px-1">
                                 <a class="btn btn-outline-dark mt-auto"
                                    asp-area="Admin"
-                                   asp-action="@nameof(ProductController.Upsert)"
-                                   asp-controller="Product" asp-route-id="@product.Id">
+                                   asp-action="@nameof(ProductsController.Upsert)"
+                                   asp-controller="Products" asp-route-id="@product.Id">
                                     Edit
                                 </a>
                             </div>
                             <div class="text-center px-1">
                                 <button class="btn btn-outline-dark mt-auto"
-                                        onclick="removeItem('admin/product/delete?id=@product.Id')">
+                                        onclick="removeItem('admin/products/delete?id=@product.Id')">
                                     Delete
                                 </button>
                             </div>

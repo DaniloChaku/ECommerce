@@ -4,19 +4,19 @@ document.addEventListener("DOMContentLoaded", loadTableData);
 
 function loadTableData() {
     dataTable = $('#categoriesTable').DataTable({
-        ajax: { url: '/admin/category/getall' },
+        ajax: { url: '/admin/categories/getall' },
         columns: [
             { data: "name", width: "75%" },
             {
                 data: "id", render: function (data) {
                     return `<span class="p-1 d-flex align-content-center gap-2">
-                        <a href="/admin/category/upsert?id=${data}" class="text-decoration-none">
+                        <a href="/admin/categories/upsert?id=${data}" class="text-decoration-none">
                             <i class="bi bi-pencil-square text-warning" style="font-size: 1.1rem"></i>
                         </a>
                         <button class="btn btn-link p-0 m-0" onclick="removeItemWithAssociation(
-                            '/admin/product/hasReference?type=category&id=${data}',
-                        '/admin/product/removeReference?type=category&id=${data}', 
-                        '/admin/category/delete?id=${data}', 'category', dataTable)">
+                            '/admin/products/hasReference?type=category&id=${data}',
+                        '/admin/products/removeReference?type=category&id=${data}', 
+                        '/admin/categories/delete?id=${data}', 'category', dataTable)">
                             <i class="bi bi-trash text-danger" style="font-size: 1.1rem"></i>
                         </button>
                     </span>`
