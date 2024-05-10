@@ -16,6 +16,7 @@ using Microsoft.Extensions.Options;
 using ECommerce.Core.Domain.Entities;
 using System.Drawing;
 using ECommerce.UI.Areas.Admin.Controllers;
+using ECommerce.Tests.Helpers;
 
 namespace ECommerce.Tests.ControllerTests
 {
@@ -58,10 +59,12 @@ namespace ECommerce.Tests.ControllerTests
         private readonly Mock<ITempDataDictionary> _tempDataMock;
 
         private readonly IFixture _fixture;
+        private readonly ProductCreationHelper _productCreationHelper;
 
         public ProductControllerTests()
         {
             _fixture = new Fixture();
+            _productCreationHelper = new ProductCreationHelper(_fixture);
 
             _productGetterServiceMock = new Mock<IProductGetterService>();
             _productAdderServiceMock = new Mock<IProductAdderService>();
@@ -79,8 +82,8 @@ namespace ECommerce.Tests.ControllerTests
             _imageDeleterServiceMock = new Mock<IImageDeleterService>();
             var imageUploadOptions = new ImageUploadOptions()
             {
-                AllowedTypes = new List<ExtensionMapping>()
-                {
+                AllowedTypes =
+                [
                     new ExtensionMapping()
                     {
                         Extension = ".jpg",
@@ -101,7 +104,7 @@ namespace ECommerce.Tests.ControllerTests
                         Extension = ".gif",
                         ContentType = "image/gif"
                     }
-                },
+                ],
                 MaxImageSize = 1024 * 1024 * 10,
             };
 
@@ -147,7 +150,7 @@ namespace ECommerce.Tests.ControllerTests
         public void Index_ReturnsViewResult()
         {
             // Arrange
-            _productGetterServiceMock.Setup(t => t.GetAllAsync()).ReturnsAsync(new List<ProductDto>());
+            _productGetterServiceMock.Setup(s => s.GetAllAsync()).ReturnsAsync([]);
 
             var productController = CreateProductController();
 
@@ -170,17 +173,17 @@ namespace ECommerce.Tests.ControllerTests
             var manufacturers = _fixture.CreateMany<ManufacturerDto>(5).ToList();
             var expectedProduct = new ProductDto();
 
-            _productGetterServiceMock.Setup(t => t.GetByIdAsync(
+            _productGetterServiceMock.Setup(s => s.GetByIdAsync(
                 It.IsAny<Guid>())).ReturnsAsync(expectedProduct);
 
-            _categoryGetterServiceMock.Setup(t => t.GetAllAsync())
+            _categoryGetterServiceMock.Setup(s => s.GetAllAsync())
                 .ReturnsAsync(categories);
-            _categorySorterServiceMock.Setup(t => t.Sort(It.IsAny<IEnumerable<CategoryDto>>(), 
+            _categorySorterServiceMock.Setup(s => s.Sort(It.IsAny<IEnumerable<CategoryDto>>(), 
                 It.IsAny<SortOrder>())).Returns(categories);
 
-            _manufacturerGetterServiceMock.Setup(t => t.GetAllAsync())
+            _manufacturerGetterServiceMock.Setup(s => s.GetAllAsync())
                 .ReturnsAsync(manufacturers);
-            _manufacturerSorterServiceMock.Setup(t => t.Sort(
+            _manufacturerSorterServiceMock.Setup(s => s.Sort(
                 It.IsAny<IEnumerable<ManufacturerDto>>(), It.IsAny<SortOrder>()))
                 .Returns(manufacturers);
 
@@ -202,26 +205,23 @@ namespace ECommerce.Tests.ControllerTests
         {
             // Arrange
             var productId = Guid.NewGuid();
-            var expectedProduct = _fixture.Build<ProductDto>()
-                .With(t => t.Id, productId)
-                .With(t => t.Price, 10)
-                .With(t => t.SalePrice, null as decimal?)
-                .With(t => t.Stock, 10)
-                .Create();
-            _productGetterServiceMock.Setup(t => t.GetByIdAsync(
+            var expectedProduct = _productCreationHelper.CreateProductDto();
+            expectedProduct.Id = productId;
+
+            _productGetterServiceMock.Setup(s => s.GetByIdAsync(
                 productId)).ReturnsAsync(expectedProduct);
 
             var categories = _fixture.CreateMany<CategoryDto>(5).ToList();
             var manufacturers = _fixture.CreateMany<ManufacturerDto>(5).ToList();
 
-            _categoryGetterServiceMock.Setup(t => t.GetAllAsync())
+            _categoryGetterServiceMock.Setup(s => s.GetAllAsync())
                 .ReturnsAsync(categories);
-            _categorySorterServiceMock.Setup(t => t.Sort(It.IsAny<IEnumerable<CategoryDto>>(),
+            _categorySorterServiceMock.Setup(s => s.Sort(It.IsAny<IEnumerable<CategoryDto>>(),
                 It.IsAny<SortOrder>())).Returns(categories);
 
-            _manufacturerGetterServiceMock.Setup(t => t.GetAllAsync())
+            _manufacturerGetterServiceMock.Setup(s => s.GetAllAsync())
                 .ReturnsAsync(manufacturers);
-            _manufacturerSorterServiceMock.Setup(t => t.Sort(
+            _manufacturerSorterServiceMock.Setup(s => s.Sort(
                 It.IsAny<IEnumerable<ManufacturerDto>>(), It.IsAny<SortOrder>()))
                 .Returns(manufacturers);
 
@@ -247,17 +247,17 @@ namespace ECommerce.Tests.ControllerTests
             var expectedProduct = new ProductDto();
 
             var productId = Guid.NewGuid();
-            _productGetterServiceMock.Setup(t => t.GetByIdAsync(productId))
+            _productGetterServiceMock.Setup(s => s.GetByIdAsync(productId))
                 .ReturnsAsync(expectedProduct);
 
-            _categoryGetterServiceMock.Setup(t => t.GetAllAsync())
+            _categoryGetterServiceMock.Setup(s => s.GetAllAsync())
                 .ReturnsAsync(categories);
-            _categorySorterServiceMock.Setup(t => t.Sort(It.IsAny<IEnumerable<CategoryDto>>(),
+            _categorySorterServiceMock.Setup(s => s.Sort(It.IsAny<IEnumerable<CategoryDto>>(),
                 It.IsAny<SortOrder>())).Returns(categories);
 
-            _manufacturerGetterServiceMock.Setup(t => t.GetAllAsync())
+            _manufacturerGetterServiceMock.Setup(s => s.GetAllAsync())
                 .ReturnsAsync(manufacturers);
-            _manufacturerSorterServiceMock.Setup(t => t.Sort(
+            _manufacturerSorterServiceMock.Setup(s => s.Sort(
                 It.IsAny<IEnumerable<ManufacturerDto>>(), It.IsAny<SortOrder>()))
                 .Returns(manufacturers);
 
@@ -280,11 +280,7 @@ namespace ECommerce.Tests.ControllerTests
             // Arrange
             var categories = _fixture.CreateMany<SelectListItem>(5);
             var manufacturers = _fixture.CreateMany<SelectListItem>(5);
-            var expectedProduct = _fixture.Build<ProductDto>()
-                .With(t => t.Price, 10)
-                .With(t => t.SalePrice, null as decimal?)
-                .With(t => t.Stock, 10)
-                .Create();
+            var expectedProduct = _productCreationHelper.CreateProductDto(false);
             var expectedVm = new ProductUpsertViewModel()
             {
                 Product = expectedProduct,
@@ -311,12 +307,7 @@ namespace ECommerce.Tests.ControllerTests
             // Arrange
             var categories = _fixture.CreateMany<SelectListItem>(5);
             var manufacturers = _fixture.CreateMany<SelectListItem>(5);
-            var product = _fixture.Build<ProductDto>()
-                .With(t => t.Id, Guid.Empty)
-                .With(t => t.Price, 10)
-                .With(t => t.SalePrice, null as decimal?)
-                .With(t => t.Stock, 10)
-                .Create();
+            var product = _productCreationHelper.CreateProductDto();
             var vm = new ProductUpsertViewModel()
             {
                 Product = product,
@@ -327,13 +318,13 @@ namespace ECommerce.Tests.ControllerTests
             var productController = CreateProductController();
 
             // Act
-            _productAdderServiceMock.Setup(t => t.AddAsync(It.IsAny<ProductDto>()))
+            _productAdderServiceMock.Setup(s => s.AddAsync(It.IsAny<ProductDto>()))
                 .ReturnsAsync(product);
 
             var result = await productController.Upsert(vm);
 
             // Assert
-            _productAdderServiceMock.Verify(t => t.AddAsync(product), Times.Once);
+            _productAdderServiceMock.Verify(s => s.AddAsync(product), Times.Once);
             result.Should().BeOfType<RedirectToActionResult>();
         }
 
@@ -343,11 +334,7 @@ namespace ECommerce.Tests.ControllerTests
             // Arrange
             var categories = _fixture.CreateMany<SelectListItem>(5);
             var manufacturers = _fixture.CreateMany<SelectListItem>(5);
-            var product = _fixture.Build<ProductDto>()
-                .With(t => t.Price, 10)
-                .With(t => t.SalePrice, null as decimal?)
-                .With(t => t.Stock, 10)
-                .Create();
+            var product = _productCreationHelper.CreateProductDto(false);
             var vm = new ProductUpsertViewModel()
             {
                 Product = product,
@@ -358,13 +345,13 @@ namespace ECommerce.Tests.ControllerTests
             var productController = CreateProductController();
 
             // Act
-            _productUpdaterServiceMock.Setup(t => t.UpdateAsync(It.IsAny<ProductDto>()))
+            _productUpdaterServiceMock.Setup(s => s.UpdateAsync(It.IsAny<ProductDto>()))
                 .ReturnsAsync(product);
 
             var result = await productController.Upsert(vm);
 
             // Assert
-            _productUpdaterServiceMock.Verify(t => t.UpdateAsync(product), Times.Once);
+            _productUpdaterServiceMock.Verify(s => s.UpdateAsync(product), Times.Once);
             result.Should().BeOfType<RedirectToActionResult>();
         }
 
@@ -375,11 +362,7 @@ namespace ECommerce.Tests.ControllerTests
             var categories = _fixture.CreateMany<SelectListItem>(5);
             var manufacturers = _fixture.CreateMany<SelectListItem>(5);
 
-            var product = _fixture.Build<ProductDto>()
-                .With(t => t.Price, 10)
-                .With(t => t.SalePrice, null as decimal?)
-                .With(t => t.Stock, 10)
-                .Create();
+            var product = _productCreationHelper.CreateProductDto(false);
 
             var imageMock = new Mock<IFormFile>();
             imageMock.Setup(i => i.Length).Returns(1024);
@@ -398,7 +381,7 @@ namespace ECommerce.Tests.ControllerTests
             var productController = CreateProductController();
 
             // Act
-            _productUpdaterServiceMock.Setup(t => t.UpdateAsync(It.IsAny<ProductDto>()))
+            _productUpdaterServiceMock.Setup(s => s.UpdateAsync(It.IsAny<ProductDto>()))
                 .ReturnsAsync(product);
             _imageUploaderServiceMock.Setup(s => s.UploadAsync(It.IsAny<IFormFile>(),
                 It.IsAny<string>())).ReturnsAsync("");
@@ -407,7 +390,7 @@ namespace ECommerce.Tests.ControllerTests
             var result = await productController.Upsert(vm);
 
             // Assert
-            _productUpdaterServiceMock.Verify(t => t.UpdateAsync(product));
+            _productUpdaterServiceMock.Verify(s => s.UpdateAsync(product));
             _imageUploaderServiceMock.Verify(s => s.UploadAsync(image, 
                 vm.Product.Id.ToString()), Times.Once);
             _imageDeleterServiceMock.Verify(s => s.DeleteImage(It.IsAny<string>()), Times.Once);
@@ -422,7 +405,7 @@ namespace ECommerce.Tests.ControllerTests
         public async Task GetAll_ExceptionOccurred_ReturnsObjectResultWith500StatusCode()
         {
             // Arrange
-            _productGetterServiceMock.Setup(t => t.GetAllAsync()).Throws(new Exception());
+            _productGetterServiceMock.Setup(s => s.GetAllAsync()).Throws(new Exception());
 
             var controller = CreateProductController();
 
@@ -440,14 +423,9 @@ namespace ECommerce.Tests.ControllerTests
         public async Task GetAll_RetrievedSuccessfully_ReturnsOkObjectResultWithData()
         {
             // Arrange
-            List<ProductDto> productDtos = _fixture.Build<ProductDto>()
-                .With(t => t.Price, 10)
-                .With(t => t.SalePrice, null as decimal?)
-                .With(t => t.Stock, 10)
-                .CreateMany()
-                .ToList();
+            var productDtos = _productCreationHelper.CreateManyProductDtos().ToList();
 
-            _productGetterServiceMock.Setup(t => t.GetAllAsync()).ReturnsAsync(productDtos);
+            _productGetterServiceMock.Setup(s => s.GetAllAsync()).ReturnsAsync(productDtos);
 
             var controller = CreateProductController();
 
@@ -511,11 +489,7 @@ namespace ECommerce.Tests.ControllerTests
         public async Task Delete_DeletedSuccessfullyWithImage_ReturnsOkResult()
         {
             // Arrange
-            var productDto = _fixture.Build<ProductDto>()
-                .With(t => t.Price, 10)
-                .With(t => t.SalePrice, null as decimal?)
-                .With(t => t.Stock, 10)
-                .Create();
+            var productDto = _productCreationHelper.CreateProductDto(false);
 
             _productGetterServiceMock.Setup(s => s.GetByIdAsync(It.IsAny<Guid>()))
                 .ReturnsAsync(productDto);
@@ -548,24 +522,14 @@ namespace ECommerce.Tests.ControllerTests
             var existingProducts = new List<ProductDto>(); 
             foreach(var name in existingProductsNames)
             {
-                var productDto = _fixture.Build<ProductDto>()
-                    .With(t => t.Price, 10)
-                    .With(t => t.SalePrice, null as decimal?)
-                    .With(t => t.Stock, 10)
-                    .With(c => c.Name, name).Create();
+                var productDto = _productCreationHelper.CreateProductDto(false, name);
                 existingProducts.Add(productDto);
             }
 
-            var product = _fixture.Build<ProductDto>()
-                .With(p => p.Id, Guid.Empty)
-                .With(c => c.Name, newName)
-                .With(t => t.Price, 10)
-                .With(t => t.SalePrice, null as decimal?)
-                .With(t => t.Stock, 10)
-                .Create(); 
+            var product = _productCreationHelper.CreateProductDto(false, newName); 
             var productController = CreateProductController();
 
-            _productGetterServiceMock.Setup(t => t.GetAllAsync()).ReturnsAsync(existingProducts);
+            _productGetterServiceMock.Setup(s => s.GetAllAsync()).ReturnsAsync(existingProducts);
 
             // Act
             var result = await productController.IsProductNameUnique(product);
@@ -584,37 +548,24 @@ namespace ECommerce.Tests.ControllerTests
             var existingProducts = new List<ProductDto>();
             foreach (var name in existingProductsNames)
             {
-                var productDto = _fixture.Build<ProductDto>()
-                    .With(t => t.Price, 10)
-                    .With(t => t.SalePrice, null as decimal?)
-                    .With(t => t.Stock, 10)
-                    .With(c => c.Name, name).Create();
+                var productDto = _productCreationHelper.CreateProductDto(false);
                 existingProducts.Add(productDto);
             }
 
             if (existingProducts.Count == 0)
             {
-                var productDto = _fixture.Build<ProductDto>()
-                    .With(t => t.Price, 10)
-                    .With(t => t.SalePrice, null as decimal?)
-                    .With(t => t.Stock, 10)
-                    .Create();
+                var productDto = _productCreationHelper.CreateProductDto(false);
                 existingProducts.Add(productDto);
             }
 
             var existingProduct = existingProducts[0];
 
-            var product = _fixture.Build<ProductDto>()
-                .With(c => c.Id, existingProduct.Id)
-                .With(c => c.Name, newName)
-                .With(t => t.Price, 10)
-                .With(t => t.SalePrice, null as decimal?)
-                .With(t => t.Stock, 10)
-                .Create();
+            var product = _productCreationHelper.CreateProductDto(false, newName);
+            product.Id = existingProduct.Id;
 
-            _productGetterServiceMock.Setup(t => t.GetByIdAsync(It.IsAny<Guid>()))
+            _productGetterServiceMock.Setup(s => s.GetByIdAsync(It.IsAny<Guid>()))
                 .ReturnsAsync(existingProduct);
-            _productGetterServiceMock.Setup(t => t.GetAllAsync())
+            _productGetterServiceMock.Setup(s => s.GetAllAsync())
                 .ReturnsAsync(existingProducts);
 
             var productController = CreateProductController();
@@ -631,21 +582,11 @@ namespace ECommerce.Tests.ControllerTests
         public async Task IsProductNameUnique_EmptyIdAndExistingName_ReturnsFalse()
         {
             // Arrange
-            var existingProduct = _fixture.Build<ProductDto>()
-                .With(t => t.Price, 10)
-                .With(t => t.SalePrice, null as decimal?)
-                .With(t => t.Stock, 10)
-                .Create();
+            var existingProduct = _productCreationHelper.CreateProductDto(false);
             var allProducts = new List<ProductDto>() { existingProduct };
-            var newProduct = _fixture.Build<ProductDto>()
-                .With(c => c.Id, Guid.Empty)
-                .With(t => t.Name, existingProduct.Name)
-                .With(t => t.Price, 10)
-                .With(t => t.SalePrice, null as decimal?)
-                .With(t => t.Stock, 10)
-                .Create();
+            var newProduct = _productCreationHelper.CreateProductDto(true, existingProduct.Name);
 
-            _productGetterServiceMock.Setup(t => t.GetAllAsync())
+            _productGetterServiceMock.Setup(s => s.GetAllAsync())
                 .ReturnsAsync(allProducts);
 
             var productController = CreateProductController();
@@ -662,20 +603,11 @@ namespace ECommerce.Tests.ControllerTests
         public async Task IsProductNameUnique_ExistingIdAndSameName_ReturnsTrue()
         {
             // Arrange
-            var existingProduct = _fixture.Build<ProductDto>()
-                .With(t => t.Price, 10)
-                .With(t => t.SalePrice, null as decimal?)
-                .With(t => t.Stock, 10)
-                .Create();
-            var newProduct = _fixture.Build<ProductDto>()
-                .With(c => c.Id, existingProduct.Id)
-                .With(t => t.Name, existingProduct.Name)
-                .With(t => t.Price, 10)
-                .With(t => t.SalePrice, null as decimal?)
-                .With(t => t.Stock, 10)
-                .Create();
+            var existingProduct = _productCreationHelper.CreateProductDto(false);
+            var newProduct = _productCreationHelper.CreateProductDto(true, existingProduct.Name);
+            newProduct.Id = existingProduct.Id;
 
-            _productGetterServiceMock.Setup(t => t.GetByIdAsync(It.IsAny<Guid>()))
+            _productGetterServiceMock.Setup(s => s.GetByIdAsync(It.IsAny<Guid>()))
                 .ReturnsAsync(existingProduct);
 
             var productController = CreateProductController();
@@ -692,29 +624,16 @@ namespace ECommerce.Tests.ControllerTests
         public async Task IsProductNameUnique_ExistingIdAndExistingNameButDifferentFromPrevious_ReturnsFalse()
         {
             // Arrange
-            var existingProduct1 = _fixture.Build<ProductDto>()
-                .With(t => t.Price, 10)
-                .With(t => t.SalePrice, null as decimal?)
-                .With(t => t.Stock, 10)
-                .Create();
-            var existingProduct2 = _fixture.Build<ProductDto>()
-                .With(t => t.Price, 10)
-                .With(t => t.SalePrice, null as decimal?)
-                .With(t => t.Stock, 10)
-                .Create();
+            var existingProduct1 = _productCreationHelper.CreateProductDto(false);
+            var existingProduct2 = _productCreationHelper.CreateProductDto(false);
             var allProducts = new List<ProductDto>() { existingProduct1, existingProduct2 };
 
-            var newProduct = _fixture.Build<ProductDto>()
-                .With(c => c.Id, existingProduct1.Id)
-                .With(t => t.Name, existingProduct2.Name)
-                .With(t => t.Price, 10)
-                .With(t => t.SalePrice, null as decimal?)
-                .With(t => t.Stock, 10)
-                .Create();
+            var newProduct = _productCreationHelper.CreateProductDto(true, existingProduct2.Name);
+            newProduct.Id = existingProduct1.Id;
 
-            _productGetterServiceMock.Setup(t => t.GetByIdAsync(It.IsAny<Guid>()))
+            _productGetterServiceMock.Setup(s => s.GetByIdAsync(It.IsAny<Guid>()))
                 .ReturnsAsync(existingProduct1);
-            _productGetterServiceMock.Setup(t => t.GetAllAsync())
+            _productGetterServiceMock.Setup(s => s.GetAllAsync())
                 .ReturnsAsync(allProducts);
 
             var productController = CreateProductController();
