@@ -137,7 +137,7 @@ namespace ECommerce.UI.Areas.Admin.Controllers
                     }
                     catch (Exception)
                     {
-                        TempData["error"] = "Failed to add the image";
+                        TempData["error"] = "Failed to add the image.";
                         return View(productModel);
                     }
                 }
@@ -148,7 +148,7 @@ namespace ECommerce.UI.Areas.Admin.Controllers
             }
             catch (Exception)
             {
-                TempData["error"] = "An error occurred while processing your request. Please try again.";
+                TempData["error"] = "An error occurred. Please try again.";
                 return View(productModel);
             }
         }
@@ -189,7 +189,7 @@ namespace ECommerce.UI.Areas.Admin.Controllers
             catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
-                    new { error = "An error occurred while processing your request. Please try again later." });
+                    new { error = "An error occurred. Please try again later." });
             }
         }
 
@@ -214,7 +214,7 @@ namespace ECommerce.UI.Areas.Admin.Controllers
 
                 if (!isDeleted)
                 {
-                    throw new InvalidOperationException("Failed to delete the product. Please try again later.");
+                    throw new InvalidOperationException();
                 }
 
                 try
@@ -239,7 +239,7 @@ namespace ECommerce.UI.Areas.Admin.Controllers
                 var response = new
                 {
                     success = false,
-                    Message = "An error occurred while deleting the product. Please try again later."
+                    Message = "Failed to delete the product. Please try again later."
                 };
 
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
@@ -254,7 +254,7 @@ namespace ECommerce.UI.Areas.Admin.Controllers
                 return BadRequest(new
                 {
                     success = false,
-                    message = "Id cannot be null"
+                    message = "Id cannot be null."
                 });
             }
 
@@ -264,7 +264,7 @@ namespace ECommerce.UI.Areas.Admin.Controllers
                 {
                     "category" => await _productGetterService.GetByCategoryAsync(id),
                     "manufacturer" => await _productGetterService.GetByManufacturerAsync(id),
-                    _ => throw new ArgumentException("The referenced type is invalid")
+                    _ => throw new ArgumentException("The referenced type is invalid.")
                 };
 
                 if (products.Count is 0)
@@ -304,7 +304,7 @@ namespace ECommerce.UI.Areas.Admin.Controllers
                 return BadRequest(new
                 {
                     success = false,
-                    message = "Id cannot be null"
+                    message = "Id cannot be null."
                 });
             }
 
@@ -332,7 +332,7 @@ namespace ECommerce.UI.Areas.Admin.Controllers
                         }
                         break;
                     default:
-                        throw new ArgumentException("The referenced type is invalid");
+                        throw new ArgumentException("The referenced type is invalid.");
                 }
 
                 return Ok(new { success = true });

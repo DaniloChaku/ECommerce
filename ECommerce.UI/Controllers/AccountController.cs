@@ -44,7 +44,7 @@ namespace ECommerce.UI.Controllers
                 return RedirectToAction(nameof(Index), "Home");
             }
 
-            ModelState.AddModelError("", "Invalid email or password");
+            ModelState.AddModelError("", "Invalid email or password.");
             return View();
         }
 

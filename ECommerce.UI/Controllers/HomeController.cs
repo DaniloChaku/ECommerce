@@ -76,7 +76,7 @@ namespace ECommerce.UI.Controllers
 
             if (product is null)
             {
-                TempData["error"] = "Product not found";
+                TempData["error"] = "Product not found.";
                 return RedirectToAction("Index");
             }
 
@@ -126,12 +126,12 @@ namespace ECommerce.UI.Controllers
                 {
                     shoppingCartItem.Id = model.ShoppingCartItemId.Value;
                     await _shoppingCartItemUpdaterService.UpdateAsync(shoppingCartItem);
-                    TempData["success"] = "The product in your shopping cart was updated successfully";
+                    TempData["success"] = "The quantity of the product in your shopping cart has been updated successfully.";
                 }
                 else
                 {
                     await _shoppingCartItemAdderService.AddAsync(shoppingCartItem);
-                    TempData["success"] = "The product was successfully added to your shopping cart";
+                    TempData["success"] = "The product was successfully added to your shopping cart.";
                 }
             }
             catch (QuantityExceedsStockException ex)
@@ -144,7 +144,7 @@ namespace ECommerce.UI.Controllers
             catch (Exception)
             {
                 model.Product = await _productGetterService.GetByIdAsync(model.Product.Id);
-                TempData["error"] = "An error occurred. Please, try again later";
+                TempData["error"] = "An error occurred. Please, try again later.";
                 return View(model);
             }
 
@@ -170,18 +170,18 @@ namespace ECommerce.UI.Controllers
                 try
                 {
                     await _shoppingCartItemAdderService.AddAsync(shoppingCartItem);
-                    TempData["success"] = "The product was successfully added to your shopping cart";
+                    TempData["success"] = "The product was successfully added to your shopping cart.";
                 }
                 catch (Exception)
                 {
-                    TempData["error"] = "An error occurred. Please, try again later";
+                    TempData["error"] = "An error occurred. Please, try again later.";
                 }
             }
             else
             {
                 cart.Count += 1;
                 await _shoppingCartItemUpdaterService.UpdateAsync(cart);
-                TempData["success"] = "The product was successfully added to your shopping cart";
+                TempData["success"] = "The product was successfully added to your shopping cart.";
             }
 
             return RedirectToAction(nameof(Index), new { page = currentPage });

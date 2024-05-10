@@ -72,7 +72,7 @@ namespace ECommerce.UI.Areas.Admin.Controllers
             }
             catch (Exception)
             {
-                TempData["error"] = "An error occurred while processing your request. Please try again later.";
+                TempData["error"] = "An error occurred. Please, try again later.";
                 return View(categoryDto);
             }
         }
@@ -113,7 +113,7 @@ namespace ECommerce.UI.Areas.Admin.Controllers
             catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
-                    new { error = "An error occurred while processing your request. Please try again later." });
+                    new { error = "An error occurred. Please, try again later." });
             }
         }
 
@@ -126,7 +126,7 @@ namespace ECommerce.UI.Areas.Admin.Controllers
 
                 if (!isDeleted)
                 {
-                    throw new InvalidOperationException("Failed to delete the category.");
+                    throw new InvalidOperationException();
                 }
 
                 var response = new
@@ -142,7 +142,7 @@ namespace ECommerce.UI.Areas.Admin.Controllers
                 var response = new
                 {
                     success = false,
-                    Message = "An error occurred while deleting the category. Please try again later."
+                    Message = "Failed to delete the category. Please try again later."
                 };
 
                 return BadRequest(response);

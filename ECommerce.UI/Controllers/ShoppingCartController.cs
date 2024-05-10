@@ -52,7 +52,7 @@ namespace ECommerce.UI.Controllers
 
             if (cart is null)
             {
-                TempData["error"] = "Product not found";
+                TempData["error"] = "Product not found.";
             }
             else
             {
@@ -77,7 +77,7 @@ namespace ECommerce.UI.Controllers
 
             if (cart is null)
             {
-                TempData["error"] = "Product not found";
+                TempData["error"] = "Product not found.";
             }
             else
             {
@@ -92,7 +92,7 @@ namespace ECommerce.UI.Controllers
                 }
                 catch (Exception)
                 {
-                    TempData["error"] = "An error occurred. Please, try again later";
+                    TempData["error"] = "An error occurred. Please, try again later.";
                 }
             }
 
@@ -106,7 +106,7 @@ namespace ECommerce.UI.Controllers
 
             if (cart is null)
             {
-                TempData["error"] = "Product not found";
+                TempData["error"] = "Product not found.";
             }
             else
             {
@@ -116,7 +116,7 @@ namespace ECommerce.UI.Controllers
                 }
                 catch (Exception)
                 {
-                    TempData["error"] = "An error occurred. Please, try again later";
+                    TempData["error"] = "An error occurred. Please, try again later.";
                 }
             }
 
