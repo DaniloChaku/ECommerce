@@ -25,6 +25,7 @@ namespace ECommerce.Tests.ControllerTests
         private readonly Mock<IUserContextService> _userContextServiceMock;
 
         private readonly IFixture _fixture;
+        private readonly ProductCreationHelper _productCreationHelper;
 
         public HomeControllerTests()
         {
@@ -41,6 +42,7 @@ namespace ECommerce.Tests.ControllerTests
             _userContextService = _userContextServiceMock.Object;
 
             _fixture = new Fixture();
+            _productCreationHelper = new ProductCreationHelper(_fixture);
         }
 
         public HomeController CreateController()
@@ -61,7 +63,7 @@ namespace ECommerce.Tests.ControllerTests
             int pageExpected, int totalPagesExpected, int paginationStartExpected, int paginationEndExpected)
         {
             // Arrange
-            var products = ProductCreationHelper.CreateManyProductDtos(productCount)
+            var products = _productCreationHelper.CreateManyProductDtos(productCount)
                 .ToList();
 
             _productGetterServiceMock.Setup(s => s.GetBySearchQueryAsync(It.IsAny<string>()))

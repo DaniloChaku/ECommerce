@@ -8,11 +8,16 @@ using System.Threading.Tasks;
 
 namespace ECommerce.Tests.Helpers
 {
-    internal static class ProductCreationHelper
+    internal class ProductCreationHelper
     {
-        private static readonly IFixture _fixture = new Fixture();
+        private readonly IFixture _fixture;
 
-        public static IEnumerable<ProductDto> CreateManyProductDtos(int count)
+        public ProductCreationHelper(IFixture fixture)
+        {
+            _fixture = fixture;
+        }
+
+        public IEnumerable<ProductDto> CreateManyProductDtos(int count = 10)
         {
             return _fixture.Build<ProductDto>()
                 .With(p => p.Price, 10)
@@ -21,7 +26,7 @@ namespace ECommerce.Tests.Helpers
                 .CreateMany(count);
         }
 
-        public static ProductDto CreateProductDto(bool isEmptyId = true, string? name = null)
+        public ProductDto CreateProductDto(bool isEmptyId = true, string? name = null)
         {
             var product = _fixture.Build<ProductDto>()
                 .With(p => p.Price, 10)
@@ -42,7 +47,7 @@ namespace ECommerce.Tests.Helpers
             return product;
         }
 
-        public static IEnumerable<Product> CreateManyProducts(int count)
+        public IEnumerable<Product> CreateManyProducts(int count = 10)
         {
             return _fixture.Build<Product>()
                 .With(p => p.Price, 10)
@@ -51,7 +56,7 @@ namespace ECommerce.Tests.Helpers
                 .CreateMany(count);
         }
 
-        public static Product CreateProduct(bool isEmptyId = true, string? name = null)
+        public Product CreateProduct(bool isEmptyId = true, string? name = null)
         {
             var product = _fixture.Build<Product>()
                 .With(p => p.Price, 10)
