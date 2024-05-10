@@ -2,7 +2,7 @@
 
 namespace ECommerce.UI.Models
 {
-    public class ProductPageModel
+    public class ProductPageViewModel
     {
         public List<ProductDto> Products { get; set; } = [];
         public int CurrentPage { get; set; }

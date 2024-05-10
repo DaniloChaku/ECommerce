@@ -74,7 +74,7 @@ namespace ECommerce.Tests.ControllerTests
 
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsType<ProductPageModel>(viewResult.Model);
+            var model = Assert.IsType<ProductPageViewModel>(viewResult.Model);
             model.CurrentPage.Should().Be(pageExpected);
             model.TotalPages.Should().Be(totalPagesExpected);
             model.PaginationStart.Should().Be(paginationStartExpected);

@@ -69,7 +69,7 @@ namespace ECommerce.UI.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Upsert(Guid? id)
         {
-            var productUpsertModel = new ProductUpsertModel()
+            var productUpsertModel = new ProductUpsertViewModel()
             {
                 Categories = await GetCategoriesSelectList(),
                 Manufacturers = await GetManufacturersSelectList(),
@@ -86,7 +86,7 @@ namespace ECommerce.UI.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Upsert(ProductUpsertModel productModel)
+        public async Task<IActionResult> Upsert(ProductUpsertViewModel productModel)
         {
             if (!productModel.Categories.Any())
             {

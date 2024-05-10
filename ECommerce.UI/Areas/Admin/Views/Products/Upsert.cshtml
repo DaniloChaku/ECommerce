@@ -1,4 +1,4 @@
-﻿@model ProductUpsertModel
+﻿@model ProductUpsertViewModel
 @{
     ViewBag.Action = Model.Product.Id == Guid.Empty ? "Add" : "Edit";
     ViewBag.Title = $"{ViewBag.Action} Product";

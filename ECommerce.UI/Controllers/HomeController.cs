@@ -33,7 +33,7 @@ namespace ECommerce.UI.Controllers
             _userContextService = userContextService;
         }
 
-        public async Task<IActionResult> Index(int page = 1, ProductPageModel? productPage = null)
+        public async Task<IActionResult> Index(int page = 1, ProductPageViewModel? productPage = null)
         {
             var products = await _productGetterService
                 .GetBySearchQueryAsync(productPage?.SearchQuery);
@@ -58,7 +58,7 @@ namespace ECommerce.UI.Controllers
             var productsOnCurrentPage = Math.Min(products.Count - pageStartIndex, 10);
             var productsForDisplay = products.GetRange(pageStartIndex, productsOnCurrentPage);
 
-            var productPageModel = new ProductPageModel()
+            var productPageModel = new ProductPageViewModel()
             {
                 Products = productsForDisplay,
                 CurrentPage = currentPage,

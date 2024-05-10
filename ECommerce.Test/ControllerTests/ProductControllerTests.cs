@@ -191,7 +191,7 @@ namespace ECommerce.Tests.ControllerTests
 
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsAssignableFrom<ProductUpsertModel>(viewResult.Model);
+            var model = Assert.IsAssignableFrom<ProductUpsertViewModel>(viewResult.Model);
             model.Categories.Should().NotBeEmpty();
             model.Manufacturers.Should().NotBeEmpty();
             model.Product.Should().BeEquivalentTo(expectedProduct);
@@ -232,7 +232,7 @@ namespace ECommerce.Tests.ControllerTests
 
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsAssignableFrom<ProductUpsertModel>(viewResult.Model);
+            var model = Assert.IsAssignableFrom<ProductUpsertViewModel>(viewResult.Model);
             model.Categories.Should().NotBeEmpty();
             model.Manufacturers.Should().NotBeEmpty();
             model.Product.Should().BeEquivalentTo(expectedProduct);
@@ -268,7 +268,7 @@ namespace ECommerce.Tests.ControllerTests
 
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsAssignableFrom<ProductUpsertModel>(viewResult.Model);
+            var model = Assert.IsAssignableFrom<ProductUpsertViewModel>(viewResult.Model);
             model.Categories.Should().NotBeEmpty();
             model.Manufacturers.Should().NotBeEmpty();
             model.Product.Should().BeEquivalentTo(expectedProduct);
@@ -285,7 +285,7 @@ namespace ECommerce.Tests.ControllerTests
                 .With(t => t.SalePrice, null as decimal?)
                 .With(t => t.Stock, 10)
                 .Create();
-            var expectedVm = new ProductUpsertModel()
+            var expectedVm = new ProductUpsertViewModel()
             {
                 Product = expectedProduct,
                 Categories = categories,
@@ -301,7 +301,7 @@ namespace ECommerce.Tests.ControllerTests
 
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsAssignableFrom<ProductUpsertModel>(viewResult.Model);
+            var model = Assert.IsAssignableFrom<ProductUpsertViewModel>(viewResult.Model);
             model.Should().BeEquivalentTo(expectedVm);
         }
 
@@ -317,7 +317,7 @@ namespace ECommerce.Tests.ControllerTests
                 .With(t => t.SalePrice, null as decimal?)
                 .With(t => t.Stock, 10)
                 .Create();
-            var vm = new ProductUpsertModel()
+            var vm = new ProductUpsertViewModel()
             {
                 Product = product,
                 Categories = categories,
@@ -348,7 +348,7 @@ namespace ECommerce.Tests.ControllerTests
                 .With(t => t.SalePrice, null as decimal?)
                 .With(t => t.Stock, 10)
                 .Create();
-            var vm = new ProductUpsertModel()
+            var vm = new ProductUpsertViewModel()
             {
                 Product = product,
                 Categories = categories,
@@ -387,7 +387,7 @@ namespace ECommerce.Tests.ControllerTests
             imageMock.Setup(i => i.ContentType).Returns("image/jpeg");
             var image = imageMock.Object;
 
-            var vm = new ProductUpsertModel()
+            var vm = new ProductUpsertViewModel()
             {
                 Product = product,
                 Categories = categories,

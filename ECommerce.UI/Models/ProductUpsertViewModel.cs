@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ECommerce.UI.Models
 {
-    public class ProductUpsertModel
+    public class ProductUpsertViewModel
     {
         public ProductDto Product { get; set; } = new ProductDto();
         public IEnumerable<SelectListItem> Categories { get; set; } = Enumerable.Empty<SelectListItem>();
