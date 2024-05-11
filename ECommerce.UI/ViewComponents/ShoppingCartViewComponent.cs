@@ -5,11 +5,19 @@ using System.Security.Claims;
 
 namespace ECommerce.UI.ViewComponents
 {
+    /// <summary>
+    /// View component for displaying the shopping cart.
+    /// </summary>
     public class ShoppingCartViewComponent : ViewComponent
     {
         private readonly IShoppingCartItemGetterService _shoppingCartItemGetterService;
         private readonly IUserContextService _userContextService;
 
+        /// <summary>
+        /// Initializes a new instance of the ShoppingCartViewComponent class.
+        /// </summary>
+        /// <param name="shoppingCartItemGetterService">The service for retrieving shopping cart items.</param>
+        /// <param name="userContextService">The service for accessing user context.</param>
         public ShoppingCartViewComponent(IShoppingCartItemGetterService shoppingCartItemGetterService,
             IUserContextService userContextService)
         {
@@ -17,6 +25,10 @@ namespace ECommerce.UI.ViewComponents
             _userContextService = userContextService;
         }
 
+        /// <summary>
+        /// Invokes the view component asynchronously.
+        /// </summary>
+        /// <returns>An asynchronous task that returns an IViewComponentResult.</returns>
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var customerId = _userContextService.GetCustomerId(User.Identity as ClaimsIdentity);
