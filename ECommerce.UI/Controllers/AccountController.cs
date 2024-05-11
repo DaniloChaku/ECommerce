@@ -6,11 +6,19 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerce.UI.Controllers
 {
+    /// <summary>
+    /// Controller responsible for handling account-related actions such as login, signup, and logout.
+    /// </summary>
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AccountController"/> class.
+        /// </summary>
+        /// <param name="userManager">The user manager service.</param>
+        /// <param name="signInManager">The sign-in manager service.</param>
         public AccountController(UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager)
         {
@@ -18,12 +26,22 @@ namespace ECommerce.UI.Controllers
             _signInManager = signInManager;
         }
 
+        /// <summary>
+        /// Displays the login view.
+        /// </summary>
+        /// <returns>The login view.</returns>
         [HttpGet]
         public IActionResult Login()
         {
             return View();
         }
 
+        /// <summary>
+        /// Handles the login process.
+        /// </summary>
+        /// <param name="loginDto">The login DTO containing user credentials.</param>
+        /// <returns>A redirect to the home page if login is successful, 
+        /// otherwise the login view with an error message.</returns>
         [HttpPost]
         public async Task<IActionResult> Login(LoginDto loginDto)
         {
@@ -47,12 +65,22 @@ namespace ECommerce.UI.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Displays the sign-up view.
+        /// </summary>
+        /// <returns>The sign-up view.</returns>
         [HttpGet]
         public IActionResult SignUp()
         {
             return View();
         }
 
+        /// <summary>
+        /// Handles the sign-up process.
+        /// </summary>
+        /// <param name="signUpDto">The sign-up DTO containing user details.</param>
+        /// <returns>A redirect to the home page if sign-up is successful, 
+        /// otherwise the sign-up view with error messages.</returns>
         [HttpPost]
         public async Task<IActionResult> SignUp(SignUpDto signUpDto)
         {
@@ -89,6 +117,11 @@ namespace ECommerce.UI.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Checks if an email is not in use.
+        /// </summary>
+        /// <param name="email">The email to check.</param>
+        /// <returns>A JSON result indicating whether the email is not in use.</returns>
         [HttpGet]
         public async Task<IActionResult> IsEmailNotInUse(string email)
         {
@@ -97,6 +130,10 @@ namespace ECommerce.UI.Controllers
             return Ok(isNotInUse);
         }
 
+        /// <summary>
+        /// Logs the user out.
+        /// </summary>
+        /// <returns>A redirect to the login page.</returns>
         [HttpGet]
         public async Task<IActionResult> Logout()
         {

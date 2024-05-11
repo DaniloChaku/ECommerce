@@ -9,6 +9,10 @@ using System.Security.Claims;
 
 namespace ECommerce.UI.Controllers
 {
+    /// <summary>
+    /// Controller responsible for managing shopping cart-related actions, such as adding, 
+    /// removing, and updating items in the shopping cart.
+    /// </summary>
     [Authorize(Roles = Constants.ROLE_CUSTOMER)]
     public class ShoppingCartController : Controller
     {
@@ -17,6 +21,13 @@ namespace ECommerce.UI.Controllers
         private readonly IShoppingCartItemUpdaterService _shoppingCartItemUpdaterService;
         private readonly IUserContextService _userContextService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ShoppingCartController"/> class.
+        /// </summary>
+        /// <param name="shoppingCartItemGetterService">The shopping cart item getter service.</param>
+        /// <param name="shoppingCartItemDeleterService">The shopping cart item deleter service.</param>
+        /// <param name="shoppingCartItemUpdaterService">The shopping cart item updater service.</param>
+        /// <param name="userContextService">The user context service.</param>
         public ShoppingCartController(IShoppingCartItemGetterService shoppingCartItemGetterService,
             IShoppingCartItemDeleterService shoppingCartItemDeleterService,
             IShoppingCartItemUpdaterService shoppingCartItemUpdaterService,
@@ -28,6 +39,10 @@ namespace ECommerce.UI.Controllers
             _userContextService = userContextService;
         }
 
+        /// <summary>
+        /// Displays the shopping cart with all items added by the current customer.
+        /// </summary>
+        /// <returns>The shopping cart view.</returns>
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -45,6 +60,11 @@ namespace ECommerce.UI.Controllers
             return View(shoppingCartViewModel);
         }
 
+        /// <summary>
+        /// Decreases the quantity of a product in the shopping cart and redirects to the shopping cart page.
+        /// </summary>
+        /// <param name="id">The ID of the shopping cart item to decrease.</param>
+        /// <returns>A redirect to the shopping cart page.</returns>
         [HttpGet]
         public async Task<IActionResult> Minus(Guid id)
         {
@@ -70,6 +90,11 @@ namespace ECommerce.UI.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        /// <summary>
+        /// Increases the quantity of a product in the shopping cart and redirects to the shopping cart page.
+        /// </summary>
+        /// <param name="id">The ID of the shopping cart item to increase.</param>
+        /// <returns>A redirect to the shopping cart page.</returns>
         [HttpGet]
         public async Task<IActionResult> Plus(Guid id)
         {
@@ -99,6 +124,11 @@ namespace ECommerce.UI.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        /// <summary>
+        /// Removes a product from the shopping cart and redirects to the shopping cart page.
+        /// </summary>
+        /// <param name="id">The ID of the shopping cart item to remove.</param>
+        /// <returns>A redirect to the shopping cart page.</returns>
         [HttpGet]
         public async Task<IActionResult> Remove(Guid id)
         {

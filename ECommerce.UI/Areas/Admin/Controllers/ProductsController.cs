@@ -15,6 +15,9 @@ using Microsoft.Extensions.Options;
 
 namespace ECommerce.UI.Areas.Admin.Controllers
 {
+    /// <summary>
+    /// Controller for managing products in the admin area.
+    /// </summary>
     [Area("Admin")]
     [Authorize(Roles = Constants.ROLE_ADMIN)]
     public class ProductsController : Controller
@@ -35,6 +38,21 @@ namespace ECommerce.UI.Areas.Admin.Controllers
         private readonly IImageDeleterService _imageDeleterService;
         private readonly ImageUploadOptions _imageUploadOptions;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProductsController"/> class.
+        /// </summary>
+        /// <param name="productGetterService">The service for retrieving products.</param>
+        /// <param name="productAdderService">The service for adding products.</param>
+        /// <param name="productUpdaterService">The service for updating products.</param>
+        /// <param name="productDeleterService">The service for deleting products.</param>
+        /// <param name="categoryGetterService">The service for retrieving categories.</param>
+        /// <param name="categorySorterService">The service for sorting categories.</param>
+        /// <param name="manufacturerGetterService">The service for retrieving manufacturers.</param>
+        /// <param name="manufacturerSorterService">The service for sorting manufacturers.</param>
+        /// <param name="webHostEnvironment">The hosting environment.</param>
+        /// <param name="imageUploaderService">The service for uploading images.</param>
+        /// <param name="imageDeleterService">The service for deleting images.</param>
+        /// <param name="imageUploadOptions">The image upload options.</param>
         public ProductsController(IProductGetterService productGetterService,
             IProductAdderService productAdderService, IProductUpdaterService productUpdaterService,
             IProductDeleterService productDeleterService, ICategoryGetterService categoryGetterService,
@@ -60,11 +78,20 @@ namespace ECommerce.UI.Areas.Admin.Controllers
             _imageUploadOptions = imageUploadOptions.Value;
         }
 
+        /// <summary>
+        /// Displays the index view.
+        /// </summary>
+        /// <returns>The index view.</returns>
         public IActionResult Index()
         {
             return View();
         }
 
+        /// <summary>
+        /// Displays the view for adding or updating a product.
+        /// </summary>
+        /// <param name="id">The ID of the product to update, if any.</param>
+        /// <returns>The view for adding or updating a product.</returns>
         [HttpGet]
         public async Task<IActionResult> Upsert(Guid? id)
         {
@@ -84,6 +111,11 @@ namespace ECommerce.UI.Areas.Admin.Controllers
             return View(productUpsertModel);
         }
 
+        /// <summary>
+        /// Handles the POST request for adding or updating a product.
+        /// </summary>
+        /// <param name="productModel">The product data to add or update.</param>
+        /// <returns>The index view if successful, otherwise the add/update view.</returns>
         [HttpPost]
         public async Task<IActionResult> Upsert(ProductUpsertViewModel productModel)
         {
@@ -154,6 +186,11 @@ namespace ECommerce.UI.Areas.Admin.Controllers
 
         #region API
 
+        /// <summary>
+        /// Checks if a product name is unique.
+        /// </summary>
+        /// <param name="product">The product DTO containing the name to check.</param>
+        /// <returns>A JSON result indicating whether the name of the product is unique.</returns>
         [HttpGet]
         public async Task<IActionResult> IsProductNameUnique(ProductDto product)
         {
@@ -177,6 +214,10 @@ namespace ECommerce.UI.Areas.Admin.Controllers
             return Json(true);
         }
 
+        /// <summary>
+        /// Retrieves all products.
+        /// </summary>
+        /// <returns>A JSON result containing the list of products.</returns>
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -193,6 +234,11 @@ namespace ECommerce.UI.Areas.Admin.Controllers
             }
         }
 
+        /// <summary>
+        /// Deletes a product by ID.
+        /// </summary>
+        /// <param name="id">The ID of the product to delete.</param>
+        /// <returns>A JSON result indicating the success of the deletion operation.</returns>
         [HttpDelete]
         public async Task<IActionResult> Delete(Guid id)
         {
@@ -246,6 +292,12 @@ namespace ECommerce.UI.Areas.Admin.Controllers
             }
         }
 
+        /// <summary>
+        /// Checks if a referenced entity has associations with products.
+        /// </summary>
+        /// <param name="type">The type of entity to check (e.g., category or manufacturer).</param>
+        /// <param name="id">The ID of the entity to check.</param>
+        /// <returns>A JSON result indicating whether the entity has associations with products.</returns>
         [HttpGet]
         public async Task<IActionResult> HasReference(string type, Guid id)
         {
@@ -296,6 +348,12 @@ namespace ECommerce.UI.Areas.Admin.Controllers
             }
         }
 
+        /// <summary>
+        /// Removes references to an entity from products.
+        /// </summary>
+        /// <param name="type">The type of entity to remove references from (e.g., category or manufacturer).</param>
+        /// <param name="id">The ID of the entity to remove references for.</param>
+        /// <returns>A JSON result indicating the success of the operation.</returns>
         [HttpDelete]
         public async Task<IActionResult> RemoveReference(string type, Guid id)
         {
@@ -363,6 +421,11 @@ namespace ECommerce.UI.Areas.Admin.Controllers
 
         #region PrivateMethods
 
+        /// <summary>
+        /// Retrieves a sorted list of categories as select list items.
+        /// </summary>
+        /// <returns>A task representing the asynchronous operation, 
+        /// returning a sorted list of categories as select list items.</returns>
         private async Task<IEnumerable<SelectListItem>> GetCategoriesSelectList()
         {
             return _categorySorterService.Sort(await
@@ -370,6 +433,11 @@ namespace ECommerce.UI.Areas.Admin.Controllers
                 new SelectListItem() { Text = t.Name, Value = t.Id.ToString() });
         }
 
+        /// <summary>
+        /// Retrieves a sorted list of manufacturers as select list items.
+        /// </summary>
+        /// <returns>A task representing the asynchronous operation, 
+        /// returning a sorted list of manufacturers as select list items.</returns>
         private async Task<IEnumerable<SelectListItem>> GetManufacturersSelectList()
         {
             return _manufacturerSorterService.Sort(await
@@ -377,6 +445,10 @@ namespace ECommerce.UI.Areas.Admin.Controllers
                 new SelectListItem() { Text = t.Name, Value = t.Id.ToString() });
         }
 
+        /// <summary>
+        /// Retrieves select list items for price types.
+        /// </summary>
+        /// <returns>A list of select list items representing price types.</returns>
         private IEnumerable<SelectListItem> GetPriceTypesSelectList()
         {
             return Enum.GetNames(typeof(PriceType)).Select(

@@ -12,6 +12,10 @@ using System.Security.Claims;
 
 namespace ECommerce.UI.Controllers
 {
+    /// <summary>
+    /// Controller responsible for handling home-related actions such as displaying products, 
+    /// product details, and managing the shopping cart.
+    /// </summary>
     public class HomeController : Controller
     {
         private readonly IProductGetterService _productGetterService;
@@ -20,6 +24,14 @@ namespace ECommerce.UI.Controllers
         private readonly IShoppingCartItemUpdaterService _shoppingCartItemUpdaterService;
         private readonly IUserContextService _userContextService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HomeController"/> class.
+        /// </summary>
+        /// <param name="productGetterService">The product getter service.</param>
+        /// <param name="shoppingCartItemAdderService">The shopping cart item adder service.</param>
+        /// <param name="shoppingCartItemGetterService">The shopping cart item getter service.</param>
+        /// <param name="shoppingCartItemUpdaterService">The shopping cart item updater service.</param>
+        /// <param name="userContextService">The user context service.</param>
         public HomeController(IProductGetterService productGetterService,
             IShoppingCartItemAdderService shoppingCartItemAdderService,
             IShoppingCartItemGetterService shoppingCartItemGetterService,
@@ -33,6 +45,12 @@ namespace ECommerce.UI.Controllers
             _userContextService = userContextService;
         }
 
+        /// <summary>
+        /// Displays the home page with a list of products.
+        /// </summary>
+        /// <param name="page">The page number for pagination.</param>
+        /// <param name="productPage">The product page view model containing search query and pagination data.</param>
+        /// <returns>The home page view.</returns>
         public async Task<IActionResult> Index(int page = 1, ProductPageViewModel? productPage = null)
         {
             var products = await _productGetterService
@@ -70,6 +88,11 @@ namespace ECommerce.UI.Controllers
             return View(productPageModel);
         }
 
+        /// <summary>
+        /// Displays the details of a product.
+        /// </summary>
+        /// <param name="id">The ID of the product.</param>
+        /// <returns>The product detail view.</returns>
         public async Task<IActionResult> Detail(Guid id)
         {
             var product = await _productGetterService.GetByIdAsync(id);
@@ -102,6 +125,11 @@ namespace ECommerce.UI.Controllers
             return View(productDetailsViewModel);
         }
 
+        /// <summary>
+        /// Handles the submission of product details, updates the shopping cart, and redirects to the home page.
+        /// </summary>
+        /// <param name="model">The product detail view model containing product details and shopping cart information.</param>
+        /// <returns>A redirect to the home page.</returns>
         [Authorize(Roles = Constants.ROLE_CUSTOMER)]
         [HttpPost]
         public async Task<IActionResult> Detail(ProductDetailViewModel model)
@@ -151,6 +179,12 @@ namespace ECommerce.UI.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        /// <summary>
+        /// Adds a product to the shopping cart and redirects to the home page.
+        /// </summary>
+        /// <param name="id">The ID of the product to add.</param>
+        /// <param name="currentPage">The current page number for pagination.</param>
+        /// <returns>A redirect to the home page.</returns>
         public async Task<IActionResult> Buy(Guid id, int currentPage)
         {
             var customerId = _userContextService.GetCustomerId(User.Identity as ClaimsIdentity);
@@ -194,11 +228,19 @@ namespace ECommerce.UI.Controllers
             return RedirectToAction(nameof(Index), new { page = currentPage });
         }
 
+        /// <summary>
+        /// Displays the privacy policy page.
+        /// </summary>
+        /// <returns>The privacy policy view.</returns>
         public IActionResult Privacy()
         {
             return View();
         }
 
+        /// <summary>
+        /// Handles errors and displays the error page.
+        /// </summary>
+        /// <returns>The error view.</returns>
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
