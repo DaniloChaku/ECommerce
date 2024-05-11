@@ -79,6 +79,7 @@ namespace ECommerce.UI.Areas.Admin.Controllers
 
         #region API
 
+        [HttpGet]
         public async Task<IActionResult> IsCategoryNameUnique(CategoryDto category)
         {
             if (category.Id != Guid.Empty)

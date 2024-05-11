@@ -80,6 +80,7 @@ namespace ECommerce.UI.Areas.Admin.Controllers
 
         #region API
 
+        [HttpGet]
         public async Task<IActionResult> IsManufacturerNameUnique(ManufacturerDto manufacturer)
         {
             if (manufacturer.Id != Guid.Empty)

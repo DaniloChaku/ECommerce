@@ -154,6 +154,7 @@ namespace ECommerce.UI.Areas.Admin.Controllers
 
         #region API
 
+        [HttpGet]
         public async Task<IActionResult> IsProductNameUnique(ProductDto product)
         {
             if (product.Id != Guid.Empty)
