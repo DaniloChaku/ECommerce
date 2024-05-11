@@ -4,15 +4,29 @@ using ECommerce.Core.ServiceContracts.Products;
 
 namespace ECommerce.Core.Services.Products
 {
+    /// <summary>
+    /// Service for updating products.
+    /// </summary>
     public class ProductUpdaterService : IProductUpdaterService
     {
         private readonly IProductRepository _productRepository;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProductUpdaterService"/> class.
+        /// </summary>
+        /// <param name="productRepository">The repository for interacting with products.</param>
         public ProductUpdaterService(IProductRepository productRepository)
         {
             _productRepository = productRepository;
         }
 
+        /// <summary>
+        /// Updates an existing product with the provided data.
+        /// </summary>
+        /// <param name="productDto">The data for the product to be updated.</param>
+        /// <returns>The updated product.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the provided product data is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when the provided product ID is empty or when the product does not exist.</exception>
         public async Task<ProductDto> UpdateAsync(ProductDto productDto)
         {
             if (productDto is null)

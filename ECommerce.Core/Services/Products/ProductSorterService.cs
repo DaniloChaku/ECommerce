@@ -4,8 +4,19 @@ using ECommerce.Core.ServiceContracts.Products;
 
 namespace ECommerce.Core.Services.Products
 {
+    /// <summary>
+    /// Service for sorting lists of products based on various criteria.
+    /// </summary>
     public class ProductSorterService : IProductSorterService
     {
+        /// <summary>
+        /// Sorts a collection of product DTOs based on the specified criteria.
+        /// </summary>
+        /// <param name="products">The collection of product DTOs to be sorted.</param>
+        /// <param name="sortBy">The property to sort by (e.g., "Name", "Price").</param>
+        /// <param name="sortOrder">The sort order (ASC or DESC).</param>
+        /// <param name="onSaleFirst">Specifies whether products on sale should be sorted first.</param>
+        /// <returns>The sorted list of product DTOs.</returns>
         public List<ProductDto> Sort(IEnumerable<ProductDto> products,
             string? sortBy, SortOrder sortOrder = SortOrder.ASC, bool onSaleFirst = false)
         {

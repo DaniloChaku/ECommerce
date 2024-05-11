@@ -4,15 +4,27 @@ using ECommerce.Core.ServiceContracts.Products;
 
 namespace ECommerce.Core.Services.Products
 {
+    /// <summary>
+    /// Service for adding new products.
+    /// </summary>
     public class ProductAdderService : IProductAdderService
     {
         private readonly IProductRepository _productRepository;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProductAdderService"/> class.
+        /// </summary>
+        /// <param name="productRepository">The repository for interacting with products.</param>
         public ProductAdderService(IProductRepository productRepository)
         {
             _productRepository = productRepository;
         }
 
+        /// <summary>
+        /// Adds a new product.
+        /// </summary>
+        /// <param name="productDto">The DTO containing the product information to be added.</param>
+        /// <returns>The added product DTO.</returns>
         public async Task<ProductDto> AddAsync(ProductDto productDto)
         {
             if (productDto is null)

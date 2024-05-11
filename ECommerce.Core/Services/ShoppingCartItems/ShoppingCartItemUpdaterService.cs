@@ -6,11 +6,19 @@ using ECommerce.Core.ServiceContracts.ShoppingCartItems;
 
 namespace ECommerce.Core.Services.ShoppingCartItems
 {
+    /// <summary>
+    /// Service for updating shopping cart items.
+    /// </summary>
     public class ShoppingCartItemUpdaterService : IShoppingCartItemUpdaterService
     {
         private readonly IShoppingCartItemRepository _shoppingCartItemRepository;
         private readonly IProductGetterService _productGetterService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ShoppingCartItemUpdaterService"/> class.
+        /// </summary>
+        /// <param name="shoppingCartItemRepository">The repository for interacting with shopping cart items.</param>
+        /// <param name="productGetterService">The service for retrieving product information.</param>
         public ShoppingCartItemUpdaterService(IShoppingCartItemRepository shoppingCartItemRepository,
             IProductGetterService productGetterService)
         {
@@ -18,6 +26,16 @@ namespace ECommerce.Core.Services.ShoppingCartItems
             _productGetterService = productGetterService;
         }
 
+        /// <summary>
+        /// Updates a shopping cart item with the provided data.
+        /// </summary>
+        /// <param name="shoppingCartItemDto">The data for the shopping cart item to be updated.</param>
+        /// <returns>The updated shopping cart item.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the provided shopping cart item data is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when the ID of the shopping cart item is empty, 
+        /// when the product ID is invalid, or when the shopping cart item does not exist.</exception>
+        /// <exception cref="QuantityExceedsStockException">Thrown when the count of the shopping cart item 
+        /// exceeds the available stock.</exception>
         public async Task<ShoppingCartItemDto> UpdateAsync(ShoppingCartItemDto shoppingCartItemDto)
         {
             if (shoppingCartItemDto is null)

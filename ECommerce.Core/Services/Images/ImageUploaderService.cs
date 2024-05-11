@@ -7,11 +7,19 @@ using Microsoft.Extensions.Options;
 
 namespace ECommerce.Core.Services.Images
 {
+    /// <summary>
+    /// Service for uploading images.
+    /// </summary>
     public class ImageUploaderService : IImageUploaderService
     {
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly ImageUploadOptions _imageUploadSettings;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ImageUploaderService"/> class.
+        /// </summary>
+        /// <param name="webHostEnvironment">The hosting environment.</param>
+        /// <param name="imageUploadSettings">The image upload settings.</param>
         public ImageUploaderService(IWebHostEnvironment webHostEnvironment,
             IOptions<ImageUploadOptions> imageUploadSettings)
         {
@@ -19,6 +27,14 @@ namespace ECommerce.Core.Services.Images
             _imageUploadSettings = imageUploadSettings.Value;
         }
 
+        /// <summary>
+        /// Uploads an image asynchronously.
+        /// </summary>
+        /// <param name="image">The image file to upload.</param>
+        /// <param name="productId">The ID of the product to which the image belongs.</param>
+        /// <returns>The URL of the uploaded image.</returns>
+        /// <exception cref="ImageUploadException">Thrown when the image is not supplied,
+        /// file size exceeds the maximum allowed limit, or the file type is not supported.</exception>
         public async Task<string> UploadAsync(IFormFile image, string productId)
         {
             if (image is null)

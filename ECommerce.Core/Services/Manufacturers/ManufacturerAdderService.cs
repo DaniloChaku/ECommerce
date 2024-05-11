@@ -4,15 +4,30 @@ using ECommerce.Core.ServiceContracts.Manufacturers;
 
 namespace ECommerce.Core.Services.Manufacturers
 {
+    /// <summary>
+    /// Service for adding manufacturers.
+    /// </summary>
     public class ManufacturerAdderService : IManufacturerAdderService
     {
         private readonly IManufacturerRepository _manufacturerRepository;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ManufacturerAdderService"/> class.
+        /// </summary>
+        /// <param name="manufacturerRepository">The manufacturer repository.</param>
         public ManufacturerAdderService(IManufacturerRepository manufacturerRepository)
         {
             _manufacturerRepository = manufacturerRepository;
         }
 
+        /// <summary>
+        /// Adds a manufacturer asynchronously.
+        /// </summary>
+        /// <param name="manufacturerDto">The manufacturer DTO containing the data of the manufacturer to add.</param>
+        /// <returns>The added manufacturer DTO.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the manufacturer DTO is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when the ID is not empty or a manufacturer 
+        /// with the same name already exists.</exception>
         public async Task<ManufacturerDto> AddAsync(ManufacturerDto manufacturerDto)
         {
             if (manufacturerDto is null)

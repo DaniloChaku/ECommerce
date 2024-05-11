@@ -3,15 +3,26 @@ using Microsoft.AspNetCore.Hosting;
 
 namespace ECommerce.Core.Services.Images
 {
+    /// <summary>
+    /// Service for deleting images.
+    /// </summary>
     public class ImageDeleterService : IImageDeleterService
     {
         private readonly IWebHostEnvironment _webHostEnvironment;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ImageDeleterService"/> class.
+        /// </summary>
+        /// <param name="webHostEnvironment">The hosting environment.</param>
         public ImageDeleterService(IWebHostEnvironment webHostEnvironment)
         {
             _webHostEnvironment = webHostEnvironment;
         }
 
+        /// <summary>
+        /// Deletes the specified image.
+        /// </summary>
+        /// <param name="imageUrl">The URL of the image to delete.</param>
         public void DeleteImage(string? imageUrl)
         {
             if (imageUrl is not null)
@@ -25,6 +36,10 @@ namespace ECommerce.Core.Services.Images
             }
         }
 
+        /// <summary>
+        /// Deletes the folder containing images for a specified product.
+        /// </summary>
+        /// <param name="productId">The ID of the product whose image folder is to be deleted.</param>
         public void DeleteImageFolder(string productId)
         {
             string wwwrootPath = _webHostEnvironment.WebRootPath;

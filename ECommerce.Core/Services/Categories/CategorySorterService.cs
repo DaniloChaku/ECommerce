@@ -4,10 +4,18 @@ using ECommerce.Core.ServiceContracts.Categories;
 
 namespace ECommerce.Core.Services.Categories
 {
+    /// <summary>
+    /// Service for sorting categories.
+    /// </summary>
     public class CategorySorterService : ICategorySorterService
     {
-        public List<CategoryDto> Sort(IEnumerable<CategoryDto> categories,
-            SortOrder sortOrder = SortOrder.ASC)
+        /// <summary>
+        /// Sorts categories based on the provided sort order asynchronously.
+        /// </summary>
+        /// <param name="categories">The collection of categories to sort.</param>
+        /// <param name="sortOrder">The sort order (ASC or DESC).</param>
+        /// <returns>A list of sorted category DTOs.</returns>
+        public List<CategoryDto> Sort(IEnumerable<CategoryDto> categories, SortOrder sortOrder = SortOrder.ASC)
         {
             if (sortOrder == SortOrder.ASC)
             {
