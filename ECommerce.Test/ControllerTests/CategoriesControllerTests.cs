@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace ECommerce.Tests.ControllerTests
 {
-    public class CategoryControllerTests
+    public class CategoriesControllerTests
     {
         private readonly ICategoryGetterService _categoryGetterService;
         private readonly ICategoryAdderService _categoryAdderService;
@@ -30,7 +30,7 @@ namespace ECommerce.Tests.ControllerTests
 
         private readonly IFixture _fixture;
 
-        public CategoryControllerTests()
+        public CategoriesControllerTests()
         {
             _fixture = new Fixture();
 

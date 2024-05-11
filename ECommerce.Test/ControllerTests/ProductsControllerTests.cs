@@ -20,7 +20,7 @@ using ECommerce.Tests.Helpers;
 
 namespace ECommerce.Tests.ControllerTests
 {
-    public class ProductControllerTests
+    public class ProductsControllerTests
     {
         private readonly IProductGetterService _productGetterService;
         private readonly IProductAdderService _productAdderService;
@@ -61,7 +61,7 @@ namespace ECommerce.Tests.ControllerTests
         private readonly IFixture _fixture;
         private readonly ProductCreationHelper _productCreationHelper;
 
-        public ProductControllerTests()
+        public ProductsControllerTests()
         {
             _fixture = new Fixture();
             _productCreationHelper = new ProductCreationHelper(_fixture);

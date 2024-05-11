@@ -13,7 +13,7 @@ using ECommerce.UI.Areas.Admin.Controllers;
 
 namespace ECommerce.Tests.ControllerTests
 {
-    public class ManufacturerControllerTests
+    public class ManufacturersControllerTests
     {
         private readonly IManufacturerGetterService _manufacturerGetterService;
         private readonly IManufacturerAdderService _manufacturerAdderService;
@@ -29,7 +29,7 @@ namespace ECommerce.Tests.ControllerTests
 
         private readonly IFixture _fixture;
 
-        public ManufacturerControllerTests()
+        public ManufacturersControllerTests()
         {
             _fixture = new Fixture();
 
