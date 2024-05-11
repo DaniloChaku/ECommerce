@@ -1,10 +1,21 @@
-﻿let dataTable;
+﻿/**
+ * Represents the DataTable object used to display manufacturers' data.
+ * @type {DataTable}
+ */
+let dataTable;
 
+/**
+ * Event listener that loads table data when the DOM content is loaded.
+ */
 document.addEventListener("DOMContentLoaded", loadTableData);
 
+/**
+ * Loads data into the DataTable.
+ */
 function loadTableData() {
+    // Initialize the DataTable
     dataTable = $('#manufacturersTable').DataTable({
-        ajax: { url: '/admin/manufacturers/getall' },
+        ajax: { url: '/admin/manufacturers/getall' }, // URL to fetch data from
         columns: [
             { data: "name", width: "20%" },
             { data: "description", width: "70%" },
@@ -24,6 +35,6 @@ function loadTableData() {
                 }
             }
         ],
-        autoWidth: false
+        autoWidth: false // Disable automatic column width adjustment
     });
 }

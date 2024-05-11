@@ -1,10 +1,21 @@
-﻿let dataTable;
+﻿/**
+ * Represents the DataTable object used to display products' data.
+ * @type {DataTable}
+ */
+let dataTable;
 
+/**
+ * Event listener that loads table data when the DOM content is loaded.
+ */
 document.addEventListener("DOMContentLoaded", loadTableData);
 
+/**
+ * Loads data into the DataTable.
+ */
 function loadTableData() {
+    // Initialize the DataTable
     dataTable = $('#productsTable').DataTable({
-        ajax: { url: '/admin/products/getall' },
+        ajax: { url: '/admin/products/getall' }, // URL to fetch data from
         columns: [
             { data: "name", width: "10%" },
             { data: "description", with: "30%"},
@@ -30,6 +41,6 @@ function loadTableData() {
                 }
             }
         ],
-        autoWidth: false
+        autoWidth: false // Disable automatic column width adjustment
     });
 }

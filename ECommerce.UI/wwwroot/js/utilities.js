@@ -1,4 +1,9 @@
-﻿function removeItem(url, dataTable) {
+﻿/**
+ * Removes an entity after displaying an initial confirmation message.
+ * @param {string} url - The URL to send the DELETE request to.
+ * @param {DataTable} [dataTable=null] - Optional DataTable object to reload after removal.
+ */
+function removeItem(url, dataTable) {
     showInitialMessage().then((result) => {
         if (result.isConfirmed) {
             removeEntity(url, dataTable);
@@ -6,6 +11,14 @@
     })
 }
 
+/**
+ * Removes an entity after checking for associations with other entities.
+ * @param {string} hasAssociationsUrl - The URL to check for associations.
+ * @param {string} removeAssociactionUrl - The URL to remove associations.
+ * @param {string} deleteUrl - The URL to delete the entity.
+ * @param {string} entityName - The name of the entity being removed.
+ * @param {DataTable} dataTable - The DataTable object to reload after removal.
+ */
 function removeItemWithAssociation(hasAssociationsUrl, removeAssociactionUrl, deleteUrl, entityName, dataTable) {
     showInitialMessage().then((result) => {
         if (result.isConfirmed) {
@@ -31,7 +44,11 @@ function removeItemWithAssociation(hasAssociationsUrl, removeAssociactionUrl, de
     });
 }
 
-
+/**
+ * Removes an entity from the database using the provided URL.
+ * @param {string} url - The URL to send the DELETE request to.
+ * @param {DataTable} [dataTable=null] - Optional DataTable object to reload after removal.
+ */
 function removeEntity(url, dataTable = null) {
     fetch(url, {
         method: 'DELETE'
@@ -54,6 +71,13 @@ function removeEntity(url, dataTable = null) {
         });
 }
 
+/**
+ * Removes associations between entities before deleting the main entity.
+ * @param {string} removeAssociactionUrl - The URL to remove associations.
+ * @param {string} deleteUrl - The URL to delete the main entity.
+ * @param {string} entityName - The name of the entity being removed.
+ * @param {DataTable} dataTable - The DataTable object to reload after removal.
+ */
 function removeAssociation(removeAssociactionUrl, deleteUrl, entityName, dataTable) {
     Swal.fire({
         title: 'Associated entities found!',
@@ -84,6 +108,10 @@ function removeAssociation(removeAssociactionUrl, deleteUrl, entityName, dataTab
     });
 }
 
+/**
+ * Shows the initial confirmation message before performing an action.
+ * @returns {Promise} A promise representing the result of the confirmation dialog.
+ */
 function showInitialMessage() {
     return Swal.fire({
         title: 'Are you sure?',

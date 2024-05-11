@@ -1,10 +1,21 @@
-﻿let dataTable;
+﻿/**
+ * Represents the DataTable object used to display categories' data.
+ * @type {DataTable}
+ */
+let dataTable;
 
+/**
+ * Event listener that loads table data when the DOM content is loaded.
+ */
 document.addEventListener("DOMContentLoaded", loadTableData);
 
+/**
+ * Loads data into the DataTable.
+ */
 function loadTableData() {
+    // Initialize the DataTable
     dataTable = $('#categoriesTable').DataTable({
-        ajax: { url: '/admin/categories/getall' },
+        ajax: { url: '/admin/categories/getall' }, // URL to fetch data from
         columns: [
             { data: "name", width: "75%" },
             {
@@ -23,6 +34,6 @@ function loadTableData() {
                 }
             }
         ],
-        autoWidth: false
+        autoWidth: false // Disable automatic column width adjustment
     });
 }
