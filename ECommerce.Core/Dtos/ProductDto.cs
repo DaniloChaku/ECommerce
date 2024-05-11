@@ -81,6 +81,11 @@ namespace ECommerce.Core.Dtos
 
             return false;
         }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 
     public static class ProductExtensions
