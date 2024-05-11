@@ -3,15 +3,23 @@ using System.Reflection;
 
 namespace ECommerce.Core.Helpers.ValidationAttributes
 {
+    /// <summary>
+    /// Validates that the value of the property is less than the value of another property.
+    /// </summary>
     public class LessThanAttribute : ValidationAttribute
     {
         private readonly string _comparisonProperty;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LessThanAttribute"/> class with the specified comparison property.
+        /// </summary>
+        /// <param name="comparisonProperty">The name of the property to compare against.</param>
         public LessThanAttribute(string comparisonProperty)
         {
             _comparisonProperty = comparisonProperty;
         }
 
+        /// <inheritdoc/>
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
             if (value == null)
