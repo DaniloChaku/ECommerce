@@ -19,8 +19,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ECommerce.UI.StartupExtensions
 {
+    /// <summary>
+    /// Extension methods for configuring services in the ASP.NET Core application.
+    /// </summary>
     public static class ConfigureServicesExtensions
     {
+        /// <summary>
+        /// Configures services for the application.
+        /// </summary>
+        /// <param name="services">The service collection to which services will be added.</param>
+        /// <param name="configuration">The application configuration.</param>
+        /// <returns>The modified service collection.</returns>
         public static IServiceCollection ConfigureServices(this IServiceCollection services,
             IConfiguration configuration)
         {
