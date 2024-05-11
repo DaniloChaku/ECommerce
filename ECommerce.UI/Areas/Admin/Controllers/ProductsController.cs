@@ -361,6 +361,8 @@ namespace ECommerce.UI.Areas.Admin.Controllers
 
         #endregion
 
+        #region PrivateMethods
+
         private async Task<IEnumerable<SelectListItem>> GetCategoriesSelectList()
         {
             return _categorySorterService.Sort(await
@@ -380,5 +382,7 @@ namespace ECommerce.UI.Areas.Admin.Controllers
             return Enum.GetNames(typeof(PriceType)).Select(
                 t => new SelectListItem() { Text = t, Value = t });
         }
+
+        #endregion
     }
 }
