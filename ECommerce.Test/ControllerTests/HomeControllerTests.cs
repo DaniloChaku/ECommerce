@@ -1,5 +1,4 @@
-﻿using ECommerce.Core.Dtos;
-using ECommerce.Core.ServiceContracts.Products;
+﻿using ECommerce.Core.ServiceContracts.Products;
 using ECommerce.Core.ServiceContracts.ShoppingCartItems;
 using ECommerce.Core.ServiceContracts.Users;
 using ECommerce.Tests.Helpers;
@@ -59,7 +58,7 @@ namespace ECommerce.Tests.ControllerTests
         [InlineData(101, 4, 4, 11, 2, 6)]
         [InlineData(101, 2, 2, 11, 1, 4)]
         [InlineData(101, 11, 11, 11, 9, 11)]
-        public async Task Index_ReturnsViewModelWithProductPageModel(int productCount, int page, 
+        public async Task Index_ReturnsViewModelWithProductPageModel(int productCount, int page,
             int pageExpected, int totalPagesExpected, int paginationStartExpected, int paginationEndExpected)
         {
             // Arrange

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
-using System.ComponentModel.DataAnnotations;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
+using System.ComponentModel.DataAnnotations;
 
 namespace ECommerce.Core.Helpers.ValidationAttributes
 {

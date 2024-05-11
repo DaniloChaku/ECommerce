@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECommerce.Core.Helpers.ValidationAttributes
 {
@@ -39,13 +34,13 @@ namespace ECommerce.Core.Helpers.ValidationAttributes
             var result = decimal.Compare(currentValue, comparisonValue);
             if (result >= 0)
             {
-                var currentPropertyDisplayName = GetDisplayName(validationContext.ObjectType, 
+                var currentPropertyDisplayName = GetDisplayName(validationContext.ObjectType,
                     validationContext.MemberName!);
-                var comparisonPropertyDisplayName = GetDisplayName(validationContext.ObjectType, 
+                var comparisonPropertyDisplayName = GetDisplayName(validationContext.ObjectType,
                     _comparisonProperty);
 
                 return new ValidationResult(string.Format(
-                    ErrorMessage ?? "The {0} must be less than {1}.", 
+                    ErrorMessage ?? "The {0} must be less than {1}.",
                     currentPropertyDisplayName, comparisonPropertyDisplayName));
             }
 

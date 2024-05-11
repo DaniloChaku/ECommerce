@@ -22,7 +22,7 @@ namespace ECommerce.Core.Services.ShoppingCartItems
 
         public async Task<ShoppingCartItemDto?> GetByCustomerAndProductIdAsync(Guid customerId, Guid productId)
         {
-            var shoppingCartItems = await _shoppingCartItemRepository.GetAllAsync(i => 
+            var shoppingCartItems = await _shoppingCartItemRepository.GetAllAsync(i =>
             i.CustomerId == customerId && i.ProductId == productId);
 
             return shoppingCartItems.FirstOrDefault()?.ToDto();

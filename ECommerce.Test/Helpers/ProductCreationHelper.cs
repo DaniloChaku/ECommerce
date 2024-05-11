@@ -1,10 +1,5 @@
 ﻿using ECommerce.Core.Domain.Entities;
 using ECommerce.Core.Dtos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECommerce.Tests.Helpers
 {
@@ -66,9 +61,9 @@ namespace ECommerce.Tests.Helpers
 
             if (isEmptyId)
             {
-                product.Id = Guid.Empty;   
+                product.Id = Guid.Empty;
             }
-            
+
             if (name is not null)
             {
                 product.Name = name;

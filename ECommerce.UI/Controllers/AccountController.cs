@@ -1,6 +1,5 @@
 ﻿using ECommerce.Core.Domain.IdentityEntities;
 using ECommerce.Core.Dtos;
-using ECommerce.Core.Enums;
 using ECommerce.Core.Helpers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -33,7 +32,7 @@ namespace ECommerce.UI.Controllers
                 return View();
             }
 
-            var result = await _signInManager.PasswordSignInAsync(loginDto.Email, loginDto.Password, 
+            var result = await _signInManager.PasswordSignInAsync(loginDto.Email, loginDto.Password,
                 isPersistent: true, lockoutOnFailure: false);
 
             if (result.Succeeded)
@@ -74,7 +73,7 @@ namespace ECommerce.UI.Controllers
 
             if (result.Succeeded)
             {
-                await _signInManager.PasswordSignInAsync(user, signUpDto.Password, 
+                await _signInManager.PasswordSignInAsync(user, signUpDto.Password,
                     isPersistent: true, lockoutOnFailure: false);
                 await _userManager.AddToRoleAsync(user, Constants.ROLE_CUSTOMER);
                 await _signInManager.RefreshSignInAsync(user);
@@ -82,7 +81,7 @@ namespace ECommerce.UI.Controllers
                 return RedirectToAction(nameof(HomeController.Index), "Home");
             }
 
-            foreach(var error in result.Errors)
+            foreach (var error in result.Errors)
             {
                 ModelState.AddModelError("", error.Description);
             }

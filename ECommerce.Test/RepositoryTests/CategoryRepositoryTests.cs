@@ -1,13 +1,5 @@
 ﻿using ECommerce.Core.Domain.Entities;
-using ECommerce.Core.Domain.RepositoryContracts;
 using ECommerce.Infrastructure.Repositories;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECommerce.Test.RepositoryTests
 {
@@ -78,7 +70,7 @@ namespace ECommerce.Test.RepositoryTests
         [Fact]
         public async Task GetAllAsync_WithFilter_ReturnsMatchingCategories()
         {
-            
+
             using (var context = GetContext())
             {
                 // Arrange
@@ -166,8 +158,8 @@ namespace ECommerce.Test.RepositoryTests
 
                 // Assert
                 result.Should().NotBeNull();
-                result.Id.Should().NotBe(Guid.Empty); 
-                context.Categories.Should().Contain(result); 
+                result.Id.Should().NotBe(Guid.Empty);
+                context.Categories.Should().Contain(result);
             }
         }
 
@@ -186,8 +178,8 @@ namespace ECommerce.Test.RepositoryTests
                 {
                     var addedCategory = await repository.AddAsync(category);
                     addedCategories.Add(addedCategory);
-                    addedCategory.Should().NotBeNull(); 
-                    addedCategory.Id.Should().NotBe(Guid.Empty); 
+                    addedCategory.Should().NotBeNull();
+                    addedCategory.Id.Should().NotBe(Guid.Empty);
                 }
 
                 // Assert

@@ -1,15 +1,10 @@
 ﻿using ECommerce.Core.Dtos;
 using ECommerce.Core.ServiceContracts.Manufacturers;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Mvc;
-using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ECommerce.UI.Areas.Admin.Controllers;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Moq;
 
 namespace ECommerce.Tests.ControllerTests
 {

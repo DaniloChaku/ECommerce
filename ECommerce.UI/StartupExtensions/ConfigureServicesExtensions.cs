@@ -15,8 +15,6 @@ using ECommerce.Core.Services.Users;
 using ECommerce.Core.Settings;
 using ECommerce.Infrastructure.Db;
 using ECommerce.Infrastructure.Repositories;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace ECommerce.UI.StartupExtensions

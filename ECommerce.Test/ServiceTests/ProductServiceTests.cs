@@ -295,14 +295,14 @@ namespace ECommerce.Test.ServiceTests
             };
             _productRepositoryMock.Setup(repo => repo.GetAllAsync(
                 It.IsAny<Expression<Func<Product, bool>>>()))
-                .ReturnsAsync(products.FindAll(p => p.Name.Contains(searchQuery, 
+                .ReturnsAsync(products.FindAll(p => p.Name.Contains(searchQuery,
                 StringComparison.CurrentCultureIgnoreCase)));
 
             // Act
             var result = await _productGetterService.GetBySearchQueryAsync(searchQuery);
 
             // Assert
-            result.Should().OnlyContain(dto => dto.Name.Contains(searchQuery, 
+            result.Should().OnlyContain(dto => dto.Name.Contains(searchQuery,
                 StringComparison.CurrentCultureIgnoreCase));
         }
 

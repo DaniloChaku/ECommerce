@@ -3,11 +3,6 @@ using ECommerce.Core.Domain.RepositoryContracts;
 using ECommerce.Core.Dtos;
 using ECommerce.Core.ServiceContracts.Products;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECommerce.Core.Services.Products
 {
@@ -17,7 +12,7 @@ namespace ECommerce.Core.Services.Products
 
         public ProductGetterService(IProductRepository productRepository)
         {
-            _productRepository = productRepository; 
+            _productRepository = productRepository;
         }
 
         public async Task<ProductDto?> GetByIdAsync(Guid id)
@@ -53,12 +48,13 @@ namespace ECommerce.Core.Services.Products
             var searchQueryTrimmed = searchQuery?.Trim().ToLower();
             List<Product> products;
 
-            if (string.IsNullOrWhiteSpace(searchQueryTrimmed)) {
+            if (string.IsNullOrWhiteSpace(searchQueryTrimmed))
+            {
                 products = await _productRepository.GetAllAsync();
             }
             else
             {
-                products = await _productRepository.GetAllAsync(p => 
+                products = await _productRepository.GetAllAsync(p =>
                 EF.Functions.Like(p.Name, $"%{searchQueryTrimmed}%"));
             }
 

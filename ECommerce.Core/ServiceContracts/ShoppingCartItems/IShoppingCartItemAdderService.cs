@@ -4,6 +4,6 @@ namespace ECommerce.Core.ServiceContracts.ShoppingCartItems
 {
     public interface IShoppingCartItemAdderService
     {
-        Task<ShoppingCartItemDto> AddAsync(ShoppingCartItemDto shoppingCartItemDto); 
+        Task<ShoppingCartItemDto> AddAsync(ShoppingCartItemDto shoppingCartItemDto);
     }
 }

@@ -1,13 +1,6 @@
 ﻿using ECommerce.Core.Domain.Entities;
-using ECommerce.Core.Domain.RepositoryContracts;
 using ECommerce.Core.Enums;
-using ECommerce.Core.Helpers.ValidationAttributes;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECommerce.Core.Dtos
 {
@@ -37,9 +30,9 @@ namespace ECommerce.Core.Dtos
         {
             if (obj is ShoppingCartItemDto other)
             {
-                return other.Id == Id && 
+                return other.Id == Id &&
                     other.CustomerId == CustomerId &&
-                    other.ProductId == ProductId && 
+                    other.ProductId == ProductId &&
                     other.ProductName == ProductName &&
                     other.ProductPrice == ProductPrice &&
                     other.ProductPriceType == ProductPriceType &&

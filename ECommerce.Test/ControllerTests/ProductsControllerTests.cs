@@ -1,22 +1,20 @@
 ﻿using ECommerce.Core.Dtos;
-using ECommerce.Core.ServiceContracts.Products;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Mvc;
-using Moq;
-using ECommerce.Core.ServiceContracts.Categories;
-using ECommerce.Core.ServiceContracts.Manufacturers;
-using Microsoft.AspNetCore.Hosting;
 using ECommerce.Core.Enums;
-using ECommerce.UI.Models;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using ECommerce.Core.ServiceContracts.Categories;
 using ECommerce.Core.ServiceContracts.Images;
+using ECommerce.Core.ServiceContracts.Manufacturers;
+using ECommerce.Core.ServiceContracts.Products;
 using ECommerce.Core.Settings;
-using Microsoft.Extensions.Options;
-using ECommerce.Core.Domain.Entities;
-using System.Drawing;
-using ECommerce.UI.Areas.Admin.Controllers;
 using ECommerce.Tests.Helpers;
+using ECommerce.UI.Areas.Admin.Controllers;
+using ECommerce.UI.Models;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.Extensions.Options;
+using Moq;
 
 namespace ECommerce.Tests.ControllerTests
 {
@@ -137,7 +135,7 @@ namespace ECommerce.Tests.ControllerTests
             return new ProductsController(_productGetterService,
                 _productAdderService, _productUpdaterService, _productDeleterService,
                 _categoryGetterService, _categorySorterService, _manufacturerGetterService,
-                _manufacturerSorterService, _webHostEnvironment, _imageUploaderService, 
+                _manufacturerSorterService, _webHostEnvironment, _imageUploaderService,
                 _imageDeleterService, _imageUploadOptions)
             {
                 TempData = _tempData
@@ -178,7 +176,7 @@ namespace ECommerce.Tests.ControllerTests
 
             _categoryGetterServiceMock.Setup(s => s.GetAllAsync())
                 .ReturnsAsync(categories);
-            _categorySorterServiceMock.Setup(s => s.Sort(It.IsAny<IEnumerable<CategoryDto>>(), 
+            _categorySorterServiceMock.Setup(s => s.Sort(It.IsAny<IEnumerable<CategoryDto>>(),
                 It.IsAny<SortOrder>())).Returns(categories);
 
             _manufacturerGetterServiceMock.Setup(s => s.GetAllAsync())
@@ -391,7 +389,7 @@ namespace ECommerce.Tests.ControllerTests
 
             // Assert
             _productUpdaterServiceMock.Verify(s => s.UpdateAsync(product));
-            _imageUploaderServiceMock.Verify(s => s.UploadAsync(image, 
+            _imageUploaderServiceMock.Verify(s => s.UploadAsync(image,
                 vm.Product.Id.ToString()), Times.Once);
             _imageDeleterServiceMock.Verify(s => s.DeleteImage(It.IsAny<string>()), Times.Once);
             result.Should().BeOfType<RedirectToActionResult>();
@@ -503,7 +501,7 @@ namespace ECommerce.Tests.ControllerTests
             var result = await controller.Delete(productDto.Id);
 
             // Assert
-            _imageDeleterServiceMock.Verify(s => s.DeleteImageFolder(It.IsAny<string>()), 
+            _imageDeleterServiceMock.Verify(s => s.DeleteImageFolder(It.IsAny<string>()),
                 Times.Once);
             result.Should().NotBe(null);
             result.Should().BeOfType<OkObjectResult>();
@@ -519,14 +517,14 @@ namespace ECommerce.Tests.ControllerTests
             string[] existingProductsNames, string newName)
         {
             // Arrange
-            var existingProducts = new List<ProductDto>(); 
-            foreach(var name in existingProductsNames)
+            var existingProducts = new List<ProductDto>();
+            foreach (var name in existingProductsNames)
             {
                 var productDto = _productCreationHelper.CreateProductDto(false, name);
                 existingProducts.Add(productDto);
             }
 
-            var product = _productCreationHelper.CreateProductDto(true, newName); 
+            var product = _productCreationHelper.CreateProductDto(true, newName);
             var productController = CreateProductController();
 
             _productGetterServiceMock.Setup(s => s.GetAllAsync()).ReturnsAsync(existingProducts);
@@ -536,7 +534,7 @@ namespace ECommerce.Tests.ControllerTests
 
             // Assert
             var jsonResult = Assert.IsType<JsonResult>(result);
-            jsonResult.Value.Should().Be(true); 
+            jsonResult.Value.Should().Be(true);
         }
 
         [Theory]

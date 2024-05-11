@@ -3,15 +3,10 @@ using ECommerce.Core.Domain.IdentityEntities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECommerce.Infrastructure.Db
 {
-    public class ApplicationDbContext : 
+    public class ApplicationDbContext :
         IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
     {
         public DbSet<Category> Categories { get; set; }
@@ -43,7 +38,7 @@ namespace ECommerce.Infrastructure.Db
                 Name = "Customer",
                 NormalizedName = "CUSTOMER"
             };
-            
+
             modelBuilder.Entity<ApplicationRole>().HasData(adminRole);
             modelBuilder.Entity<ApplicationRole>().HasData(customerRole);
 

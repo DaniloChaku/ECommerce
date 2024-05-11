@@ -2,7 +2,6 @@
 using ECommerce.Core.Helpers.ValidationAttributes;
 using ECommerce.Core.Settings;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.Options;
 using System.ComponentModel.DataAnnotations;
 
 namespace ECommerce.UI.Models

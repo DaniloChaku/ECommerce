@@ -1,11 +1,6 @@
 ﻿using ECommerce.Core.Domain.RepositoryContracts;
 using ECommerce.Core.Dtos;
 using ECommerce.Core.ServiceContracts.Categories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECommerce.Core.Services.Categories
 {
@@ -39,7 +34,7 @@ namespace ECommerce.Core.Services.Categories
             var category = categoryDto.ToEntity();
 
             var categoryUpdated = await _categoryRepository.UpdateAsync(category);
-            
+
             return categoryUpdated.ToDto();
         }
     }

@@ -1,11 +1,6 @@
 ﻿using ECommerce.Core.Domain.Entities;
 using ECommerce.Infrastructure.Repositories;
 using ECommerce.Tests.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECommerce.Tests.RepositoryTests
 {

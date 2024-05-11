@@ -5,13 +5,7 @@ using ECommerce.Core.Enums;
 using ECommerce.Core.ServiceContracts.Categories;
 using ECommerce.Core.Services.Categories;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ECommerce.Test.ServiceTests
 {
@@ -57,7 +51,7 @@ namespace ECommerce.Test.ServiceTests
             };
 
             // Assert
-            await action.Should().ThrowAsync<ArgumentNullException>();    
+            await action.Should().ThrowAsync<ArgumentNullException>();
         }
 
         [Fact]
@@ -122,7 +116,7 @@ namespace ECommerce.Test.ServiceTests
 
             // Assert
             result.Should().NotBeNull();
-            result.Should().BeEquivalentTo(categoryDto); 
+            result.Should().BeEquivalentTo(categoryDto);
         }
 
         #endregion
@@ -279,7 +273,7 @@ namespace ECommerce.Test.ServiceTests
         public async Task UpdateAsync_InvalidId_ThrowsArgumentException()
         {
             // Arrange
-            var invalidId = Guid.NewGuid(); 
+            var invalidId = Guid.NewGuid();
             var categoryDto = _fixture.Build<CategoryDto>()
                 .With(c => c.Id, invalidId)
                 .Create();

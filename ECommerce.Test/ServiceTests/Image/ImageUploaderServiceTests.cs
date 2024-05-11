@@ -5,11 +5,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECommerce.Tests.ServiceTests.Image
 {
@@ -112,7 +107,7 @@ namespace ECommerce.Tests.ServiceTests.Image
         {
             // Arrange
             var image = new Mock<IFormFile>();
-            image.Setup(i => i.Length).Returns(1024); 
+            image.Setup(i => i.Length).Returns(1024);
             image.Setup(i => i.FileName).Returns("image.jpg");
             image.Setup(i => i.ContentType).Returns("image/jpeg");
             image.Setup(i => i.CopyToAsync(It.IsAny<Stream>(), It.IsAny<CancellationToken>()))

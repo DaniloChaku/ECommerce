@@ -9,7 +9,7 @@ namespace ECommerce.Core.Dtos
             ErrorMessage = "The {0} must not start or end with a whitespace characters and must contain at least two letter.")]
         public string Name { get; set; } = "Unknown";
         [RegularExpression(@"^\d{10}$", ErrorMessage = "Invalid phone number format")]
-        public string? PhoneNumber { get; set; } 
+        public string? PhoneNumber { get; set; }
         [EmailAddress(ErrorMessage = "Email must be in a proper format")]
         [DataType(DataType.EmailAddress)]
         [Remote("IsEmailNotInUse", "Account", ErrorMessage = "This email address is already in use")]

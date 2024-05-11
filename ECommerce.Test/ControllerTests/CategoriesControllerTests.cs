@@ -5,12 +5,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECommerce.Tests.ControllerTests
 {
@@ -283,8 +277,8 @@ namespace ECommerce.Tests.ControllerTests
             string[] existingCategoriesNames, string newName)
         {
             // Arrange
-            var existingCategories = new List<CategoryDto>(); 
-            foreach(var name in existingCategoriesNames)
+            var existingCategories = new List<CategoryDto>();
+            foreach (var name in existingCategoriesNames)
             {
                 var categoryDto = _fixture.Build<CategoryDto>()
                     .With(m => m.Name, name).Create();
@@ -293,7 +287,7 @@ namespace ECommerce.Tests.ControllerTests
 
             var category = _fixture.Build<CategoryDto>()
                 .With(m => m.Id, Guid.Empty)
-                .With(m => m.Name, newName).Create(); 
+                .With(m => m.Name, newName).Create();
             var categoryController = CreateCategoryController();
 
             _categoryGetterServiceMock.Setup(s => s.GetAllAsync()).ReturnsAsync(existingCategories);
@@ -303,7 +297,7 @@ namespace ECommerce.Tests.ControllerTests
 
             // Assert
             var jsonResult = Assert.IsType<JsonResult>(result);
-            jsonResult.Value.Should().Be(true); 
+            jsonResult.Value.Should().Be(true);
         }
 
         [Theory]

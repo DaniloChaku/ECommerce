@@ -1,15 +1,10 @@
 ﻿using ECommerce.Core.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECommerce.Core.Dtos
 {
     public class CategoryDto
-    { 
+    {
         public Guid Id { get; set; }
         [Remote(controller: "Categories", action: "IsCategoryNameUnique",
             AdditionalFields = nameof(Id),
@@ -18,10 +13,10 @@ namespace ECommerce.Core.Dtos
 
         public Category ToEntity()
         {
-            return new Category 
-            { 
+            return new Category
+            {
                 Id = Id,
-                Name = Name 
+                Name = Name
             };
         }
 
@@ -30,7 +25,7 @@ namespace ECommerce.Core.Dtos
             if (obj is CategoryDto categoryDto)
             {
                 return Id == categoryDto.Id && Name == categoryDto.Name;
-            } 
+            }
 
             return false;
         }

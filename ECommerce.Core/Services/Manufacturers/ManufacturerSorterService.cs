@@ -1,12 +1,6 @@
-﻿using ECommerce.Core.Domain.RepositoryContracts;
-using ECommerce.Core.Dtos;
+﻿using ECommerce.Core.Dtos;
 using ECommerce.Core.Enums;
 using ECommerce.Core.ServiceContracts.Manufacturers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECommerce.Core.Services.Manufacturers
 {

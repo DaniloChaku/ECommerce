@@ -3,19 +3,14 @@ using ECommerce.Core.Enums;
 using ECommerce.Core.Helpers;
 using ECommerce.Core.Helpers.ValidationAttributes;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECommerce.Core.Dtos
 {
     public class ProductDto
     {
         public Guid Id { get; set; }
-        [RegularExpression(@"^\S(.*\S)?$", 
+        [RegularExpression(@"^\S(.*\S)?$",
             ErrorMessage = "The {0} field must not start or end with a whitespace characters and must contain at least one letter.")]
         [Remote(controller: "Products", action: "IsProductNameUnique",
             AdditionalFields = nameof(Id),
@@ -24,21 +19,21 @@ namespace ECommerce.Core.Dtos
         [MaxLength(400)]
         public string? Description { get; set; }
         [Display(Name = "Price")]
-        [Range(typeof(decimal), "0.01", Constants.MAX_DECIMAL_VALUE_STRING, 
-            ParseLimitsInInvariantCulture = true, 
+        [Range(typeof(decimal), "0.01", Constants.MAX_DECIMAL_VALUE_STRING,
+            ParseLimitsInInvariantCulture = true,
             ErrorMessage = "{0} must be greater than 0")]
         public decimal Price { get; set; }
         [Display(Name = "Sale Price")]
         [Range(typeof(decimal), "0.01", Constants.MAX_DECIMAL_VALUE_STRING,
             ParseLimitsInInvariantCulture = true,
             ErrorMessage = "{0} must be greater than 0")]
-        [LessThan(nameof(Price), 
+        [LessThan(nameof(Price),
             ErrorMessage = "{0} must be less than {1}")]
         public decimal? SalePrice { get; set; }
         public PriceType PriceType { get; set; }
         public string? ImageUrl { get; set; }
         [Required]
-        [Range(0, long.MaxValue, 
+        [Range(0, long.MaxValue,
             ErrorMessage = "The number of products in stock must not be negative")]
         public long Stock { get; set; }
         public Guid? ManufacturerId { get; set; }
