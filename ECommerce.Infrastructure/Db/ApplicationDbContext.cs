@@ -45,13 +45,6 @@ namespace ECommerce.Infrastructure.Db
         {
             base.OnModelCreating(modelBuilder);
 
-            // Seed categories
-            modelBuilder.Entity<Category>().HasData(
-                new Category { Id = new Guid("71886F11-075C-48BC-B5B0-35A4E68A7C33"), Name = "Fruits" },
-                new Category { Id = new Guid("E5E04394-6595-4680-8EBE-1030523A01DD"), Name = "Vegetables" }
-            );
-
-            // Seed roles
             var adminRole = new ApplicationRole
             {
                 Id = new Guid("D1EF53AC-AAB9-4FA0-BA8C-C3F69505A62E"),
@@ -61,7 +54,7 @@ namespace ECommerce.Infrastructure.Db
 
             var customerRole = new ApplicationRole
             {
-                Id = Guid.NewGuid(),
+                Id = new Guid("5a598257-8e8b-4d63-bc64-d1068ce37f58"),
                 Name = "Customer",
                 NormalizedName = "CUSTOMER"
             };

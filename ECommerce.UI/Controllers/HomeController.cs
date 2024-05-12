@@ -185,6 +185,8 @@ namespace ECommerce.UI.Controllers
         /// <param name="id">The ID of the product to add.</param>
         /// <param name="currentPage">The current page number for pagination.</param>
         /// <returns>A redirect to the home page.</returns>
+        [Authorize(Roles = Constants.ROLE_CUSTOMER)]
+        [HttpGet]
         public async Task<IActionResult> Buy(Guid id, int currentPage)
         {
             var customerId = _userContextService.GetCustomerId(User.Identity as ClaimsIdentity);
