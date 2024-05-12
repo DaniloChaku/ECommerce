@@ -151,6 +151,8 @@ namespace ECommerce.UI.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Roles = Constants.ROLE_CUSTOMER)]
+        [HttpGet]
         public async Task<IActionResult> Buy(Guid id, int currentPage)
         {
             var customerId = _userContextService.GetCustomerId(User.Identity as ClaimsIdentity);
