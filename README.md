@@ -3,7 +3,7 @@
 ## Introduction
 This is an e-commerce application built with ASP.NET Core and Entity Framework Core for the fictional company ABC. It provides a comprehensive platform for users to browse, search, and purchase products online and for company employees (administrators) to manage product information.
 
-## Features:
+## Features
 - User registration and authentication
 - Role-based authorization
 - Product management
@@ -11,7 +11,7 @@ This is an e-commerce application built with ASP.NET Core and Entity Framework C
 - Product catalog
 - Product search functionality
 
-## Technologies Used
+## Technologies
 - Backend: ASP.NET Core, Entity Framework Core, Identity Core
 - Frontend: JavaScript, HTML, CSS, Bootstrap
 - Database: SQL Server
