@@ -75,7 +75,7 @@ namespace ECommerce.Infrastructure.Db
             };
 
             var passwordHasher = new PasswordHasher<ApplicationUser>();
-            adminUser.PasswordHash = passwordHasher.HashPassword(adminUser, "Manager2024No1");
+            adminUser.PasswordHash = passwordHasher.HashPassword(adminUser, "Admin1234");
 
             modelBuilder.Entity<ApplicationUser>().HasData(adminUser);
 
