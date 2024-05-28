@@ -65,7 +65,7 @@ namespace ECommerce.Infrastructure.Db
             // Seed admin user
             var adminUser = new ApplicationUser
             {
-                Id = Guid.NewGuid(),
+                Id = new Guid("369b6eed-1926-4ea7-a3e0-73810ed9af19"),
                 UserName = "admin@example.com",
                 NormalizedUserName = "ADMIN@EXAMPLE.COM",
                 Email = "admin@example.com",
