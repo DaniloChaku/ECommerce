@@ -30,3 +30,4 @@ This is an e-commerce application built with ASP.NET Core and Entity Framework C
 3. Restore the .NET packages: 'dotnet restore'
 4. Navigate to the UI directory: 'cd ECommerce.UI'
 5. Run the application: 'dotnet run'
+6. Enter 'admin@example.com' as the email and 'Admin1234' as the password to log in as an administrator
